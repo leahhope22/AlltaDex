@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>WildDex v12</title>
+<title>WildDex v13</title>
 <style>
 body {font-family:Arial;margin:0;background:linear-gradient(135deg,#b7e4d7,#d7f2ff);}
 .tabs {display:flex;background:#2c3e50;color:white;}
@@ -30,25 +30,15 @@ button {padding:10px 18px;border:none;border-radius:8px;background:#1abc9c;color
 .autocomplete-suggestion{padding:5px;cursor:pointer;}
 .autocomplete-suggestion:hover{background:#eee;}
 
-/* Element gradients */
-.fire{background:linear-gradient(135deg,#ff7b4b,#ffcc5c);}
-.water{background:linear-gradient(135deg,#4facfe,#00f2fe);}
-.grass{background:linear-gradient(135deg,#43e97b,#38f9d7);}
-.ice{background:linear-gradient(135deg,#7de2fc,#b9b6e5);}
-.flying{background:linear-gradient(135deg,#89f7fe,#66a6ff);}
-.normal{background:linear-gradient(135deg,#bdbdbd,#e0e0e0);}
-
 /* Rarity glow */
 .card.rare { box-shadow:0 0 10px silver,0 10px 30px rgba(0,0,0,.25);}
 .card.epic { box-shadow:0 0 15px purple,0 10px 30px rgba(0,0,0,.25);}
 .card.legendary { box-shadow:0 0 20px gold,0 10px 30px rgba(0,0,0,.25);}
 
-/* Realistic animated element borders */
-.card::before {
-  content:""; position:absolute; top:0; left:0; width:100%; height:100%; border-radius:18px; pointer-events:none; z-index:1;
-}
+/* Element borders using multiple pseudo-elements for dynamic animation */
+.card::before {content:"";position:absolute;top:0;left:0;width:100%;height:100%;border-radius:18px;pointer-events:none;z-index:1;}
 
-/* FIRE: flickering flames */
+/* --- FIRE --- */
 .card.fire::before {
   background: radial-gradient(circle, rgba(255,200,0,0.3) 15%, transparent 70%);
   animation: fireFlicker 1.2s infinite alternate;
@@ -59,29 +49,32 @@ button {padding:10px 18px;border:none;border-radius:8px;background:#1abc9c;color
   100% { box-shadow: inset 0 0 15px rgba(255,120,0,0.3); }
 }
 
-/* WATER: rising bubbles */
-.card.water::before {
-  background: radial-gradient(circle, rgba(255,255,255,0.3) 2px, transparent 2px);
-  background-size: 12px 12px;
-  animation: waterBubbles 3s linear infinite;
+/* --- WATER --- */
+.card.water::before { background:none; }
+.card.water::after {
+  content:""; position:absolute; top:0; left:0; width:100%; height:100%; border-radius:inherit; pointer-events:none;
+  background: radial-gradient(circle, rgba(255,255,255,0.4) 20%, transparent 20%) no-repeat;
+  background-size: 20px 20px;
+  animation: waterBubbles 5s linear infinite;
 }
 @keyframes waterBubbles {
-  0% { background-position: 0 100%; }
-  100% { background-position: 0 -100%; }
+  0% { background-position: 10% 100%, 50% 90%, 80% 95%; }
+  50% { background-position: 15% 50%, 52% 40%, 78% 45%; }
+  100% { background-position: 12% 0%, 48% -10%, 82% 0%; }
 }
 
-/* GRASS: waving pattern */
+/* --- GRASS --- */
 .card.grass::before {
   background: repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0 5px, transparent 5px 10px);
-  animation: grassWave 3s ease-in-out infinite;
+  animation: grassWave 4s ease-in-out infinite;
 }
 @keyframes grassWave {
   0% { transform: translateY(0); }
-  50% { transform: translateY(3px); }
+  50% { transform: translateY(4px); }
   100% { transform: translateY(0); }
 }
 
-/* ICE: drifting snowflakes */
+/* --- ICE --- */
 .card.ice::before {
   background: radial-gradient(circle, rgba(255,255,255,0.6) 2px, transparent 2px);
   background-size: 15px 15px;
@@ -92,14 +85,18 @@ button {padding:10px 18px;border:none;border-radius:8px;background:#1abc9c;color
   100% { background-position: 100% 100%; }
 }
 
-/* FLYING: gusts of wind */
+/* --- FLYING --- */
 .card.flying::before {
   background: repeating-linear-gradient(90deg, rgba(255,255,255,0.15) 0 5px, transparent 5px 10px);
   background-size: 20px 20px;
   animation: flyingWind 4s linear infinite;
 }
+@keyframes flyingWind {
+  0% { background-position: 0 0; }
+  100% { background-position: 100% 0; }
+}
 
-/* NORMAL: no pattern */
+/* NORMAL */
 .card.normal::before { background:none; }
 </style>
 </head>
@@ -139,7 +136,8 @@ button {padding:10px 18px;border:none;border-radius:8px;background:#1abc9c;color
 </div>
 
 <script>
-const animalDatabase = [
+// --- Animal Database ---
+const animalDatabase=[
 {name:"African Lion",scientific:"Panthera leo",type:"fire",continent:"Africa",image:"https://upload.wikimedia.org/wikipedia/commons/7/73/Lion_waiting_in_Namibia.jpg"},
 {name:"Tiger",scientific:"Panthera tigris",type:"fire",continent:"Asia",image:"https://upload.wikimedia.org/wikipedia/commons/5/56/Tiger.50.jpg"},
 {name:"Elephant",scientific:"Loxodonta africana",type:"grass",continent:"Africa",image:"https://upload.wikimedia.org/wikipedia/commons/3/37/African_Bush_Elephant.jpg"},
@@ -154,28 +152,37 @@ const animalDatabase = [
 {name:"Green Finch",scientific:"Chloris chloris",type:"flying",continent:"Europe",image:"https://upload.wikimedia.org/wikipedia/commons/1/1e/Chloris_chloris01.jpg"}
 ];
 
-const typeIcons = {fire:"🔥",water:"💧",grass:"🌿",ice:"❄️",flying:"🕊️",normal:"⚪"};
-const continentIcons = {Africa:"🌍",Asia:"🌏",Europe:"🌍","North America":"🌎","South America":"🌎",Australia:"🌏",Antarctica:"❄️",Ocean:"🌊",Arctic:"❄️"};
+// --- Symbols ---
+const typeIcons={fire:"🔥",water:"💧",grass:"🌿",ice:"❄️",flying:"🕊️",normal:"⚪"};
+const continentIcons={Africa:"🌍",Asia:"🌏",Europe:"🌍","North America":"🌎","South America":"🌎",Australia:"🌏",Antarctica:"❄️",Ocean:"🌊",Arctic:"❄️"};
 
-let animals = JSON.parse(localStorage.getItem("wilddex"))||[];
-let currentModalAnimalIndex = null;
+// --- Data ---
+let animals=JSON.parse(localStorage.getItem("wilddex"))||[];
+let currentModalAnimalIndex=null;
 
+// --- Autocomplete ---
 function showSuggestions(){
-  const val=document.getElementById("animalInput").value.toLowerCase();
-  const sugg=document.getElementById("suggestions"); sugg.innerHTML="";
+  const input=document.getElementById("animalInput");
+  const sugg=document.getElementById("suggestions");
+  const val=input.value.toLowerCase();
+  sugg.innerHTML="";
   if(!val) return;
   animalDatabase.forEach(a=>{
     if(a.name.toLowerCase().includes(val)){
-      const div=document.createElement("div"); div.className="autocomplete-suggestion"; div.innerText=a.name;
-      div.onclick=()=>{document.getElementById("animalInput").value=a.name; sugg.innerHTML="";}
+      const div=document.createElement("div");
+      div.className="autocomplete-suggestion";
+      div.innerText=a.name;
+      div.onclick=()=>{input.value=a.name;sugg.innerHTML="";}
       sugg.appendChild(div);
     }
   });
 }
 
+// --- Helper ---
 function random(min,max){return Math.floor(Math.random()*(max-min)+min);}
 function rarity(){let r=Math.random();if(r<0.6)return"common";if(r<0.85)return"rare";if(r<0.97)return"epic";return"legendary";}
 
+// --- Log Animal ---
 function logAnimal(){
   const name=document.getElementById("animalInput").value.trim();
   if(!name) return;
@@ -187,28 +194,51 @@ function logAnimal(){
   if(dbAnimal.type==="grass") moves=["Vine Whip","Nature Guard"];
   if(dbAnimal.type==="ice") moves=["Frost Bite","Glacier Punch"];
   if(dbAnimal.type==="flying") moves=["Sky Dive","Wind Slash"];
-  const animal={name:dbAnimal.name,scientific:dbAnimal.scientific,type:dbAnimal.type,continent:dbAnimal.continent,image:dbAnimal.image||`https://source.unsplash.com/featured/260x160/?${encodeURIComponent(dbAnimal.name)}`,atk:random(20,100),def:random(20,100),rarity:rarity(),move:moves[random(0,moves.length)]};
-  animals.push(animal); localStorage.setItem("wilddex",JSON.stringify(animals)); renderCollection(); renderBadges(); document.getElementById("animalInput").value="";
+  const animal={
+    name:dbAnimal.name,
+    scientific:dbAnimal.scientific,
+    type:dbAnimal.type,
+    continent:dbAnimal.continent,
+    image:dbAnimal.image||`https://source.unsplash.com/featured/260x160/?${encodeURIComponent(dbAnimal.name)}`,
+    atk:random(20,100),
+    def:random(20,100),
+    rarity:rarity(),
+    move:moves[random(0,moves.length)]
+  };
+  animals.push(animal);
+  localStorage.setItem("wilddex",JSON.stringify(animals));
+  renderCollection();
+  renderBadges();
+  document.getElementById("animalInput").value="";
 }
 
+// --- Render Collection ---
 function renderCollection(){
-  const grid=document.getElementById("collectionGrid"); grid.innerHTML="";
+  const grid=document.getElementById("collectionGrid");
+  grid.innerHTML="";
   animals.forEach((a,i)=>{
-    const card=document.createElement("div"); card.className=`card ${a.type} ${a.rarity}`; card.onclick=()=>openModal(i);
+    const card=document.createElement("div");
+    card.className=`card ${a.type} ${a.rarity}`;
+    card.onclick=()=>openModal(i);
     const img=`<img src="${a.image}" onerror="this.onerror=null;this.src='https://via.placeholder.com/260x160?text=No+Image'">`;
     card.innerHTML=`<div class="card-header"><span>${a.name}</span><span>HP ${a.atk+a.def}</span></div>${img}<div class="card-body"><div><b>${a.scientific}</b></div><div><b>${a.move}</b></div><div class="stats"><span>ATK ${a.atk}</span><span>DEF ${a.def}</span></div><div class="footer"><span>${typeIcons[a.type]} ${a.type}</span><span>${continentIcons[a.continent]} ${a.continent}</span></div></div>`;
     grid.appendChild(card);
   });
 }
 
+// --- Badges ---
 function renderBadges(){
-  let counts={}; animals.forEach(a=>{counts[a.continent]=(counts[a.continent]||0)+1;});
-  const container=document.getElementById("badgeContainer"); container.innerHTML="";
+  let counts={};
+  animals.forEach(a=>{counts[a.continent]=(counts[a.continent]||0)+1;});
+  const container=document.getElementById("badgeContainer");container.innerHTML="";
   for(let c in counts){
-    const badge=document.createElement("div"); badge.className="badge"; badge.innerHTML=`<b>${continentIcons[c]} ${c} Explorer</b><br>${counts[c]} animals logged`; container.appendChild(badge);
+    const badge=document.createElement("div");badge.className="badge";
+    badge.innerHTML=`<b>${continentIcons[c]} ${c} Explorer</b><br>${counts[c]} animals logged`;
+    container.appendChild(badge);
   }
 }
 
+// --- Modal ---
 function openModal(index){
   currentModalAnimalIndex=index;
   const a=animals[index];
@@ -218,12 +248,13 @@ function openModal(index){
   modal.style.display="flex";
 }
 function closeModal(){document.getElementById("modal").style.display="none";}
-function releaseAnimal(){if(currentModalAnimalIndex!==null){animals.splice(currentModalAnimalIndex,1); localStorage.setItem("wilddex",JSON.stringify(animals)); renderCollection(); renderBadges(); closeModal(); }}
+function releaseAnimal(){if(currentModalAnimalIndex!==null){animals.splice(currentModalAnimalIndex,1); localStorage.setItem("wilddex",JSON.stringify(animals)); renderCollection(); renderBadges(); closeModal();}}
 
 function openTab(id,event){document.querySelectorAll(".section").forEach(s=>s.classList.remove("active")); document.getElementById(id).classList.add("active"); document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active")); event.target.classList.add("active");}
 window.onclick=function(e){if(e.target==document.getElementById("modal")) closeModal();}
 
-renderCollection(); renderBadges();
+renderCollection();
+renderBadges();
 </script>
 </body>
 </html>
