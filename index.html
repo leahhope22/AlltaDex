@@ -13,7 +13,7 @@ margin:0;
 text-align:center;
 }
 
-h1{margin-top:15px;}
+h1{margin-top:15px}
 
 .tabs{
 display:flex;
@@ -29,17 +29,26 @@ background:#ddd;
 cursor:pointer;
 }
 
-.tab.active{background:#bbb;}
+.tab.active{background:#bbb}
 
-.page{display:none;}
-.page.active{display:block;}
+.page{display:none}
+.page.active{display:block}
+
+.controls{
+margin-top:10px
+}
+
+.controls input,.controls select{
+padding:6px;
+margin:4px
+}
 
 .grid{
 display:flex;
 flex-wrap:wrap;
 gap:15px;
 justify-content:center;
-padding:20px;
+padding:20px
 }
 
 .card{
@@ -50,10 +59,10 @@ overflow:hidden;
 position:relative;
 border:2px solid rgba(0,0,0,.2);
 transition:.2s;
-color:#111;
+cursor:pointer;
 }
 
-.card:hover{transform:scale(1.03)}
+.card:hover{transform:scale(1.04)}
 
 .card-header{
 display:flex;
@@ -118,8 +127,6 @@ margin-top:6px;
 font-size:18px;
 }
 
-/* overlay */
-
 .card-overlay{
 position:absolute;
 top:0;
@@ -130,132 +137,54 @@ z-index:1;
 pointer-events:none;
 }
 
+/* element colours */
+
+.card.fire{background:linear-gradient(#ffe5d0,#ffd0b0)}
+.card.water{background:linear-gradient(#dff4ff,#c8eaff)}
+.card.grass{background:linear-gradient(#e4ffd8,#d0f5c2)}
+.card.ice{background:linear-gradient(#eaffff,#dff6ff)}
+.card.flying{background:linear-gradient(#f0f0ff,#e5e5ff)}
+
 /* rarity glow */
 
-.card.common{box-shadow:none;}
+.card.uncommon{box-shadow:0 0 10px rgba(0,200,255,.4)}
+.card.rare{box-shadow:0 0 16px rgba(255,150,0,.7)}
+.card.legendary{box-shadow:0 0 25px gold}
 
-.card.uncommon{
-box-shadow:0 0 10px rgba(0,200,255,.4);
+/* modal */
+
+.modal{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.7);
+display:none;
+align-items:center;
+justify-content:center;
 }
 
-.card.rare{
-box-shadow:
-0 0 12px rgba(255,150,0,.6),
-0 0 20px rgba(255,150,0,.4);
+.modal-content{
+background:white;
+padding:20px;
+border-radius:14px;
+width:320px;
 }
 
-.card.legendary{
-box-shadow:
-0 0 18px rgba(255,215,0,.9),
-0 0 30px rgba(255,215,0,.6),
-0 0 45px rgba(255,215,0,.3);
-animation:legendPulse 3s infinite alternate;
+.modal img{
+width:100%;
+border-radius:10px;
 }
 
-@keyframes legendPulse{
-from{filter:brightness(1)}
-to{filter:brightness(1.15)}
-}
-
-/* ELEMENT COLORS */
-
-.card.fire{
-background:linear-gradient(#ffe5d0,#ffd0b0);
-}
-
-.card.water{
-background:linear-gradient(#dff4ff,#c8eaff);
-}
-
-.card.grass{
-background:linear-gradient(#e4ffd8,#d0f5c2);
-}
-
-.card.ice{
-background:linear-gradient(#eaffff,#dff6ff);
-}
-
-.card.flying{
-background:linear-gradient(#f0f0ff,#e5e5ff);
-}
-
-/* ELEMENT EFFECTS */
-
-/* fire */
-
-.card.fire .card-overlay{
-background:
-radial-gradient(circle at 50% 100%, rgba(255,120,0,.25), transparent 70%),
-radial-gradient(circle at 60% 110%, rgba(255,60,0,.2), transparent 70%);
-animation:fireFlicker 2s infinite alternate;
-}
-
-@keyframes fireFlicker{
-from{transform:translateY(0)}
-to{transform:translateY(-3px) scale(1.03)}
-}
-
-/* water */
-
-.card.water .card-overlay{
-background:
-linear-gradient(120deg,transparent,rgba(0,150,255,.15),transparent);
-animation:waterFlow 4s linear infinite;
-}
-
-@keyframes waterFlow{
-from{background-position:-200px}
-to{background-position:200px}
-}
-
-/* grass */
-
-.card.grass .card-overlay{
-background:
-radial-gradient(circle, rgba(0,200,0,.15), transparent 70%);
-animation:grassBreathe 5s infinite alternate;
-}
-
-@keyframes grassBreathe{
-from{opacity:.3}
-to{opacity:.6}
-}
-
-/* ice */
-
-.card.ice .card-overlay{
-background:
-linear-gradient(60deg,transparent,rgba(200,255,255,.25),transparent);
-animation:iceShine 5s linear infinite;
-}
-
-@keyframes iceShine{
-from{background-position:-300px}
-to{background-position:300px}
-}
-
-/* flying */
-
-.card.flying .card-overlay{
-background:
-linear-gradient(90deg,transparent,rgba(200,200,255,.15),transparent);
-animation:windMove 6s linear infinite;
-}
-
-@keyframes windMove{
-from{background-position:-400px}
-to{background-position:400px}
-}
-
-/* controls */
-
-.controls{
+.release{
 margin-top:10px;
-}
-
-.controls input, .controls select{
-padding:6px;
-margin:4px;
+padding:8px 12px;
+background:#e74c3c;
+color:white;
+border:none;
+border-radius:6px;
+cursor:pointer;
 }
 
 .badge{
@@ -284,7 +213,6 @@ border:2px solid #ccc;
 
 <input id="animalInput" list="animals" placeholder="Log animal">
 <datalist id="animals"></datalist>
-
 <button onclick="logAnimal()">Log</button>
 
 </div>
@@ -292,6 +220,7 @@ border:2px solid #ccc;
 <div id="catches" class="page">
 
 <div class="controls">
+
 <input id="searchBox" placeholder="Search animals" oninput="renderCollection()">
 
 <select id="filterElement" onchange="renderCollection()">
@@ -302,6 +231,14 @@ border:2px solid #ccc;
 <option value="ice">Ice</option>
 <option value="flying">Flying</option>
 </select>
+
+<select id="sortOption" onchange="renderCollection()">
+<option value="none">Sort</option>
+<option value="rarity">Sort by Rarity</option>
+<option value="atk">Sort by ATK</option>
+<option value="def">Sort by DEF</option>
+</select>
+
 </div>
 
 <div id="collection" class="grid"></div>
@@ -312,35 +249,52 @@ border:2px solid #ccc;
 <div id="badgeArea"></div>
 </div>
 
+<div id="cardModal" class="modal">
+<div class="modal-content" id="modalContent"></div>
+</div>
+
 <script>
 
-const typeIcons={
-fire:"🔥",
-water:"💧",
-grass:"🌿",
-ice:"❄️",
-flying:"🕊️"
-}
+const typeIcons={fire:"🔥",water:"💧",grass:"🌿",ice:"❄️",flying:"🕊️"}
 
-const continentIcons={
-Africa:"🌍",
-Europe:"🌍",
-Asia:"🌏",
-NorthAmerica:"🌎",
-SouthAmerica:"🌎",
-Australia:"🦘",
-Antarctica:"🧊"
-}
+const continents=["Africa","Europe","Asia","NorthAmerica","SouthAmerica","Australia","Antarctica"]
 
-const animals=[
+const types=["fire","water","grass","ice","flying"]
 
-{name:"African Lion",scientific:"Panthera leo",type:"fire",continent:"Africa",rarity:"rare",atk:80,def:70,move:"Flame Pounce"},
-{name:"Bald Eagle",scientific:"Haliaeetus leucocephalus",type:"flying",continent:"NorthAmerica",rarity:"uncommon",atk:60,def:50,move:"Sky Dive"},
-{name:"Polar Bear",scientific:"Ursus maritimus",type:"ice",continent:"Antarctica",rarity:"rare",atk:75,def:80,move:"Frozen Swipe"},
-{name:"Poison Dart Frog",scientific:"Dendrobatidae",type:"grass",continent:"SouthAmerica",rarity:"uncommon",atk:40,def:30,move:"Toxic Jump"},
-{name:"Blue Whale",scientific:"Balaenoptera musculus",type:"water",continent:"Asia",rarity:"legendary",atk:90,def:90,move:"Ocean Surge"}
+const animals=[]
 
+/* generate 150 animals */
+
+const species=[
+"Lion","Tiger","Elephant","Wolf","Fox","Leopard","Jaguar","Cheetah","Hyena","Gorilla",
+"Chimpanzee","Baboon","Panda","Koala","Kangaroo","Wombat","Platypus","Dingo","Camel",
+"Horse","Donkey","Zebra","Giraffe","Buffalo","Bison","Moose","Deer","Elk","Rabbit",
+"Hare","Beaver","Otter","Seal","Walrus","Whale","Dolphin","Shark","Octopus","Squid",
+"Eagle","Falcon","Hawk","Owl","Penguin","Albatross","Pelican","Swan","Goose","Duck",
+"Crow","Raven","Parrot","Macaw","Toucan","Peacock","Turkey","Chicken","Frog","Toad",
+"Salamander","Lizard","Gecko","Iguana","Chameleon","Snake","Cobra","Python","Viper",
+"Tortoise","Turtle","Crocodile","Alligator","Ant","Bee","Wasp","Butterfly","Moth",
+"Beetle","Dragonfly","Grasshopper","Cricket","Spider","Scorpion"
 ]
+
+for(let i=0;i<150;i++){
+
+let name=species[i%species.length]+" "+(i+1)
+
+animals.push({
+
+name:name,
+scientific:"Species "+(i+1),
+type:types[i%types.length],
+continent:continents[i%continents.length],
+rarity:["common","uncommon","rare","legendary"][i%4],
+atk:Math.floor(Math.random()*100),
+def:Math.floor(Math.random()*100),
+move:"Wild Strike"
+
+})
+
+}
 
 const datalist=document.getElementById("animals")
 
@@ -355,34 +309,26 @@ let logged=[]
 function logAnimal(){
 
 let name=document.getElementById("animalInput").value
-
 let animal=animals.find(a=>a.name===name)
-
 if(!animal)return
 
-logged.push(animal)
+logged.push({...animal})
 
 renderCollection()
 updateBadges()
+
 }
 
-/* Wikipedia image */
+/* wikipedia image */
 
 async function getImage(name){
 
 try{
-
-let url=`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name)}`
-
+let url=`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name.split(" ")[0])}`
 let res=await fetch(url)
-
 let data=await res.json()
-
-return data.thumbnail ? data.thumbnail.source : ""
-
-}catch{
-return ""
-}
+return data.thumbnail?data.thumbnail.source:""
+}catch{return""}
 
 }
 
@@ -391,24 +337,35 @@ return ""
 async function renderCollection(){
 
 let area=document.getElementById("collection")
-
 area.innerHTML=""
 
 let search=document.getElementById("searchBox").value.toLowerCase()
-
 let filter=document.getElementById("filterElement").value
+let sort=document.getElementById("sortOption").value
 
-for(let a of logged){
+let list=[...logged]
+
+if(sort=="atk")list.sort((a,b)=>b.atk-a.atk)
+if(sort=="def")list.sort((a,b)=>b.def-a.def)
+
+if(sort=="rarity"){
+const order={legendary:4,rare:3,uncommon:2,common:1}
+list.sort((a,b)=>order[b.rarity]-order[a.rarity])
+}
+
+for(let i=0;i<list.length;i++){
+
+let a=list[i]
 
 if(search && !a.name.toLowerCase().includes(search))continue
-
 if(filter!="all" && a.type!=filter)continue
 
 let img=await getImage(a.name)
 
 let card=document.createElement("div")
-
 card.className=`card ${a.type} ${a.rarity}`
+
+card.onclick=()=>openCard(i,a,img)
 
 card.innerHTML=`
 
@@ -418,20 +375,12 @@ card.innerHTML=`
 </div>
 
 <div class="image-container">
-
-<img src="${img}" alt="${a.name}"
-onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
+<img src="${img}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
 <div class="no-image">🖤</div>
-
 </div>
 
 <div class="card-body">
-
-<div class="card-overlay"></div>
-
 <div class="scientific">${a.scientific}</div>
-
 <div><b>${a.move}</b></div>
 
 <div class="stats">
@@ -441,9 +390,8 @@ onerror="this.style.display='none';this.nextElementSibling.style.display='flex';
 
 <div class="footer">
 <span>${typeIcons[a.type]}</span>
-<span>${continentIcons[a.continent]}</span>
+<span>${a.continent}</span>
 </div>
-
 </div>
 `
 
@@ -453,35 +401,84 @@ area.appendChild(card)
 
 }
 
+/* modal card */
+
+function openCard(index,a,img){
+
+let modal=document.getElementById("cardModal")
+
+document.getElementById("modalContent").innerHTML=`
+
+<h2>${a.name}</h2>
+
+<img src="${img}">
+
+<p><i>${a.scientific}</i></p>
+
+<p>Element: ${a.type}</p>
+<p>Continent: ${a.continent}</p>
+
+<p>ATK: ${a.atk}</p>
+<p>DEF: ${a.def}</p>
+
+<p>Move: ${a.move}</p>
+
+<p>Rarity: ${a.rarity}</p>
+
+<button class="release" onclick="releaseAnimal(${index})">
+Release Animal
+</button>
+
+<br><br>
+
+<button onclick="closeModal()">Close</button>
+`
+
+modal.style.display="flex"
+
+}
+
+function releaseAnimal(i){
+
+logged.splice(i,1)
+
+closeModal()
+
+renderCollection()
+
+updateBadges()
+
+}
+
+function closeModal(){
+
+document.getElementById("cardModal").style.display="none"
+
+}
+
 /* badges */
 
 function updateBadges(){
 
 let badgeArea=document.getElementById("badgeArea")
-
 badgeArea.innerHTML=""
 
-let continents=[...new Set(logged.map(a=>a.continent))]
-let elements=[...new Set(logged.map(a=>a.type))]
+if(logged.length>=10)
+badgeArea.innerHTML+=`<div class="badge">📘 Researcher</div>`
 
-if(continents.length>=3)
-badgeArea.innerHTML+=`<div class="badge">🌍 Explorer Badge</div>`
+if(logged.length>=50)
+badgeArea.innerHTML+=`<div class="badge">🌍 Master Explorer</div>`
 
-if(elements.length>=3)
-badgeArea.innerHTML+=`<div class="badge">⚡ Elementalist Badge</div>`
-
-if(logged.length>=5)
-badgeArea.innerHTML+=`<div class="badge">📘 Field Researcher</div>`
 }
+
+/* tabs */
 
 function openPage(id){
 
 document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"))
-
 document.getElementById(id).classList.add("active")
 
 document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"))
-
 event.target.classList.add("active")
 
 }
