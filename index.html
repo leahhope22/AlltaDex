@@ -23,15 +23,19 @@ nav button.active { background:#007f66; }
 .stat-bar { height:10px; border-radius:5px; background:#ccc; margin:2px 0; overflow:hidden; }
 .stat-fill { height:100%; background:#00b386; }
 .card .rarity { position:absolute; top:8px; left:8px; padding:2px 6px; border-radius:5px; font-weight:bold; text-shadow:0 0 3px #000; }
+
+/* Pokémon-style gradients + holo effects */
 .Common { border:2px solid gray; }
-.Uncommon { border:2px solid green; }
+.Uncommon { border:2px solid green; background:linear-gradient(135deg, #a6f2c8, #66ffcc);}
 .Rare { border:2px solid blue; background:linear-gradient(135deg, #99ccff, #66ffff); }
 .Epic { border:2px solid purple; background:linear-gradient(135deg, #cc99ff, #9933ff); }
 .Legendary { border:3px solid gold; background:linear-gradient(135deg, gold, #ffff99); animation:holo 2s infinite alternate; }
-@keyframes holo { 0% { box-shadow:0 0 10px gold;} 100% { box-shadow:0 0 30px gold;} }
+@keyframes holo { 0% { box-shadow:0 0 10px gold;} 50% { box-shadow:0 0 20px gold;} 100% { box-shadow:0 0 30px gold;} }
+
 input, button { margin:5px 0; padding:5px; border-radius:5px; border:none; }
 .badge { display:inline-block; margin:5px; padding:10px; border-radius:50%; background:#00b386; color:white; font-size:0.7em; text-align:center; width:60px; height:60px; line-height:1em; text-shadow:0 0 2px #000; transition:0.3s;}
 .badge.locked { background:#ccc; color:#666; }
+
 #modal {display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);justify-content:center;align-items:center;}
 #modalContent {background:#d6fff5;padding:20px;border-radius:12px;max-width:400px;position:relative;}
 #modalClose {position:absolute;top:5px;right:10px;cursor:pointer;font-weight:bold;}
@@ -72,17 +76,15 @@ input, button { margin:5px 0; padding:5px; border-radius:5px; border:none; }
 <script>
 let animals = JSON.parse(localStorage.getItem('animals') || '[]');
 
-// Elements, symbols, continents
 const elements = ["Fire","Water","Grass","Electric","Ice","Flying","Poison","Dark","Normal","Steel","Psychic","Ground","Rock","Bug","Dragon","Fairy"];
 const elementSymbols = { Fire:"🔥", Water:"💧", Grass:"🌿", Electric:"⚡", Ice:"❄️", Flying:"🕊️", Poison:"☠️", Dark:"🌑", Normal:"🔹", Steel:"⚙️", Psychic:"🔮", Ground:"🌍", Rock:"🪨", Bug:"🐛", Dragon:"🐉", Fairy:"✨" };
 const continentSymbols = { Africa:"🌍", Antarctica:"❄️", Asia:"🗻", Europe:"🏰", "North America":"🏞️", "South America":"🌋", Oceania:"🏝️", Worldwide:"🌐" };
 
-// Habitat & continent lookup
+// Realistic habitats & continents
 const habitatMap = {
   "Humpback Whale":["Ocean"], "Bald Eagle":["Forests","Mountains"], "Lion":["Savanna"], "Penguin":["Coasts","Ice"],
   "Porcupine":["Forest"], "Mantis Shrimp":["Ocean"], "Polar Bear":["Arctic"], "Cheetah":["Savanna"], "Frog":["Swamps","Ponds"]
 };
-
 const continentMap = {
   "Humpback Whale":["North America","South America","Africa"],
   "Bald Eagle":["North America"],
@@ -105,10 +107,10 @@ function assignElements(name){
   if(name.includes("penguin")||name.includes("polar")) assigned.push("Ice");
   if(name.includes("mantis")||name.includes("scorpion")||name.includes("snake")) assigned.push("Poison");
   if(assigned.length===0) assigned.push(elements[Math.floor(Math.random()*elements.length)]);
-  return assigned.slice(0,2); // max 2 elements
+  return assigned.slice(0,2);
 }
 
-// Assign realistic moves
+// Moves
 function generateMove(name){
   name = name.toLowerCase();
   if(name.includes("eagle")) return "Sky Dive";
@@ -122,15 +124,14 @@ function generateMove(name){
   return name+" Tackle";
 }
 
-// Assign habitat & continents
+// Habitats & continents
 function assignHabitats(name){ return habitatMap[name] || ["Various"]; }
 function assignContinents(name){ return continentMap[name] || ["Worldwide"]; }
 
-// Rarity and image
+// Rarity & image
 function assignRarity(){ const r=Math.random(); if(r<0.5) return "Common"; if(r<0.75) return "Uncommon"; if(r<0.9) return "Rare"; if(r<0.98) return "Epic"; return "Legendary"; }
 function fetchAnimalImage(name){ return `https://source.unsplash.com/200x200/?${encodeURIComponent(name)}`; }
 
-// Tabs
 function openTab(name){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById(name).classList.add('active');
@@ -138,7 +139,6 @@ function openTab(name){
   document.querySelector(`button[onclick="openTab('${name}')"]`).classList.add('active');
 }
 
-// Logging
 function logAnimal(){
   const nameInput = document.getElementById("animalName");
   const name = nameInput.value.trim(); 
@@ -162,7 +162,6 @@ function logAnimal(){
   updateBadges();
 }
 
-// Render
 function renderAnimals(){
   const container = document.getElementById("cardsContainer");
   container.innerHTML="";
@@ -186,7 +185,6 @@ function renderAnimals(){
   });
 }
 
-// Modal
 function showModal(id){
   const animal = animals.find(a=>a.id===id);
   if(!animal) return;
@@ -214,7 +212,6 @@ function releaseAnimal(id){
   updateBadges();
 }
 
-// Badges
 function updateBadges(){
   const badgeDiv = document.getElementById("badgeList");
   badgeDiv.innerHTML="";
@@ -227,7 +224,7 @@ function updateBadges(){
 // Initialize
 renderAnimals();
 updateBadges();
-
 </script>
+
 </body>
 </html>
