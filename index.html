@@ -23,24 +23,15 @@ nav button.active { background:#007f66; }
 .card { border-radius:12px; padding:10px; margin:10px; width:220px; display:inline-block; background:#b2fff0; position:relative; box-shadow:0 0 5px #007f66; transition: transform 0.2s; cursor:pointer;}
 .card:hover { transform: scale(1.05); }
 .card img { width:100%; border-radius:8px; height:150px; object-fit:cover; }
-.card .element { position:absolute; top:8px; right:8px; padding:2px 6px; border-radius:5px; font-weight:bold; }
+.card .elements, .card .continents { margin:3px 0; font-size:1.2em;}
 .card .rarity { position:absolute; top:8px; left:8px; padding:2px 6px; border-radius:5px; font-weight:bold; text-shadow:0 0 3px #000; }
-.Fire { background:#ff7f50; color:white; }
-.Water { background:#3399ff; color:white; }
-.Grass { background:#66cc66; color:white; }
-.Electric { background:#ffeb3b; color:black; }
-.Ice { background:#66ffff; color:black; }
-.Flying { background:#99ccff; color:black; }
-.Poison { background:#9933ff; color:white; }
-.Dark { background:#333333; color:white; }
-.Normal { background:#999999; color:white; }
 .Common { border:2px solid gray; }
 .Uncommon { border:2px solid green; }
 .Rare { border:2px solid blue; background:linear-gradient(135deg, #99ccff, #66ffff); }
 .Epic { border:2px solid purple; background:linear-gradient(135deg, #cc99ff, #9933ff); }
 .Legendary { border:3px solid gold; background:linear-gradient(135deg, gold, #ffff99); animation:holo 2s infinite alternate; }
 @keyframes holo { 0% { box-shadow:0 0 10px gold;} 100% { box-shadow:0 0 30px gold;} }
-input, select, button { margin:5px 0; padding:5px; border-radius:5px; border:none;}
+input, button { margin:5px 0; padding:5px; border-radius:5px; border:none;}
 #map { height:400px; width:100%; margin-top:1em; border-radius:12px; }
 #badgeList li { margin:5px 0; }
 #modal {display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);justify-content:center;align-items:center;}
@@ -61,18 +52,7 @@ input, select, button { margin:5px 0; padding:5px; border-radius:5px; border:non
 </nav>
 
 <div id="log" class="tab active">
-  <input id="animalName" placeholder="Enter common or scientific name">
-  <input id="animalLocation" placeholder="Enter location (city or region)">
-  <select id="animalContinent">
-    <option value="">Select continent</option>
-    <option value="Africa">Africa</option>
-    <option value="Antarctica">Antarctica</option>
-    <option value="Asia">Asia</option>
-    <option value="Europe">Europe</option>
-    <option value="North America">North America</option>
-    <option value="South America">South America</option>
-    <option value="Oceania">Oceania</option>
-  </select>
+  <input id="animalName" placeholder="Enter animal name">
   <button onclick="logAnimal()">✨ Log Animal</button>
 </div>
 
@@ -94,24 +74,33 @@ input, select, button { margin:5px 0; padding:5px; border-radius:5px; border:non
 </div>
 
 <script>
-// Load from localStorage
 let animals = JSON.parse(localStorage.getItem('animals')) || [];
 let badges = [];
 
-const elements = ["Fire","Water","Grass","Electric","Ice","Flying","Poison","Dark","Normal"];
-const rarities = ["Common","Uncommon","Rare","Epic","Legendary"];
+const elements = ["Fire","Water","Grass","Electric","Ice","Flying","Poison","Dark","Normal","Steel","Psychic","Ground","Rock","Bug","Dragon","Fairy"];
 
-// Animal trait table
-const animalTraits = {
-  "humpback whale": {element:"Water", move:"Tail Slam", habitat:"Ocean", continent:"Global"},
-  "bald eagle": {element:"Flying", move:"Talon Strike", habitat:"Forests/Rivers", continent:"North America"},
-  "red fox": {element:"Normal", move:"Pounce", habitat:"Forests/Grasslands", continent:"Europe/Asia/North America"},
-  "lion": {element:"Dark", move:"Roar Bite", habitat:"Savannah", continent:"Africa"},
-  "polar bear": {element:"Ice", move:"Ice Swipe", habitat:"Arctic", continent:"Arctic"},
-  "mantis shrimp": {element:"Water", move:"Sonic Punch", habitat:"Ocean", continent:"Global"}
+const elementSymbols = {
+  Fire:"🔥", Water:"💧", Grass:"🌿", Electric:"⚡",
+  Ice:"❄️", Flying:"🕊️", Poison:"☠️", Dark:"🌑",
+  Normal:"🔹", Steel:"⚙️", Psychic:"🔮", Ground:"🌍",
+  Rock:"🪨", Bug:"🐛", Dragon:"🐉", Fairy:"✨"
 };
 
-// Tabs
+const continentSymbols = {
+  Africa:"🌍", Antarctica:"❄️", Asia:"🗻", Europe:"🏰",
+  "North America":"🏞️", "South America":"🌋", Oceania:"🏝️", Worldwide:"🌐"
+};
+
+// Animal traits table
+const animalTraits = {
+  "humpback whale": {elements:["Water"], move:"Tail Slam", habitats:["Ocean"], continents:["Worldwide"]},
+  "bald eagle": {elements:["Flying"], move:"Talon Strike", habitats:["Forests","Rivers"], continents:["North America"]},
+  "red fox": {elements:["Normal"], move:"Pounce", habitats:["Forests","Grasslands"], continents:["Europe","Asia","North America"]},
+  "lion": {elements:["Dark","Normal"], move:"Roar Bite", habitats:["Savannah"], continents:["Africa"]},
+  "polar bear": {elements:["Ice","Water"], move:"Ice Swipe", habitats:["Arctic"], continents:["Arctic"]},
+  "mantis shrimp": {elements:["Water"], move:"Sonic Punch", habitats:["Ocean"], continents:["Worldwide"]}
+};
+
 function openTab(name){
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById(name).classList.add('active');
@@ -119,21 +108,31 @@ function openTab(name){
   document.querySelector(`button[onclick="openTab('${name}')"]`).classList.add('active');
 }
 
-// Assign element
-function assignElement(name){
+function assignElements(name){
   const trait = animalTraits[name.toLowerCase()];
-  if(trait) return trait.element;
+  if(trait) return trait.elements;
   const n = name.toLowerCase();
-  if(n.includes("shark") || n.includes("fish") || n.includes("dolphin")) return "Water";
-  if(n.includes("eagle") || n.includes("sparrow") || n.includes("hawk")) return "Flying";
-  if(n.includes("snake") || n.includes("spider") || n.includes("scorpion")) return "Poison";
-  if(n.includes("lion") || n.includes("tiger") || n.includes("wolf") || n.includes("bear")) return "Dark";
-  if(n.includes("fox") || n.includes("rabbit") || n.includes("deer")) return "Normal";
-  if(n.includes("penguin") || n.includes("polar") || n.includes("arctic")) return "Ice";
-  return elements[Math.floor(Math.random()*elements.length)];
+  if(n.includes("shark") || n.includes("fish") || n.includes("dolphin")) return ["Water"];
+  if(n.includes("eagle") || n.includes("sparrow") || n.includes("hawk")) return ["Flying"];
+  if(n.includes("snake") || n.includes("spider") || n.includes("scorpion")) return ["Poison"];
+  if(n.includes("lion") || n.includes("tiger") || n.includes("wolf") || n.includes("bear")) return ["Dark"];
+  if(n.includes("fox") || n.includes("rabbit") || n.includes("deer")) return ["Normal"];
+  if(n.includes("penguin") || n.includes("polar") || n.includes("arctic")) return ["Ice"];
+  return [elements[Math.floor(Math.random()*elements.length)]];
 }
 
-// Assign rarity
+function assignContinents(name){
+  const trait = animalTraits[name.toLowerCase()];
+  if(trait) return trait.continents;
+  return ["Worldwide"];
+}
+
+function assignHabitats(name){
+  const trait = animalTraits[name.toLowerCase()];
+  if(trait) return trait.habitats;
+  return ["Various"];
+}
+
 function assignRarity(){
   const r = Math.random();
   if(r<0.5) return "Common";
@@ -143,11 +142,10 @@ function assignRarity(){
   return "Legendary";
 }
 
-// Generate move
 function generateMove(name){
   const trait = animalTraits[name.toLowerCase()];
   if(trait) return trait.move;
-  const el = assignElement(name);
+  const el = assignElements(name)[0];
   if(el==="Water") return "Splash Strike";
   if(el==="Flying") return "Sky Peck";
   if(el==="Poison") return "Venom Bite";
@@ -157,7 +155,6 @@ function generateMove(name){
   return name + " Tackle";
 }
 
-// Fetch Image from Wikimedia
 function fetchAnimalImage(name, callback){
   const url = `https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=pageimages&piprop=original&titles=${encodeURIComponent(name)}`;
   fetch(url).then(res=>res.json()).then(data=>{
@@ -171,44 +168,53 @@ function fetchAnimalImage(name, callback){
   });
 }
 
-// Log Animal
 function logAnimal(){
   const nameInput = document.getElementById("animalName");
-  const locInput = document.getElementById("animalLocation");
-  const contInput = document.getElementById("animalContinent");
   const name = nameInput.value.trim();
   if(!name) return alert("Enter an animal name!");
-  const location = locInput.value.trim() || "Unknown";
-  const continent = contInput.value || (animalTraits[name.toLowerCase()] ? animalTraits[name.toLowerCase()].continent : "Unknown");
-  const element = assignElement(name);
+  const elementsArr = assignElements(name);
+  const continentsArr = assignContinents(name);
+  const habitatsArr = assignHabitats(name);
   const rarity = assignRarity();
   const move = generateMove(name);
-  const habitat = animalTraits[name.toLowerCase()] ? animalTraits[name.toLowerCase()].habitat : location;
 
-  const animal = {id: Date.now(), name, element, rarity, attack:Math.floor(Math.random()*100), defense:Math.floor(Math.random()*100), move, habitat, continent, image:""};
+  const animal = {
+    id: Date.now(),
+    name,
+    elements: elementsArr,
+    continents: continentsArr,
+    habitats: habitatsArr,
+    rarity,
+    attack: Math.floor(Math.random()*100),
+    defense: Math.floor(Math.random()*100),
+    move,
+    image:""
+  };
 
   fetchAnimalImage(name, img=>{
     animal.image = img;
     animals.push(animal);
     localStorage.setItem('animals', JSON.stringify(animals));
-    nameInput.value=""; locInput.value=""; contInput.value="";
+    nameInput.value="";
     renderAnimals();
     updateBadges();
     renderMap();
   });
 }
 
-// Render cards
 function renderAnimals(){
   const container = document.getElementById("cards");
   container.innerHTML="";
   animals.forEach(a=>{
+    const elemSymbols = a.elements.map(e=>elementSymbols[e]||e).join(" ");
+    const contSymbols = a.continents.map(c=>continentSymbols[c]||c).join(" ");
     container.innerHTML+=`
       <div class="card ${a.rarity}" onclick='showModal(${JSON.stringify(a)})'>
         <img src="${a.image}">
-        <div class="element ${a.element}">${a.element}</div>
         <div class="rarity">${a.rarity}</div>
         <h3>${a.name}</h3>
+        <div class="elements">${elemSymbols}</div>
+        <div class="continents">${contSymbols}</div>
         <p>ATK:${a.attack} DEF:${a.defense}</p>
         <p>Move:${a.move}</p>
       </div>
@@ -216,7 +222,6 @@ function renderAnimals(){
   });
 }
 
-// Release
 function releaseAnimal(id){
   animals = animals.filter(a=>a.id!==id);
   localStorage.setItem('animals', JSON.stringify(animals));
@@ -225,31 +230,32 @@ function releaseAnimal(id){
   renderMap();
 }
 
-// Modal
 function showModal(animal){
   document.getElementById('modal').style.display='flex';
+  const elemSymbols = animal.elements.map(e=>elementSymbols[e]||e).join(" ");
+  const contSymbols = animal.continents.map(c=>continentSymbols[c]||c).join(" ");
+  const habitatsStr = animal.habitats.join(", ");
   document.getElementById('modalInner').innerHTML=`
     <h2>${animal.name}</h2>
     <img src="${animal.image}" style="width:100%;border-radius:8px;">
-    <p><strong>Element:</strong> ${animal.element}</p>
+    <p><strong>Elements:</strong> ${elemSymbols}</p>
+    <p><strong>Continents:</strong> ${contSymbols}</p>
+    <p><strong>Habitats:</strong> ${habitatsStr}</p>
     <p><strong>Rarity:</strong> ${animal.rarity}</p>
     <p><strong>Attack:</strong> ${animal.attack} | <strong>Defense:</strong> ${animal.defense}</p>
     <p><strong>Move:</strong> ${animal.move}</p>
-    <p><strong>Habitat:</strong> ${animal.habitat}</p>
-    <p><strong>Continent:</strong> ${animal.continent}</p>
     <button onclick="releaseAnimal(${animal.id});closeModal()">Release Animal</button>
   `;
 }
 function closeModal(){document.getElementById('modal').style.display='none';}
 
-// Badges
 function updateBadges(){
   badges=[];
   if(animals.length>=1) badges.push("First Encounter");
   if(animals.length>=10) badges.push("Budding Naturalist");
   if(animals.length>=50) badges.push("Field Expert");
   if(animals.some(a=>a.rarity==="Legendary")) badges.push("Rare Find");
-  if(animals.map(a=>a.element).filter((v,i,a)=>a.indexOf(v)===i).length===elements.length) badges.push("Elemental Master");
+  if(animals.map(a=>a.elements).flat().filter((v,i,a)=>a.indexOf(v)===i).length===elements.length) badges.push("Elemental Master");
   document.getElementById("badgeList").innerHTML=badges.map(b=>`<li>${b}</li>`).join("");
 }
 
@@ -261,20 +267,22 @@ function renderMap(){
   markers.forEach(m=>map.removeLayer(m));
   markers=[];
   animals.forEach(a=>{
-    let coords;
-    switch(a.continent){
-      case "Africa": coords=[Math.random()*30-5, Math.random()*30]; break;
-      case "Antarctica": coords=[-75+Math.random()*10, Math.random()*360-180]; break;
-      case "Asia": coords=[20+Math.random()*50, 60+Math.random()*60]; break;
-      case "Europe": coords=[40+Math.random()*20, -10+Math.random()*30]; break;
-      case "North America": coords=[20+Math.random()*40, -130+Math.random()*60]; break;
-      case "South America": coords=[-40+Math.random()*20, -80+Math.random()*50]; break;
-      case "Oceania": coords=[-40+Math.random()*30, 120+Math.random()*60]; break;
-      default: coords=[Math.random()*180-90, Math.random()*360-180];
-    }
-    const marker = L.marker(coords).addTo(map);
-    marker.bindPopup(`<b>${a.name}</b><br>Element: ${a.element}<br>Move: ${a.move}<br>Habitat: ${a.habitat}`);
-    markers.push(marker);
+    a.continents.forEach(cont=>{
+      let coords;
+      switch(cont){
+        case "Africa": coords=[Math.random()*30-5, Math.random()*30]; break;
+        case "Antarctica": coords=[-75+Math.random()*10, Math.random()*360-180]; break;
+        case "Asia": coords=[20+Math.random()*50, 60+Math.random()*60]; break;
+        case "Europe": coords=[40+Math.random()*20, -10+Math.random()*30]; break;
+        case "North America": coords=[20+Math.random()*40, -130+Math.random()*60]; break;
+        case "South America": coords=[-40+Math.random()*20, -80+Math.random()*50]; break;
+        case "Oceania": coords=[-40+Math.random()*30, 120+Math.random()*60]; break;
+        default: coords=[Math.random()*180-90, Math.random()*360-180];
+      }
+      const marker = L.marker(coords).addTo(map);
+      marker.bindPopup(`<b>${a.name}</b><br>Elements: ${a.elements.join(", ")}<br>Move: ${a.move}<br>Habitats: ${a.habitats.join(", ")}`);
+      markers.push(marker);
+    });
   });
 }
 
