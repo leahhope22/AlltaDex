@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <meta charset="UTF-8">
 <title>WildDex</title>
 <style>
@@ -169,7 +171,22 @@ if(animals.some(a=>a.rarity==="Legendary")) badges.push("Rare Find");
 const badgeList = document.getElementById("badgeList");
 badgeList.innerHTML = badges.map(b=>`<li>${b}</li>`).join("");
 }
-
+function generateMove(name, element){
+  const n = name.toLowerCase();
+  if(element==="Water") return "Splash Strike";
+  if(element==="Flying") return "Sky Peck";
+  if(element==="Poison") return "Venom Bite";
+  if(element==="Dark") return "Shadow Pounce";
+  if(element==="Fire") return "Flame Burst";
+  if(element==="Ice") return "Frost Jab";
+  return name + " Tackle";
+}
+const habitatData = {
+  "lion": {habitat:"Savannah", continent:"Africa"},
+  "penguin": {habitat:"Antarctic", continent:"Antarctica"},
+  "bald eagle": {habitat:"Forests/Rivers", continent:"North America"},
+  "red fox": {habitat:"Forests/Grasslands", continent:"Europe/Asia/North America"}
+};  
 // Initial render
 renderAnimals();
 updateBadges();
