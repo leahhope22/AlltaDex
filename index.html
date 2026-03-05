@@ -1,63 +1,179 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <title>WildDex</title>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
 <style>
-body { font-family: 'Press Start 2P', cursive; background:#d6fff5; margin:0; padding:0; color:#111;}
-header { background:#66ffcc; padding:1em; text-align:center; }
-header h1 { margin:0; color:#007f66; font-size:2em; text-shadow:1px 1px #fff; }
-nav { display:flex; justify-content:center; margin:1em 0; }
-nav button { margin:0 5px; padding:0.5em 1em; cursor:pointer; border:none; border-radius:5px; background:#00b386; color:white; font-weight:bold; transition:0.2s; }
-nav button.active { background:#007f66; }
-.tab { display:none; padding:0 1em; }
-.tab.active { display:block; }
-#cardsContainer { display:flex; flex-wrap:wrap; justify-content:center; margin-bottom:10px; }
-.card { border-radius:12px; width:220px; margin:10px; position:relative; cursor:pointer; overflow:hidden; box-shadow:0 0 5px #007f66; transition: transform 0.2s, box-shadow 0.2s; }
-.card:hover { transform: scale(1.05); box-shadow:0 0 15px #00b386; }
-.card-header { height:50px; display:flex; justify-content:center; align-items:center; font-weight:bold; color:white; text-shadow:1px 1px #000; font-size:1em; }
-.card img { width:100%; height:150px; object-fit:cover; border-bottom:2px solid #007f66; }
-.card-body { padding:5px; }
-.elements, .continents { margin:3px 0; font-size:1.2em; }
-.stat-bar { height:10px; border-radius:5px; background:#ccc; margin:2px 0; overflow:hidden; }
-.stat-fill { height:100%; background:#00b386; }
-.card .rarity { position:absolute; top:8px; left:8px; padding:2px 6px; border-radius:5px; font-weight:bold; text-shadow:0 0 3px #000; }
 
-/* Pokémon-style gradients + holo effects */
-.Common { border:2px solid gray; }
-.Uncommon { border:2px solid green; background:linear-gradient(135deg, #a6f2c8, #66ffcc);}
-.Rare { border:2px solid blue; background:linear-gradient(135deg, #99ccff, #66ffff); }
-.Epic { border:2px solid purple; background:linear-gradient(135deg, #cc99ff, #9933ff); }
-.Legendary { border:3px solid gold; background:linear-gradient(135deg, gold, #ffff99); animation:holo 2s infinite alternate; }
-@keyframes holo { 0% { box-shadow:0 0 10px gold;} 50% { box-shadow:0 0 20px gold;} 100% { box-shadow:0 0 30px gold;} }
+body{
+background:#d9fff5;
+font-family:system-ui;
+margin:0;
+}
 
-input, button { margin:5px 0; padding:5px; border-radius:5px; border:none; }
-.badge { display:inline-block; margin:5px; padding:10px; border-radius:50%; background:#00b386; color:white; font-size:0.7em; text-align:center; width:60px; height:60px; line-height:1em; text-shadow:0 0 2px #000; transition:0.3s;}
-.badge.locked { background:#ccc; color:#666; }
+header{
+background:#7fffd4;
+padding:15px;
+text-align:center;
+font-weight:bold;
+font-size:28px;
+}
 
-#modal {display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);justify-content:center;align-items:center;}
-#modalContent {background:#d6fff5;padding:20px;border-radius:12px;max-width:400px;position:relative;}
-#modalClose {position:absolute;top:5px;right:10px;cursor:pointer;font-weight:bold;}
-#map { height:400px; margin:10px 0; border-radius:12px; }
+nav{
+display:flex;
+justify-content:center;
+gap:10px;
+padding:10px;
+}
+
+nav button{
+padding:8px 16px;
+border:none;
+border-radius:10px;
+background:#00bfa6;
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+
+.tab{display:none;padding:15px;}
+.active{display:block;}
+
+#cardsContainer{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+}
+
+.card{
+width:260px;
+border-radius:18px;
+margin:14px;
+overflow:hidden;
+box-shadow:0 10px 25px rgba(0,0,0,0.25);
+cursor:pointer;
+transition:.25s;
+}
+
+.card:hover{
+transform:translateY(-6px) scale(1.02);
+}
+
+.card-header{
+display:flex;
+justify-content:space-between;
+padding:10px 14px;
+font-weight:700;
+font-size:18px;
+color:white;
+}
+
+.card-image{
+padding:14px;
+}
+
+.card-image img{
+width:100%;
+height:160px;
+object-fit:cover;
+border-radius:14px;
+border:2px solid rgba(255,255,255,0.6);
+}
+
+.card-body{
+background:rgba(255,255,255,0.9);
+padding:12px;
+}
+
+.move{
+display:flex;
+justify-content:space-between;
+font-weight:bold;
+}
+
+.move-desc{
+font-size:12px;
+opacity:.7;
+margin:6px 0 10px;
+}
+
+.stats{
+display:flex;
+gap:14px;
+font-size:13px;
+font-weight:bold;
+}
+
+.card-footer{
+display:flex;
+justify-content:space-between;
+padding:10px;
+font-weight:bold;
+}
+
+.Common{background:linear-gradient(135deg,#e9e9e9,#d2d2d2)}
+.Uncommon{background:linear-gradient(135deg,#7ed957,#4ac12c)}
+.Rare{background:linear-gradient(135deg,#5ab3ff,#2a86ff)}
+.Epic{background:linear-gradient(135deg,#c17dff,#7a2bff)}
+.Legendary{
+background:linear-gradient(135deg,#ffd95b,#ffb300);
+animation:legendaryGlow 3s infinite alternate;
+}
+
+@keyframes legendaryGlow{
+from{box-shadow:0 0 10px gold}
+to{box-shadow:0 0 25px gold}
+}
+
+.badge{
+display:inline-block;
+background:#00bfa6;
+padding:10px;
+margin:5px;
+border-radius:50%;
+color:white;
+font-weight:bold;
+}
+
+#map{height:400px;margin-top:20px}
+
+#modal{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.7);
+display:none;
+align-items:center;
+justify-content:center;
+}
+
+#modalContent{
+background:white;
+padding:20px;
+border-radius:15px;
+width:350px;
+}
+
 </style>
 </head>
+
 <body>
 
-<header>
-<h1>WildDex</h1>
-</header>
+<header>🌿 WildDex</header>
 
 <nav>
-<button class="tab-btn active" onclick="openTab('log')">Log</button>
-<button class="tab-btn" onclick="openTab('catches')">Catches</button>
-<button class="tab-btn" onclick="openTab('badges')">Badges</button>
+<button onclick="openTab('log')">Log</button>
+<button onclick="openTab('catches')">Catches</button>
+<button onclick="openTab('badges')">Badges</button>
 </nav>
 
 <div id="log" class="tab active">
 <input id="animalName" placeholder="Enter animal name">
-<button onclick="logAnimal()">✨ Log Animal</button>
+<button onclick="logAnimal()">Log Animal</button>
 </div>
 
 <div id="catches" class="tab">
@@ -71,183 +187,286 @@ input, button { margin:5px 0; padding:5px; border-radius:5px; border:none; }
 
 <div id="modal">
 <div id="modalContent">
-<span id="modalClose" onclick="closeModal()">X</span>
 <div id="modalInner"></div>
+<button onclick="closeModal()">Close</button>
 </div>
 </div>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
 <script>
-let animals = JSON.parse(localStorage.getItem('animals') || '[]');
 
-const elements = ["Fire","Water","Grass","Electric","Ice","Flying","Poison","Dark","Normal","Steel","Psychic","Ground","Rock","Bug","Dragon","Fairy"];
-const elementSymbols = { Fire:"🔥", Water:"💧", Grass:"🌿", Electric:"⚡", Ice:"❄️", Flying:"🕊️", Poison:"☠️", Dark:"🌑", Normal:"🔹", Steel:"⚙️", Psychic:"🔮", Ground:"🌍", Rock:"🪨", Bug:"🐛", Dragon:"🐉", Fairy:"✨" };
-const continentSymbols = { Africa:"🌍", Antarctica:"❄️", Asia:"🗻", Europe:"🏰", "North America":"🏞️", "South America":"🌋", Oceania:"🏝️", Worldwide:"🌐" };
+let animals=JSON.parse(localStorage.getItem("animals")||"[]")
 
-// Continent coordinates for map markers
-const continentCoords = {
-  "Africa":[0,20], "Antarctica":[-75,0], "Asia":[30,100], "Europe":[50,15], "North America":[40,-100], "South America":[-15,-60], "Oceania":[-25,135], "Worldwide":[0,0]
-};
+const elementSymbols={
+Water:"💧",Fire:"🔥",Grass:"🌿",Electric:"⚡",
+Ice:"❄️",Flying:"🕊️",Poison:"☠️",
+Normal:"🔹",Dark:"🌑"
+}
 
-// Realistic habitats & continents
-const habitatMap = {
-  "Humpback Whale":["Ocean"], "Bald Eagle":["Forests","Mountains"], "Lion":["Savanna"], "Penguin":["Coasts","Ice"],
-  "Porcupine":["Forest"], "Mantis Shrimp":["Ocean"], "Polar Bear":["Arctic"], "Cheetah":["Savanna"], "Frog":["Swamps","Ponds"]
-};
-const continentMap = {
-  "Humpback Whale":["North America","South America","Africa"],
-  "Bald Eagle":["North America"],
-  "Lion":["Africa"],
-  "Penguin":["Antarctica","Oceania"],
-  "Porcupine":["North America"],
-  "Mantis Shrimp":["Worldwide"],
-  "Polar Bear":["Arctic"],
-  "Cheetah":["Africa"],
-  "Frog":["Worldwide"]
-};
+const continentSymbols={
+Africa:"🌍",Asia:"🗻",Europe:"🏰",
+"North America":"🏞️","South America":"🌋",
+Oceania:"🏝️",Antarctica:"❄️",Worldwide:"🌐"
+}
 
-// Assign elements, moves, habitats, continents
+const continentCoords={
+Africa:[0,20],
+Asia:[30,100],
+Europe:[50,15],
+"North America":[40,-100],
+"South America":[-15,-60],
+Oceania:[-25,135],
+Antarctica:[-75,0],
+Worldwide:[0,0]
+}
+
+const continentMap={
+"Lion":["Africa"],
+"African Lion":["Africa"],
+"Polar Bear":["Antarctica"],
+"Bald Eagle":["North America"],
+"Kangaroo":["Oceania"],
+"Tiger":["Asia"]
+}
+
+function fetchAnimalImage(name){
+return `https://source.unsplash.com/600x400/?${name},animal`
+}
+
 function assignElements(name){
-  name = name.toLowerCase(); const assigned=[];
-  if(name.includes("whale")||name.includes("shark")||name.includes("fish")) assigned.push("Water");
-  if(name.includes("eagle")||name.includes("bat")||name.includes("hawk")) assigned.push("Flying");
-  if(name.includes("lion")||name.includes("cheetah")||name.includes("bear")) assigned.push("Normal");
-  if(name.includes("penguin")||name.includes("polar")) assigned.push("Ice");
-  if(name.includes("mantis")||name.includes("scorpion")||name.includes("snake")) assigned.push("Poison");
-  if(assigned.length===0) assigned.push(elements[Math.floor(Math.random()*elements.length)]);
-  return assigned.slice(0,2);
+
+name=name.toLowerCase()
+
+let e=[]
+
+if(name.includes("bear")) e.push("Normal","Ice")
+else if(name.includes("lion")||name.includes("tiger")) e.push("Fire")
+else if(name.includes("eagle")||name.includes("hawk")) e.push("Flying")
+else if(name.includes("frog")) e.push("Water","Grass")
+else e.push("Normal")
+
+return e
+}
+
+function assignContinents(name){
+
+for(const key in continentMap){
+
+if(name.toLowerCase().includes(key.toLowerCase()))
+return continentMap[key]
+
+}
+
+return ["Worldwide"]
+}
+
+function assignRarity(){
+
+let r=Math.random()
+
+if(r<0.5) return "Common"
+if(r<0.75) return "Uncommon"
+if(r<0.9) return "Rare"
+if(r<0.98) return "Epic"
+return "Legendary"
 }
 
 function generateMove(name){
-  name = name.toLowerCase();
-  if(name.includes("eagle")) return "Sky Dive";
-  if(name.includes("lion")) return "Pounce";
-  if(name.includes("porcupine")) return "Quill Barrage";
-  if(name.includes("mantis")) return "Sonic Punch";
-  if(name.includes("whale")) return "Water Slam";
-  if(name.includes("cheetah")) return "Blazing Sprint";
-  if(name.includes("polar")) return "Ice Slam";
-  if(name.includes("frog")) return "Leap Strike";
-  return name+" Tackle";
+
+name=name.toLowerCase()
+
+if(name.includes("lion")) return "Savannah Roar"
+if(name.includes("bear")) return "Ice Slam"
+if(name.includes("eagle")) return "Sky Dive"
+
+return "Wild Strike"
 }
 
-function assignHabitats(name){ return habitatMap[name] || ["Various"]; }
-function assignContinents(name){ return continentMap[name] || ["Worldwide"]; }
+function openTab(tab){
 
-function assignRarity(){ const r=Math.random(); if(r<0.5) return "Common"; if(r<0.75) return "Uncommon"; if(r<0.9) return "Rare"; if(r<0.98) return "Epic"; return "Legendary"; }
-function fetchAnimalImage(name){ return `https://source.unsplash.com/200x200/?${encodeURIComponent(name)}`; }
+document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"))
+document.getElementById(tab).classList.add("active")
 
-function openTab(name){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById(name).classList.add('active');
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelector(`button[onclick="openTab('${name}')"]`).classList.add('active');
 }
 
 function logAnimal(){
-  const nameInput=document.getElementById("animalName"); const name=nameInput.value.trim(); 
-  if(!name) return alert("Enter an animal name!");
-  const animal={
-    id:Date.now(),
-    name:name,
-    elements:assignElements(name),
-    continents:assignContinents(name),
-    habitats:assignHabitats(name),
-    rarity:assignRarity(),
-    attack:Math.floor(Math.random()*100),
-    defense:Math.floor(Math.random()*100),
-    move:generateMove(name),
-    image:fetchAnimalImage(name)
-  };
-  animals.push(animal);
-  localStorage.setItem('animals', JSON.stringify(animals));
-  nameInput.value="";
-  renderAnimals();
-  updateBadges();
-  renderMap();
+
+let name=document.getElementById("animalName").value
+
+if(!name) return
+
+let animal={
+
+id:Date.now(),
+name:name,
+elements:assignElements(name),
+continents:assignContinents(name),
+rarity:assignRarity(),
+attack:Math.floor(Math.random()*100),
+defense:Math.floor(Math.random()*100),
+move:generateMove(name),
+image:fetchAnimalImage(name)
+
+}
+
+animals.push(animal)
+
+localStorage.setItem("animals",JSON.stringify(animals))
+
+renderAnimals()
+updateBadges()
+renderMap()
+
 }
 
 function renderAnimals(){
-  const container=document.getElementById("cardsContainer");
-  container.innerHTML="";
-  animals.forEach(a=>{
-    const elemSymbols=a.elements.map(e=>elementSymbols[e]||e).join(" ");
-    const contSymbols=a.continents.map(c=>continentSymbols[c]||c).join(" ");
-    const card=document.createElement("div");
-    card.className=`card ${a.rarity}`;
-    card.innerHTML=`
-      <div class="card-header">${a.name}</div>
-      <img src="${a.image}">
-      <div class="card-body">
-        <div class="elements">${elemSymbols}</div>
-        <div class="continents">${contSymbols}</div>
-        <div>ATK:<div class="stat-bar"><div class="stat-fill" style="width:${a.attack}%;"></div></div></div>
-        <div>DEF:<div class="stat-bar"><div class="stat-fill" style="width:${a.defense}%;"></div></div></div>
-        <div>Move: ${a.move}</div>
-      </div>`;
-    card.addEventListener("click",()=>showModal(a.id));
-    container.appendChild(card);
-  });
+
+let container=document.getElementById("cardsContainer")
+
+container.innerHTML=""
+
+animals.forEach(a=>{
+
+let elem=a.elements.map(e=>elementSymbols[e]).join(" ")
+
+let cont=a.continents.map(c=>continentSymbols[c]).join(" ")
+
+let card=document.createElement("div")
+
+card.className=`card ${a.rarity}`
+
+card.innerHTML=`
+
+<div class="card-header">
+<span>${elem}</span>
+<span>${a.name}</span>
+</div>
+
+<div class="card-image">
+<img src="${a.image}">
+</div>
+
+<div class="card-body">
+
+<div class="move">
+<span>${a.move}</span>
+<span>${a.attack}</span>
+</div>
+
+<div class="move-desc">
+WildDex behaviour move based on species traits.
+</div>
+
+<div class="stats">
+<div>ATK ${a.attack}</div>
+<div>DEF ${a.defense}</div>
+</div>
+
+</div>
+
+<div class="card-footer">
+<div>${cont}</div>
+<div>${a.rarity}</div>
+</div>
+
+`
+
+card.onclick=()=>showModal(a.id)
+
+container.appendChild(card)
+
+})
+
 }
 
 function showModal(id){
-  const animal=animals.find(a=>a.id===id); if(!animal) return;
-  document.getElementById('modal').style.display='flex';
-  const elemSymbols=animal.elements.map(e=>elementSymbols[e]||e).join(" ");
-  const contSymbols=animal.continents.map(c=>continentSymbols[c]||c).join(" ");
-  const habitatsStr=animal.habitats.join(", ");
-  document.getElementById('modalInner').innerHTML=`
-    <h2>${animal.name}</h2>
-    <img src="${animal.image}" style="width:100%;border-radius:8px;">
-    <p><strong>Elements:</strong> ${elemSymbols}</p>
-    <p><strong>Continents:</strong> ${contSymbols}</p>
-    <p><strong>Habitats:</strong> ${habitatsStr}</p>
-    <p><strong>Rarity:</strong> ${animal.rarity}</p>
-    <p><strong>Attack:</strong> ${animal.attack} | <strong>Defense:</strong> ${animal.defense}</p>
-    <p><strong>Move:</strong> ${animal.move}</p>
-    <button onclick="releaseAnimal(${animal.id});closeModal()">Release Animal</button>`;
+
+let a=animals.find(x=>x.id===id)
+
+document.getElementById("modal").style.display="flex"
+
+document.getElementById("modalInner").innerHTML=`
+
+<h2>${a.name}</h2>
+
+<img src="${a.image}" width="100%">
+
+<p><b>Move:</b> ${a.move}</p>
+<p><b>Elements:</b> ${a.elements.join(", ")}</p>
+<p><b>Continents:</b> ${a.continents.join(", ")}</p>
+<p><b>ATK:</b> ${a.attack} DEF: ${a.defense}</p>
+
+<button onclick="releaseAnimal(${a.id})">Release</button>
+
+`
+
 }
 
-function closeModal(){ document.getElementById('modal').style.display='none'; }
+function closeModal(){
+
+document.getElementById("modal").style.display="none"
+
+}
 
 function releaseAnimal(id){
-  animals=animals.filter(a=>a.id!==id);
-  localStorage.setItem('animals', JSON.stringify(animals));
-  renderAnimals();
-  updateBadges();
-  renderMap();
+
+animals=animals.filter(a=>a.id!==id)
+
+localStorage.setItem("animals",JSON.stringify(animals))
+
+renderAnimals()
+updateBadges()
+renderMap()
+
 }
 
 function updateBadges(){
-  const badgeDiv=document.getElementById("badgeList");
-  badgeDiv.innerHTML="";
-  if(animals.length>=1) badgeDiv.innerHTML+=`<div class="badge">🎉 1</div>`;
-  if(animals.length>=10) badgeDiv.innerHTML+=`<div class="badge">🌿 10</div>`;
-  if(animals.length>=50) badgeDiv.innerHTML+=`<div class="badge">🦁 50</div>`;
-  if(animals.some(a=>a.rarity==="Legendary")) badgeDiv.innerHTML+=`<div class="badge">⭐ L</div>`;
+
+let b=document.getElementById("badgeList")
+
+b.innerHTML=""
+
+if(animals.length>=1) b.innerHTML+=`<div class="badge">Explorer</div>`
+if(animals.length>=10) b.innerHTML+=`<div class="badge">Naturalist</div>`
+if(animals.length>=50) b.innerHTML+=`<div class="badge">Zoologist</div>`
+
 }
 
-// Initialize map
-let map = L.map('map').setView([20,0], 2);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:5, attribution:'&copy; OpenStreetMap contributors'}).addTo(map);
-let markers=[];
+let map=L.map('map').setView([20,0],2)
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:5}).addTo(map)
+
+let markers=[]
 
 function renderMap(){
-  markers.forEach(m=>map.removeLayer(m));
-  markers=[];
-  animals.forEach(a=>{
-    a.continents.forEach(c=>{
-      const coords=continentCoords[c]||[0,0];
-      const marker=L.marker(coords).addTo(map).bindPopup(`${a.name} (${c})`);
-      markers.push(marker);
-    });
-  });
+
+markers.forEach(m=>map.removeLayer(m))
+
+markers=[]
+
+animals.forEach(a=>{
+
+a.continents.forEach(c=>{
+
+let coords=continentCoords[c]
+
+let marker=L.marker(coords).addTo(map)
+
+marker.bindPopup(a.name+" - "+c)
+
+markers.push(marker)
+
+})
+
+})
+
 }
 
-// Initialize
-renderAnimals();
-updateBadges();
-renderMap();
+renderAnimals()
+updateBadges()
+renderMap()
+
 </script>
 
 </body>
