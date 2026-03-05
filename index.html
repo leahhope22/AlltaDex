@@ -2,15 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>WildDex Realistic v18</title>
+<title>WildDex Realistic v19</title>
 <style>
+/* --- Global --- */
 body{font-family:Arial;margin:0;background:linear-gradient(135deg,#b7e4d7,#d7f2ff);}
 .tabs{display:flex;background:#2c3e50;color:white;}
 .tab{padding:14px 22px;cursor:pointer;}
 .tab.active{background:#1abc9c;}
 .section{display:none;padding:25px;}
 .section.active{display:block;}
-input{padding:10px;font-size:16px;border-radius:8px;border:none;width:240px;}
+input, select{padding:10px;font-size:16px;border-radius:8px;border:none;width:240px;}
 button{padding:10px 18px;border:none;border-radius:8px;background:#1abc9c;color:white;font-size:16px;cursor:pointer;margin-left:10px;}
 .collection{display:grid;grid-template-columns:repeat(auto-fill,260px);gap:24px;}
 .card{border-radius:18px;overflow:hidden;color:white;position:relative;display:flex;flex-direction:column;transition:.25s;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.25);}
@@ -43,52 +44,46 @@ button{padding:10px 18px;border:none;border-radius:8px;background:#1abc9c;color:
 .card.flying{background:linear-gradient(135deg,#89f7fe,#66a6ff);}
 .card.normal{background:linear-gradient(135deg,#bdbdbd,#e0e0e0);}
 
-/* Particle overlay containers */
-.card::before{
-  content:"";position:absolute;top:0;left:0;width:100%;height:100%;border-radius:18px;pointer-events:none;z-index:1;
-  background-repeat:no-repeat;background-position:center;background-size:cover;
-}
-
-/* FIRE realistic flames */
-.card.fire::before{
-  background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="%23FFD700" d="M10 0 C8 5,12 5,10 10 C14 8,12 12,10 20 C6 12,8 8,10 0 Z"/></svg>');
-  background-size:20px 20px;animation:fireFlicker 1s linear infinite;
-}
+/* Particle overlay */
+.card::before{content:"";position:absolute;top:0;left:0;width:100%;height:100%;border-radius:18px;pointer-events:none;z-index:1;background-repeat:no-repeat;background-position:center;background-size:cover;}
+.card.fire::before{background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="%23FFD700" d="M10 0 C8 5,12 5,10 10 C14 8,12 12,10 20 C6 12,8 8,10 0 Z"/></svg>');background-size:20px 20px;animation:fireFlicker 1s linear infinite;}
 @keyframes fireFlicker{0%{background-position:0 0;}25%{background-position:5px 2px;}50%{background-position:2px 5px;}75%{background-position:4px 1px;}100%{background-position:0 0;}}
-
-/* WATER realistic bubbles */
-.card.water::before{
-  background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="8" r="6" fill="rgba(255,255,255,0.3)"/></svg>');
-  background-size:30px 30px;animation:waterRise 6s linear infinite;
-}
+.card.water::before{background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="8" r="6" fill="rgba(255,255,255,0.3)"/></svg>');background-size:30px 30px;animation:waterRise 6s linear infinite;}
 @keyframes waterRise{0%{background-position:0 100%;}100%{background-position:0 -100%;}}
-
-/* GRASS realistic leaves */
-.card.grass::before{
-  background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"><circle cx="5" cy="5" r="4" fill="rgba(255,255,255,0.3)"/></svg>');
-  background-size:20px 20px;animation:grassFloat 5s linear infinite;
-}
+.card.grass::before{background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"><circle cx="5" cy="5" r="4" fill="rgba(255,255,255,0.3)"/></svg>');background-size:20px 20px;animation:grassFloat 5s linear infinite;}
 @keyframes grassFloat{0%{background-position:0 100%;}100%{background-position:0 -100%;}}
-
 </style>
 </head>
 <body>
 
+<!-- Tabs -->
 <div class="tabs">
-  <div class="tab active" onclick="showSection('collection')">Collection</div>
+  <div class="tab active" onclick="showSection('log')">Log</div>
+  <div class="tab" onclick="showSection('catches')">Catches</div>
   <div class="tab" onclick="showSection('badges')">Badges</div>
 </div>
 
-<div id="collection" class="section active">
-  <input id="search" placeholder="Search animals..." oninput="autocomplete(this.value)">
+<!-- --- Log Section --- -->
+<div id="log" class="section active">
+  <h3>Log an Animal</h3>
+  <input id="logInput" placeholder="Type animal name..." oninput="showSuggestions(this.value)">
   <div class="autocomplete-suggestions" id="suggestions"></div>
-  <div class="collection" id="animalCollection"></div>
+  <button onclick="logAnimal()">Log Animal</button>
 </div>
 
+<!-- --- Catches Section --- -->
+<div id="catches" class="section">
+  <h3>Your Catches</h3>
+  <div class="collection" id="catchCollection"></div>
+</div>
+
+<!-- --- Badges Section --- -->
 <div id="badges" class="section">
+  <h3>Your Badges</h3>
   <div class="badges" id="badgeCollection"></div>
 </div>
 
+<!-- Modal -->
 <div class="modal" id="modal">
   <div class="modal-content">
     <span class="modal-close" onclick="closeModal()">×</span>
@@ -107,17 +102,21 @@ function showSection(id){
   document.getElementById(id).classList.add('active');
 }
 
-// Example animal data
+// Animal Database
 const animals=[
-  {name:"Tiger",type:"fire",rarity:"rare",img:"https://placekitten.com/300/160",desc:"Powerful predator."},
-  {name:"Dolphin",type:"water",rarity:"epic",img:"https://placekitten.com/301/160",desc:"Intelligent marine mammal."},
-  {name:"Elephant",type:"normal",rarity:"legendary",img:"https://placekitten.com/302/160",desc:"Giant land mammal."},
-  {name:"Parrot",type:"flying",rarity:"rare",img:"https://placekitten.com/303/160",desc:"Colorful bird."}
+  {name:"Tiger",type:"fire",rarity:"rare",continent:"Asia",img:"https://placekitten.com/300/160",desc:"Powerful predator."},
+  {name:"Dolphin",type:"water",rarity:"epic",continent:"Oceania",img:"https://placekitten.com/301/160",desc:"Intelligent marine mammal."},
+  {name:"Elephant",type:"normal",rarity:"legendary",continent:"Africa",img:"https://placekitten.com/302/160",desc:"Giant land mammal."},
+  {name:"Parrot",type:"flying",rarity:"rare",continent:"South America",img:"https://placekitten.com/303/160",desc:"Colorful bird."},
+  {name:"Polar Bear",type:"ice",rarity:"epic",continent:"North America",img:"https://placekitten.com/304/160",desc:"Arctic predator."}
 ];
 
-// Render cards
-function renderCollection(list){
-  const container=document.getElementById('animalCollection');
+// Logged animals
+let loggedAnimals=[];
+
+// --- Render Cards ---
+function renderCollection(list,containerId){
+  const container=document.getElementById(containerId);
   container.innerHTML='';
   list.forEach(a=>{
     const card=document.createElement('div');
@@ -132,7 +131,7 @@ function renderCollection(list){
   });
 }
 
-// Modal
+// --- Modal ---
 function openModal(animal){
   document.getElementById('modal').style.display='flex';
   document.getElementById('modalImg').src=animal.img;
@@ -141,8 +140,8 @@ function openModal(animal){
 }
 function closeModal(){document.getElementById('modal').style.display='none';}
 
-// Autocomplete
-function autocomplete(query){
+// --- Autocomplete Suggestions ---
+function showSuggestions(query){
   const suggestions=document.getElementById('suggestions');
   suggestions.innerHTML='';
   if(!query)return;
@@ -151,13 +150,56 @@ function autocomplete(query){
       const div=document.createElement('div');
       div.className='autocomplete-suggestion';
       div.innerText=a.name;
-      div.onclick=()=>{document.getElementById('search').value=a.name;suggestions.innerHTML='';renderCollection([a]);};
+      div.onclick=()=>{document.getElementById('logInput').value=a.name;suggestions.innerHTML='';};
       suggestions.appendChild(div);
     });
 }
 
-// Initialize
-renderCollection(animals);
+// --- Log Animal ---
+function logAnimal(){
+  const input=document.getElementById('logInput').value;
+  const animal=animals.find(a=>a.name.toLowerCase()===input.toLowerCase());
+  if(animal && !loggedAnimals.includes(animal)){
+    loggedAnimals.push(animal);
+    renderCollection(loggedAnimals,'catchCollection');
+    updateBadges();
+    document.getElementById('logInput').value='';
+    document.getElementById('suggestions').innerHTML='';
+    alert(`${animal.name} logged!`);
+  } else if(!animal){
+    alert('Animal not found.');
+  } else {
+    alert('Animal already logged.');
+  }
+}
+
+// --- Badges ---
+function updateBadges(){
+  const badgeContainer=document.getElementById('badgeCollection');
+  badgeContainer.innerHTML='';
+  // Badge: Logged an animal from each continent
+  const continents=[...new Set(animals.map(a=>a.continent))];
+  const loggedContinents=[...new Set(loggedAnimals.map(a=>a.continent))];
+  if(continents.every(c=>loggedContinents.includes(c))){
+    const badge=document.createElement('div');
+    badge.className='badge';
+    badge.innerText='🌎 Global Explorer';
+    badgeContainer.appendChild(badge);
+  }
+  // Badge: Logged an animal of each element/type
+  const types=[...new Set(animals.map(a=>a.type))];
+  const loggedTypes=[...new Set(loggedAnimals.map(a=>a.type))];
+  if(types.every(t=>loggedTypes.includes(t))){
+    const badge=document.createElement('div');
+    badge.className='badge';
+    badge.innerText='💥 Element Master';
+    badgeContainer.appendChild(badge);
+  }
+}
+
+// --- Initialize ---
+renderCollection(loggedAnimals,'catchCollection');
+updateBadges();
 </script>
 
 </body>
