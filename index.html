@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WildDex</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #111;
+      color: white;
+      text-align: center;
+    }
+
+    .card {
+      border: 2px solid gold;
+      border-radius: 12px;
+      padding: 10px;
+      margin: 10px;
+      width: 200px;
+      display: inline-block;
+      background: #222;
+    }
+
+    img {
+      width: 100%;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>WildDex</h1>
+
+<input id="animalName" placeholder="Enter animal name">
+<button onclick="addAnimal()">Log Animal</button>
+
+<div id="cards"></div>
+
+<script>
+
+let animals = []
+
+function addAnimal() {
+
+  let name = document.getElementById("animalName").value
+
+  let animal = {
+    name: name,
+    attack: Math.floor(Math.random()*100),
+    defense: Math.floor(Math.random()*100),
+    element: "Normal",
+    image: "https://source.unsplash.com/200x200/?" + name
+  }
+
+  animals.push(animal)
+
+  renderAnimals()
+}
+
+function renderAnimals(){
+
+  let container = document.getElementById("cards")
+  container.innerHTML = ""
+
+  animals.forEach(a => {
+
+    container.innerHTML += `
+      <div class="card">
+        <img src="${a.image}">
+        <h3>${a.name}</h3>
+        <p>Element: ${a.element}</p>
+        <p>ATK: ${a.attack}</p>
+        <p>DEF: ${a.defense}</p>
+      </div>
+    `
+
+  })
+
+}
+
+</script>
+
+</body>
+</html>
