@@ -2,36 +2,22 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>WildDex v8</title>
+<title>WildDex v9</title>
 <style>
-body{font-family:Arial;margin:0;background:linear-gradient(135deg,#b7e4d7,#d7f2ff);}
-.tabs{display:flex;background:#2c3e50;color:white;}
-.tab{padding:14px 22px;cursor:pointer;}
-.tab.active{background:#1abc9c;}
-.section{display:none;padding:25px;}
-.section.active{display:block;}
-input{padding:10px;font-size:16px;border-radius:8px;border:none;width:240px;}
-button{padding:10px 18px;border:none;border-radius:8px;background:#1abc9c;color:white;font-size:16px;cursor:pointer;margin-left:10px;}
-.collection{display:grid;grid-template-columns:repeat(auto-fill,260px);gap:24px;}
-.card{border-radius:18px;overflow:hidden;color:white;box-shadow:0 10px 30px rgba(0,0,0,.25);transition:.25s;cursor:pointer;position:relative;height:350px;}
+body {font-family:Arial;margin:0;background:linear-gradient(135deg,#b7e4d7,#d7f2ff);}
+.tabs {display:flex;background:#2c3e50;color:white;}
+.tab {padding:14px 22px;cursor:pointer;}
+.tab.active {background:#1abc9c;}
+.section {display:none;padding:25px;}
+.section.active {display:block;}
+input {padding:10px;font-size:16px;border-radius:8px;border:none;width:240px;}
+button {padding:10px 18px;border:none;border-radius:8px;background:#1abc9c;color:white;font-size:16px;cursor:pointer;margin-left:10px;}
+.collection {display:grid;grid-template-columns:repeat(auto-fill,260px);gap:24px;}
+.card {border-radius:18px;overflow:hidden;color:white;box-shadow:0 10px 30px rgba(0,0,0,.25);transition:.25s;cursor:pointer;position:relative;height:350px;display:flex;flex-direction:column;}
 .card:hover{transform:scale(1.05);}
-.card::after{content:"";position:absolute;top:0;left:0;width:100%;height:100%;border-radius:inherit;pointer-events:none;}
-.card.common::after{background:none;}
-.card.rare::after{background:repeating-linear-gradient(45deg,rgba(255,255,255,0.15),rgba(255,255,255,0.15) 5px,transparent 5px,transparent 10px);}
-.card.epic::after{background:repeating-linear-gradient(45deg,rgba(255,255,255,0.25),rgba(255,255,255,0.25) 5px,transparent 5px,transparent 10px);animation:epicPulse 2s infinite alternate;}
-.card.legendary::after{background:linear-gradient(135deg,rgba(255,215,0,0.3),rgba(255,215,0,0.1));animation:goldPulse 2s infinite alternate;}
-@keyframes goldPulse{0%{opacity:0.5;}100%{opacity:1;}}
-@keyframes epicPulse{0%{opacity:0.6;}100%{opacity:0.9;}}
-.card.shiny{border:3px solid gold;box-shadow:0 0 25px gold;}
-.fire{background:linear-gradient(135deg,#ff7b4b,#ffcc5c);}
-.water{background:linear-gradient(135deg,#4facfe,#00f2fe);}
-.grass{background:linear-gradient(135deg,#43e97b,#38f9d7);}
-.ice{background:linear-gradient(135deg,#7de2fc,#b9b6e5);}
-.flying{background:linear-gradient(135deg,#89f7fe,#66a6ff);}
-.normal{background:linear-gradient(135deg,#bdbdbd,#e0e0e0);}
+.card img{width:100%;height:160px;object-fit:cover;background:white;border-bottom:2px solid rgba(0,0,0,0.1);}
 .card-header{display:flex;justify-content:space-between;padding:12px;font-weight:bold;}
-.card img{width:100%;height:160px;object-fit:cover;background:white;}
-.card-body{background:rgba(255,255,255,.9);color:black;padding:14px;height:130px;}
+.card-body{background:rgba(255,255,255,.9);color:black;padding:14px;height:130px;flex:1;}
 .stats{display:flex;gap:20px;font-weight:bold;margin-top:8px;}
 .footer{display:flex;justify-content:space-between;margin-top:10px;font-size:14px;}
 .badges{display:flex;flex-wrap:wrap;gap:20px;}
@@ -43,6 +29,36 @@ button{padding:10px 18px;border:none;border-radius:8px;background:#1abc9c;color:
 .autocomplete-suggestions{border:1px solid #ccc;background:white;position:absolute;max-height:150px;overflow-y:auto;z-index:1000;width:250px;}
 .autocomplete-suggestion{padding:5px;cursor:pointer;}
 .autocomplete-suggestion:hover{background:#eee;}
+
+/* --- Element background gradients --- */
+.fire{background:linear-gradient(135deg,#ff7b4b,#ffcc5c);}
+.water{background:linear-gradient(135deg,#4facfe,#00f2fe);}
+.grass{background:linear-gradient(135deg,#43e97b,#38f9d7);}
+.ice{background:linear-gradient(135deg,#7de2fc,#b9b6e5);}
+.flying{background:linear-gradient(135deg,#89f7fe,#66a6ff);}
+.normal{background:linear-gradient(135deg,#bdbdbd,#e0e0e0);}
+
+/* --- Rarity glow on card --- */
+.card.rare {box-shadow:0 0 10px silver,0 10px 30px rgba(0,0,0,.25);}
+.card.epic {box-shadow:0 0 15px purple,0 10px 30px rgba(0,0,0,.25);}
+.card.legendary {box-shadow:0 0 20px gold,0 10px 30px rgba(0,0,0,.25);}
+
+/* --- Element margin pattern --- */
+.card::before {
+  content:"";
+  position:absolute;
+  top:0; left:0; width:100%; height:100%;
+  border-radius:18px;
+  pointer-events:none;
+  box-sizing:border-box;
+  border:6px solid transparent;
+}
+.card.fire::before{border-image: repeating-linear-gradient(45deg,#ff7b4b 0 4px,#ffcc5c 0 8px) 6;}
+.card.water::before{border-image: repeating-linear-gradient(0deg,#4facfe 0 4px,#00f2fe 0 8px) 6;}
+.card.grass::before{border-image: repeating-linear-gradient(45deg,#43e97b 0 4px,#38f9d7 0 8px) 6;}
+.card.ice::before{border-image: repeating-linear-gradient(135deg,#7de2fc 0 4px,#b9b6e5 0 8px) 6;}
+.card.flying::before{border-image: repeating-linear-gradient(90deg,#89f7fe 0 4px,#66a6ff 0 8px) 6;}
+.card.normal::before{border-image: repeating-linear-gradient(45deg,#bdbdbd 0 4px,#e0e0e0 0 8px) 6;}
 </style>
 </head>
 <body>
@@ -81,7 +97,7 @@ button{padding:10px 18px;border:none;border-radius:8px;background:#1abc9c;color:
 </div>
 
 <script>
-// --- Animal Database ---
+// --- Database ---
 const animalDatabase = [
   {name:"African Lion", scientific:"Panthera leo", type:"fire", continent:"Africa", image:"https://upload.wikimedia.org/wikipedia/commons/7/73/Lion_waiting_in_Namibia.jpg"},
   {name:"Tiger", scientific:"Panthera tigris", type:"fire", continent:"Asia", image:"https://upload.wikimedia.org/wikipedia/commons/5/56/Tiger.50.jpg"},
@@ -107,17 +123,14 @@ let currentModalAnimalIndex = null;
 
 // --- Autocomplete ---
 function showSuggestions() {
-  const input = document.getElementById("animalInput");
-  const sugg = document.getElementById("suggestions");
-  const val = input.value.toLowerCase();
-  sugg.innerHTML = "";
-  if (!val) return;
-  animalDatabase.forEach(a => {
+  const val = document.getElementById("animalInput").value.toLowerCase();
+  const sugg = document.getElementById("suggestions"); sugg.innerHTML="";
+  if(!val) return;
+  animalDatabase.forEach(a=>{
     if(a.name.toLowerCase().includes(val)){
-      const div = document.createElement("div");
-      div.className = "autocomplete-suggestion";
-      div.innerText = a.name;
-      div.onclick = ()=>{input.value=a.name;sugg.innerHTML="";};
+      const div=document.createElement("div");
+      div.className="autocomplete-suggestion"; div.innerText=a.name;
+      div.onclick=()=>{document.getElementById("animalInput").value=a.name; sugg.innerHTML="";}
       sugg.appendChild(div);
     }
   });
@@ -127,21 +140,19 @@ function showSuggestions() {
 function random(min,max){return Math.floor(Math.random()*(max-min)+min);}
 function rarity(){let r=Math.random();if(r<0.6)return"common";if(r<0.85)return"rare";if(r<0.97)return"epic";return"legendary";}
 
-// --- Log Animal ---
+// --- Log ---
 function logAnimal(){
-  let name = document.getElementById("animalInput").value.trim();
+  const name = document.getElementById("animalInput").value.trim();
   if(!name) return;
-  let dbAnimal = animalDatabase.find(a=>a.name===name);
+  const dbAnimal = animalDatabase.find(a=>a.name===name);
   if(!dbAnimal){alert("Animal not in database"); return;}
-
   let moves = ["Wild Strike","Heavy Charge"];
   if(dbAnimal.type==="fire") moves=["Flame Pounce","Savage Roar"];
   if(dbAnimal.type==="water") moves=["Tidal Slam","Splash Charge"];
   if(dbAnimal.type==="grass") moves=["Vine Whip","Nature Guard"];
   if(dbAnimal.type==="ice") moves=["Frost Bite","Glacier Punch"];
   if(dbAnimal.type==="flying") moves=["Sky Dive","Wind Slash"];
-
-  let animal = {
+  const animal = {
     name: dbAnimal.name,
     scientific: dbAnimal.scientific,
     type: dbAnimal.type,
@@ -150,37 +161,30 @@ function logAnimal(){
     atk: random(20,100),
     def: random(20,100),
     rarity: rarity(),
-    shiny: Math.random()<0.05,
     move: moves[random(0,moves.length)]
   };
-
   animals.push(animal);
   localStorage.setItem("wilddex", JSON.stringify(animals));
-  renderCollection();
-  renderBadges();
-  document.getElementById("animalInput").value = "";
+  renderCollection(); renderBadges();
+  document.getElementById("animalInput").value="";
 }
 
 // --- Render Collection ---
 function renderCollection(){
-  const grid = document.getElementById("collectionGrid");
-  grid.innerHTML = "";
+  const grid = document.getElementById("collectionGrid"); grid.innerHTML="";
   animals.forEach((a,i)=>{
-    const card = document.createElement("div");
-    card.className = "card " + a.type + " " + a.rarity + (a.shiny?" shiny":"");
-    card.onclick = ()=>openModal(i);
-    let imgHtml = `<img src="${a.image}" onerror="this.onerror=null;this.src='https://via.placeholder.com/260x160?text=No+Image'">`;
-    card.innerHTML = `
+    const card=document.createElement("div");
+    card.className=`card ${a.type} ${a.rarity}`;
+    card.onclick=()=>openModal(i);
+    const img=`<img src="${a.image}" onerror="this.onerror=null;this.src='https://via.placeholder.com/260x160?text=No+Image'">`;
+    card.innerHTML=`
       <div class="card-header"><span>${a.name}</span><span>HP ${a.atk+a.def}</span></div>
-      ${imgHtml}
+      ${img}
       <div class="card-body">
         <div><b>${a.scientific}</b></div>
         <div><b>${a.move}</b></div>
         <div class="stats"><span>ATK ${a.atk}</span><span>DEF ${a.def}</span></div>
-        <div class="footer">
-          <span>${typeIcons[a.type]} ${a.type}</span>
-          <span>${continentIcons[a.continent]} ${a.continent}</span>
-        </div>
+        <div class="footer"><span>${typeIcons[a.type]} ${a.type}</span><span>${continentIcons[a.continent]} ${a.continent}</span></div>
       </div>`;
     grid.appendChild(card);
   });
@@ -201,12 +205,10 @@ function renderBadges(){
 // --- Modal ---
 function openModal(index){
   currentModalAnimalIndex=index;
-  const a=animals[index];
-  const modal=document.getElementById("modal");
+  const a=animals[index]; const modal=document.getElementById("modal");
   const content=document.getElementById("modalContent");
-  const modalImage = `<img src="${a.image}" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x220?text=No+Image'">`;
-  content.innerHTML = `
-    ${modalImage}
+  content.innerHTML=`
+    <img src="${a.image}" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x220?text=No+Image'">
     <h3>${a.name}</h3>
     <p><b>Scientific Name:</b> ${a.scientific}</p>
     <p><b>Move:</b> ${a.move}</p>
@@ -222,10 +224,8 @@ function closeModal(){document.getElementById("modal").style.display="none";}
 function releaseAnimal(){
   if(currentModalAnimalIndex!==null){
     animals.splice(currentModalAnimalIndex,1);
-    localStorage.setItem("wilddex", JSON.stringify(animals));
-    renderCollection();
-    renderBadges();
-    closeModal();
+    localStorage.setItem("wilddex",JSON.stringify(animals));
+    renderCollection(); renderBadges(); closeModal();
   }
 }
 
@@ -238,9 +238,8 @@ function openTab(id,event){
 }
 window.onclick=function(e){if(e.target==document.getElementById("modal")) closeModal();}
 
-// --- Initial Render ---
-renderCollection();
-renderBadges();
+// --- Initial render ---
+renderCollection(); renderBadges();
 </script>
 </body>
 </html>
