@@ -4,74 +4,70 @@
 <meta charset="UTF-8">
 <title>WildDex</title>
 <style>
-  body { font-family: Arial; background:#111; color:white; margin:0; padding:0;}
-  header { background:#222; padding:1em; text-align:center;}
-  header h1 { margin:0; color:gold; }
-  nav { display:flex; justify-content:center; margin:1em 0;}
-  nav button { margin:0 5px; padding:0.5em 1em; cursor:pointer; border:none; border-radius:5px;}
-  nav button.active { background:gold; color:black;}
-  .tab { display:none; padding:0 1em;}
-  .tab.active { display:block;}
+body { font-family: Arial; background:#111; color:white; margin:0; padding:0;}
+header { background:#222; padding:1em; text-align:center;}
+header h1 { margin:0; color:gold; font-family: "Pokemon", sans-serif;}
+nav { display:flex; justify-content:center; margin:1em 0;}
+nav button { margin:0 5px; padding:0.5em 1em; cursor:pointer; border:none; border-radius:5px;}
+nav button.active { background:gold; color:black;}
+.tab { display:none; padding:0 1em;}
+.tab.active { display:block;}
 
-  /* Card styles */
-  .card { border-radius:12px; padding:10px; margin:10px; width:200px; display:inline-block; background:#222; position:relative;}
-  .card img { width:100%; border-radius:8px; }
-  .card .element { position:absolute; top:8px; right:8px; padding:2px 5px; border-radius:5px; font-weight:bold; }
-  .card .rarity { position:absolute; top:8px; left:8px; padding:2px 5px; border-radius:5px; font-weight:bold; }
+/* Card Styles */
+.card { border-radius:12px; padding:10px; margin:10px; width:220px; display:inline-block; background:#222; position:relative; box-shadow: 0 0 5px #000; transition: transform 0.2s;}
+.card:hover { transform: scale(1.05); }
+.card img { width:100%; border-radius:8px; }
+.card .element { position:absolute; top:8px; right:8px; padding:2px 5px; border-radius:5px; font-weight:bold; }
+.card .rarity { position:absolute; top:8px; left:8px; padding:2px 5px; border-radius:5px; font-weight:bold; }
 
-  /* Element Colors */
-  .Fire { background:red; color:white; }
-  .Water { background:blue; color:white; }
-  .Grass { background:green; color:white; }
-  .Electric { background:yellow; color:black; }
-  .Ice { background:cyan; color:black; }
-  .Flying { background:skyblue; color:black; }
-  .Poison { background:purple; color:white; }
-  .Dark { background:#333; color:white; }
-  .Normal { background:gray; color:white; }
+/* Element Colors */
+.Fire { background: linear-gradient(45deg, #ff4d4d, #ff9900); color:white; }
+.Water { background: linear-gradient(45deg, #3399ff, #00ccff); color:white; }
+.Grass { background: linear-gradient(45deg, #33cc33, #66ff66); color:white; }
+.Electric { background: linear-gradient(45deg, #ffff66, #ffcc00); color:black; }
+.Ice { background: linear-gradient(45deg, #66ffff, #00cccc); color:black; }
+.Flying { background: linear-gradient(45deg, #99ccff, #3399ff); color:black; }
+.Poison { background: linear-gradient(45deg, #cc33ff, #9933cc); color:white; }
+.Dark { background: linear-gradient(45deg, #666666, #111111); color:white; }
+.Normal { background: linear-gradient(45deg, #999999, #666666); color:white; }
 
-  /* Rarity colors */
-  .Common { border:2px solid gray; }
-  .Uncommon { border:2px solid green; }
-  .Rare { border:2px solid blue; }
-  .Epic { border:2px solid purple; }
-  .Legendary { border:2px solid gold; animation: pulse 1.5s infinite; }
+/* Rarity Effects */
+.Common { border:2px solid gray; }
+.Uncommon { border:2px solid green; }
+.Rare { border:2px solid blue; background: linear-gradient(45deg, #3333ff, #66ccff); }
+.Epic { border:2px solid purple; background: linear-gradient(45deg, #9933ff, #cc99ff); }
+.Legendary { border:3px solid gold; background: linear-gradient(135deg, gold, #ffff66); animation: holo 2s infinite alternate; }
+@keyframes holo { 0% { box-shadow:0 0 10px gold;} 100% { box-shadow:0 0 30px gold; } }
 
-  @keyframes pulse {
-    0% { box-shadow: 0 0 5px gold; }
-    50% { box-shadow: 0 0 20px gold; }
-    100% { box-shadow: 0 0 5px gold; }
-  }
-
-  input, select, button { margin:5px 0; padding:5px; border-radius:5px; border:none;}
+input, select, button { margin:5px 0; padding:5px; border-radius:5px; border:none;}
 </style>
 </head>
 <body>
 
 <header>
-  <h1>WildDex</h1>
+<h1>WildDex</h1>
 </header>
 
 <nav>
-  <button class="tab-btn active" onclick="openTab('log')">Log</button>
-  <button class="tab-btn" onclick="openTab('catches')">Catches</button>
-  <button class="tab-btn" onclick="openTab('badges')">Badges</button>
+<button class="tab-btn active" onclick="openTab('log')">Log</button>
+<button class="tab-btn" onclick="openTab('catches')">Catches</button>
+<button class="tab-btn" onclick="openTab('badges')">Badges</button>
 </nav>
 
 <!-- Log Tab -->
 <div id="log" class="tab active">
-  <input id="animalName" placeholder="Enter common or scientific name">
-  <button onclick="logAnimal()">✨ Log Animal</button>
+<input id="animalName" placeholder="Enter common or scientific name">
+<button onclick="logAnimal()">✨ Log Animal</button>
 </div>
 
 <!-- Catches Tab -->
 <div id="catches" class="tab">
-  <div id="cards"></div>
+<div id="cards"></div>
 </div>
 
 <!-- Badges Tab -->
 <div id="badges" class="tab">
-  <ul id="badgeList"></ul>
+<ul id="badgeList"></ul>
 </div>
 
 <script>
@@ -83,98 +79,95 @@ const rarities = ["Common","Uncommon","Rare","Epic","Legendary"];
 
 // Tab switching
 function openTab(name){
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById(name).classList.add('active');
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelector(`button[onclick="openTab('${name}')"]`).classList.add('active');
+document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+document.getElementById(name).classList.add('active');
+document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+document.querySelector(`button[onclick="openTab('${name}')"]`).classList.add('active');
 }
 
-// Auto-assign element based on simple rules
+// Assign element based on name
 function assignElement(name){
-  const n = name.toLowerCase();
-  if(n.includes("shark") || n.includes("fish") || n.includes("dolphin")) return "Water";
-  if(n.includes("eagle") || n.includes("sparrow")) return "Flying";
-  if(n.includes("snake") || n.includes("spider") || n.includes("scorpion")) return "Poison";
-  if(n.includes("lion") || n.includes("tiger")) return "Dark";
-  if(n.includes("fox") || n.includes("rabbit")) return "Normal";
-  return elements[Math.floor(Math.random()*elements.length)];
+const n = name.toLowerCase();
+if(n.includes("shark") || n.includes("fish") || n.includes("dolphin")) return "Water";
+if(n.includes("eagle") || n.includes("sparrow")) return "Flying";
+if(n.includes("snake") || n.includes("spider") || n.includes("scorpion")) return "Poison";
+if(n.includes("lion") || n.includes("tiger")) return "Dark";
+if(n.includes("fox") || n.includes("rabbit")) return "Normal";
+return elements[Math.floor(Math.random()*elements.length)];
 }
 
-// Random rarity
+// Assign rarity with probabilities
 function assignRarity(){
-  const r = Math.random();
-  if(r<0.5) return "Common";
-  if(r<0.75) return "Uncommon";
-  if(r<0.9) return "Rare";
-  if(r<0.98) return "Epic";
-  return "Legendary";
+const r = Math.random();
+if(r<0.5) return "Common";
+if(r<0.75) return "Uncommon";
+if(r<0.9) return "Rare";
+if(r<0.98) return "Epic";
+return "Legendary";
 }
 
-// Generate random move based on name
-function generateMove(name){
-  return name + " Strike";
-}
+// Generate move
+function generateMove(name){ return name+" Strike"; }
 
 // Log Animal
 function logAnimal(){
-  const nameInput = document.getElementById("animalName");
-  const name = nameInput.value.trim();
-  if(!name) return alert("Enter an animal name!");
+const nameInput = document.getElementById("animalName");
+const name = nameInput.value.trim();
+if(!name) return alert("Enter an animal name!");
 
-  const animal = {
-    name,
-    element: assignElement(name),
-    rarity: assignRarity(),
-    attack: Math.floor(Math.random()*100),
-    defense: Math.floor(Math.random()*100),
-    move: generateMove(name),
-    image: "https://source.unsplash.com/200x200/?"+encodeURIComponent(name)
-  }
+const animal = {
+name,
+element: assignElement(name),
+rarity: assignRarity(),
+attack: Math.floor(Math.random()*100),
+defense: Math.floor(Math.random()*100),
+move: generateMove(name),
+image: "https://source.unsplash.com/200x200/?"+encodeURIComponent(name)
+}
 
-  animals.push(animal);
-  localStorage.setItem('animals', JSON.stringify(animals));
-  nameInput.value = "";
-  renderAnimals();
-  updateBadges();
+animals.push(animal);
+localStorage.setItem('animals', JSON.stringify(animals));
+nameInput.value = "";
+renderAnimals();
+updateBadges();
 }
 
 // Render Cards
 function renderAnimals(){
-  const container = document.getElementById("cards");
-  container.innerHTML = "";
-  animals.forEach(a=>{
-    container.innerHTML += `
-      <div class="card ${a.rarity}">
-        <img src="${a.image}">
-        <div class="element ${a.element}">${a.element}</div>
-        <div class="rarity">${a.rarity}</div>
-        <h3>${a.name}</h3>
-        <p>ATK: ${a.attack} | DEF: ${a.defense}</p>
-        <p>Move: ${a.move}</p>
-        <button onclick="releaseAnimal('${a.name}')">Release Animal</button>
-      </div>
-    `;
-  });
+const container = document.getElementById("cards");
+container.innerHTML = "";
+animals.forEach(a=>{
+container.innerHTML += `
+<div class="card ${a.rarity}">
+<img src="${a.image}">
+<div class="element ${a.element}">${a.element}</div>
+<div class="rarity">${a.rarity}</div>
+<h3>${a.name}</h3>
+<p>ATK: ${a.attack} | DEF: ${a.defense}</p>
+<p>Move: ${a.move}</p>
+<button onclick="releaseAnimal('${a.name}')">Release Animal</button>
+</div>
+`;
+});
 }
 
 // Release animal
 function releaseAnimal(name){
-  animals = animals.filter(a=>a.name!==name);
-  localStorage.setItem('animals', JSON.stringify(animals));
-  renderAnimals();
-  updateBadges();
+animals = animals.filter(a=>a.name!==name);
+localStorage.setItem('animals', JSON.stringify(animals));
+renderAnimals();
+updateBadges();
 }
 
-// Badge system
+// Badges
 function updateBadges(){
-  badges = [];
-  if(animals.length>=1) badges.push("First Encounter");
-  if(animals.length>=10) badges.push("Budding Naturalist");
-  if(animals.length>=50) badges.push("Field Expert");
-  if(animals.some(a=>a.rarity==="Legendary")) badges.push("Rare Find");
-
-  const badgeList = document.getElementById("badgeList");
-  badgeList.innerHTML = badges.map(b=>`<li>${b}</li>`).join("");
+badges = [];
+if(animals.length>=1) badges.push("First Encounter");
+if(animals.length>=10) badges.push("Budding Naturalist");
+if(animals.length>=50) badges.push("Field Expert");
+if(animals.some(a=>a.rarity==="Legendary")) badges.push("Rare Find");
+const badgeList = document.getElementById("badgeList");
+badgeList.innerHTML = badges.map(b=>`<li>${b}</li>`).join("");
 }
 
 // Initial render
