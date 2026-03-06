@@ -57,69 +57,49 @@ gap:18px;
 justify-content:center;
 }
 
-/* CARD DESIGN */
+/* CARD */
 
 .card{
-border-radius:18px;
-padding:0;
+border-radius:14px;
+padding:10px;
 color:white;
+text-align:center;
 cursor:pointer;
-box-shadow:0 8px 18px rgba(0,0,0,0.25);
-overflow:hidden;
+box-shadow:0 6px 14px rgba(0,0,0,0.25);
 }
 
 /* TYPE COLORS */
 
-.grass{background:linear-gradient(#39b54a,#6edc7d);}
-.fire{background:linear-gradient(#ff7a45,#ffb347);}
+.grass{background:linear-gradient(#4caf50,#7bd87b);}
+.fire{background:linear-gradient(#ff7043,#ffb347);}
 .water{background:linear-gradient(#42a5f5,#7ec8ff);}
-.air{background:linear-gradient(#8ecae6,#bde0fe);}
+.air{background:linear-gradient(#90caf9,#cfe9ff);}
 .dark{background:linear-gradient(#555,#777);}
 
-/* TOP BAR */
+/* CARD HEADER */
 
 .cardHeader{
 display:flex;
 justify-content:space-between;
-padding:8px 10px;
 font-size:12px;
+margin-bottom:6px;
 font-weight:bold;
 }
 
-/* IMAGE AREA */
+/* IMAGE */
 
-.cardImage{
-margin:10px;
-background:rgba(255,255,255,0.25);
-padding:8px;
-border-radius:12px;
-}
-
-.cardImage img{
+.card img{
 width:100%;
-height:120px;
+height:130px;
 object-fit:cover;
 border-radius:8px;
 background:white;
 }
 
-/* INFO AREA */
+/* NAME */
 
-.cardInfo{
-background:#f2f2f2;
-color:#333;
-padding:10px;
-}
-
-.cardInfo h3{
-margin:0;
-font-size:17px;
-}
-
-.science{
-font-size:12px;
-font-style:italic;
-color:#666;
+.card h3{
+margin:8px 0 0;
 }
 
 /* MODAL */
@@ -178,8 +158,6 @@ padding:6px 10px;
 <div class="tab" onclick="openTab('catches')">Catches</div>
 </div>
 
-<!-- LOG TAB -->
-
 <div id="log" class="section active">
 
 <select id="animalSelect">
@@ -190,21 +168,15 @@ padding:6px 10px;
 
 </div>
 
-<!-- CATCH TAB -->
-
 <div id="catches" class="section">
 <div class="grid" id="grid"></div>
 </div>
-
-<!-- MODAL -->
 
 <div id="modal" class="modal">
 <div class="modalContent" id="modalContent"></div>
 </div>
 
 <script>
-
-/* DATABASE */
 
 const animalDatabase=[
 
@@ -247,21 +219,14 @@ image:"https://upload.wikimedia.org/wikipedia/commons/f/f2/Rhinolophus_hipposide
 
 let loggedAnimals=JSON.parse(localStorage.getItem("wilddex"))||[]
 
-/* DROPDOWN */
-
 const select=document.getElementById("animalSelect")
 
 animalDatabase.forEach(a=>{
-
 let option=document.createElement("option")
 option.value=a.name
 option.textContent=a.name
-
 select.appendChild(option)
-
 })
-
-/* LOG ANIMAL */
 
 function logAnimal(){
 
@@ -284,8 +249,6 @@ renderCards()
 
 }
 
-/* RENDER */
-
 function renderCards(){
 
 const grid=document.getElementById("grid")
@@ -305,14 +268,9 @@ card.innerHTML=`
 <span>HP 50</span>
 </div>
 
-<div class="cardImage">
 <img src="${a.image}" onerror="this.src='https://via.placeholder.com/300x180?text=No+Image'">
-</div>
 
-<div class="cardInfo">
 <h3>${a.name}</h3>
-<div class="science">${a.scientific}</div>
-</div>
 
 `
 
@@ -325,8 +283,6 @@ grid.appendChild(card)
 }
 
 renderCards()
-
-/* MODAL */
 
 function openModal(index){
 
@@ -359,9 +315,7 @@ modal.style.display="flex"
 }
 
 function closeModal(){
-
 document.getElementById("modal").style.display="none"
-
 }
 
 function releaseAnimal(index){
@@ -375,8 +329,6 @@ closeModal()
 renderCards()
 
 }
-
-/* TABS */
 
 function openTab(id){
 
