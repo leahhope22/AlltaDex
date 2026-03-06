@@ -384,7 +384,7 @@ function updateBadges(){
   let badgeArea=document.getElementById("badgeArea");
   badgeArea.innerHTML="";
   let continents=[...new Set(logged.map(a=>a.continent))];
-  let elements=[...new Set(logged.map(a=>a.type))];
+let element = Array.isArray(animal.type) ? animal.type[0] : animal.type
   if(continents.length>=3) badgeArea.innerHTML+=`<div class="badge">🌍 Explorer Badge</div>`;
   if(elements.length>=3) badgeArea.innerHTML+=`<div class="badge">⚡ Elementalist Badge</div>`;
   if(logged.length>=5) badgeArea.innerHTML+=`<div class="badge">📘 Field Researcher</div>`;
