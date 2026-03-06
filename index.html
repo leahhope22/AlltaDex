@@ -108,14 +108,14 @@ h1{margin-top:15px;}
   font-size:18px;
 }
 
-/* overlay */
+/* overlay for particle effects */
 .card-overlay{
   position:absolute;
   top:0;
   left:0;
   width:100%;
   height:100%;
-  z-index:1;
+  z-index:0;
   pointer-events:none;
 }
 
@@ -126,7 +126,7 @@ h1{margin-top:15px;}
 .card.legendary{box-shadow:0 0 18px rgba(255,215,0,.9),0 0 30px rgba(255,215,0,.6),0 0 45px rgba(255,215,0,.3);animation:legendPulse 3s infinite alternate;}
 @keyframes legendPulse{from{filter:brightness(1)} to{filter:brightness(1.15)}}
 
-/* ORIGINAL ELEMENT COLORS */
+/* ELEMENT COLORS */
 .card.fire{background:linear-gradient(135deg,#ffe5d0,#ffd0b0);}
 .card.water{background:linear-gradient(135deg,#dff4ff,#c8eaff);}
 .card.grass{background:linear-gradient(135deg,#e4ffd8,#d0f5c2);}
@@ -136,42 +136,86 @@ h1{margin-top:15px;}
 .card.poison{background:linear-gradient(135deg,#f3e4ff,#e5d4ff);}
 .card.bug{background:linear-gradient(135deg,#f0ffd8,#d0ffb0);}
 
-/* ELEMENT EFFECTS */
-
-/* fire */
+/* Particle effects for elements */
 .card.fire .card-overlay{
-  background:radial-gradient(circle at 50% 100%, rgba(255,120,0,.25), transparent 70%), radial-gradient(circle at 60% 110%, rgba(255,60,0,.2), transparent 70%);
-  animation:fireFlicker 2s infinite alternate;
+  background: radial-gradient(circle, rgba(255,140,0,0.15) 10%, transparent 40%), radial-gradient(circle, rgba(255,180,50,0.1) 15%, transparent 50%);
+  animation:fireParticles 3s linear infinite;
 }
-@keyframes fireFlicker{from{transform:translateY(0)} to{transform:translateY(-3px) scale(1.03)}}
+@keyframes fireParticles{
+  0%{background-position:0 0,50% 100%}
+  50%{background-position:0 -20px,50% 80%}
+  100%{background-position:0 0,50% 100%}
+}
 
-/* water */
 .card.water .card-overlay{
-  background:linear-gradient(120deg,transparent,rgba(0,150,255,.15),transparent);
-  animation:waterFlow 4s linear infinite;
+  background: radial-gradient(circle, rgba(0,150,255,0.1) 10%, transparent 40%), radial-gradient(circle, rgba(50,200,255,0.1) 15%, transparent 50%);
+  animation:waterParticles 5s linear infinite;
 }
-@keyframes waterFlow{from{background-position:-200px} to{background-position:200px}}
+@keyframes waterParticles{
+  0%{background-position:0 0,50% 100%}
+  50%{background-position:0 -25px,50% 85%}
+  100%{background-position:0 0,50% 100%}
+}
 
-/* grass */
 .card.grass .card-overlay{
-  background:radial-gradient(circle, rgba(0,200,0,.15), transparent 70%);
-  animation:grassBreathe 5s infinite alternate;
+  background: radial-gradient(circle, rgba(0,200,0,0.1) 10%, transparent 40%), radial-gradient(circle, rgba(50,255,50,0.1) 15%, transparent 50%);
+  animation:grassParticles 4s linear infinite;
 }
-@keyframes grassBreathe{from{opacity:.3} to{opacity:.6}}
+@keyframes grassParticles{
+  0%{background-position:0 0,50% 100%}
+  50%{background-position:0 -15px,50% 90%}
+  100%{background-position:0 0,50% 100%}
+}
 
-/* ice */
 .card.ice .card-overlay{
-  background:linear-gradient(60deg,transparent,rgba(200,255,255,.25),transparent);
-  animation:iceShine 5s linear infinite;
+  background: radial-gradient(circle, rgba(180,255,255,0.1) 10%, transparent 40%), radial-gradient(circle, rgba(200,240,255,0.1) 15%, transparent 50%);
+  animation:iceParticles 4s linear infinite;
 }
-@keyframes iceShine{from{background-position:-300px} to{background-position:300px}}
+@keyframes iceParticles{
+  0%{background-position:0 0,50% 100%}
+  50%{background-position:0 -15px,50% 85%}
+  100%{background-position:0 0,50% 100%}
+}
 
-/* flying */
 .card.flying .card-overlay{
-  background:linear-gradient(90deg,transparent,rgba(200,200,255,.15),transparent);
-  animation:windMove 6s linear infinite;
+  background: radial-gradient(circle, rgba(180,180,255,0.1) 10%, transparent 40%), radial-gradient(circle, rgba(200,200,255,0.1) 15%, transparent 50%);
+  animation:flyingParticles 6s linear infinite;
 }
-@keyframes windMove{from{background-position:-400px} to{background-position:400px}}
+@keyframes flyingParticles{
+  0%{background-position:0 0,50% 100%}
+  50%{background-position:0 -20px,50% 80%}
+  100%{background-position:0 0,50% 100%}
+}
+
+.card.dark .card-overlay{
+  background: radial-gradient(circle, rgba(0,0,0,0.1) 10%, transparent 40%), radial-gradient(circle, rgba(50,50,50,0.1) 15%, transparent 50%);
+  animation:darkParticles 5s linear infinite;
+}
+@keyframes darkParticles{
+  0%{background-position:0 0,50% 100%}
+  50%{background-position:0 -20px,50% 80%}
+  100%{background-position:0 0,50% 100%}
+}
+
+.card.poison .card-overlay{
+  background: radial-gradient(circle, rgba(180,0,180,0.1) 10%, transparent 40%), radial-gradient(circle, rgba(220,50,220,0.1) 15%, transparent 50%);
+  animation:poisonParticles 5s linear infinite;
+}
+@keyframes poisonParticles{
+  0%{background-position:0 0,50% 100%}
+  50%{background-position:0 -20px,50% 80%}
+  100%{background-position:0 0,50% 100%}
+}
+
+.card.bug .card-overlay{
+  background: radial-gradient(circle, rgba(50,200,50,0.1) 10%, transparent 40%), radial-gradient(circle, rgba(100,255,50,0.1) 15%, transparent 50%);
+  animation:bugParticles 4s linear infinite;
+}
+@keyframes bugParticles{
+  0%{background-position:0 0,50% 100%}
+  50%{background-position:0 -15px,50% 90%}
+  100%{background-position:0 0,50% 100%}
+}
 
 /* controls */
 .controls{
@@ -231,12 +275,9 @@ h1{margin-top:15px;}
 </div>
 
 <script>
-const typeIcons={
-fire:"🔥", water:"💧", grass:"🌿", ice:"❄️", flying:"🕊️", dark:"🌙", poison:"☠️", bug:"🐛"
-}
+const typeIcons={fire:"🔥", water:"💧", grass:"🌿", ice:"❄️", flying:"🕊️", dark:"🌙", poison:"☠️", bug:"🐛"}
 const continentIcons={Africa:"🌍", Europe:"🌍", Asia:"🌏", NorthAmerica:"🌎", SouthAmerica:"🌎", Australia:"🦘", Antarctica:"🧊"}
 
-// animal database
 const animals=[
 {name:"African Lion",scientific:"Panthera leo",type:"fire",continent:"Africa",rarity:"rare",atk:80,def:70,move:"Flame Pounce"},
 {name:"Bald Eagle",scientific:"Haliaeetus leucocephalus",type:"flying",continent:"NorthAmerica",rarity:"uncommon",atk:60,def:50,move:"Sky Dive"},
@@ -257,13 +298,12 @@ function logAnimal(){
   let name=document.getElementById("animalInput").value
   let animal=animals.find(a=>a.name===name)
   if(!animal) return
-  if(logged.find(a=>a.name===name)) return // prevent duplicates
+  if(logged.find(a=>a.name===name)) return
   logged.push(animal)
   renderCollection()
   updateBadges()
 }
 
-// Wikipedia image
 async function getImage(name){
   try{
     let url=`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name)}`
@@ -273,7 +313,6 @@ async function getImage(name){
   }catch{return ""}
 }
 
-// Render cards
 async function renderCollection(){
   let area=document.getElementById("collection")
   area.innerHTML=""
@@ -288,7 +327,6 @@ async function renderCollection(){
     let img=await getImage(a.name)
     let card=document.createElement("div")
 
-    // dual type blending
     if(Array.isArray(a.type) && a.type.length==2){
       const colors={
         fire:'linear-gradient(135deg,#ffe5d0,#ffd0b0)',
@@ -332,7 +370,6 @@ async function renderCollection(){
   }
 }
 
-// badges
 function updateBadges(){
   let badgeArea=document.getElementById("badgeArea")
   badgeArea.innerHTML=""
