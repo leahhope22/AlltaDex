@@ -50,7 +50,6 @@ padding:10px;
 color:white;
 cursor:pointer;
 position:relative;
-box-shadow:0 0 8px rgba(0,0,0,0.4);
 }
 
 .card img{
@@ -74,8 +73,6 @@ font-size:20px;
 .uncommon{box-shadow:0 0 10px #4caf50}
 .rare{box-shadow:0 0 12px #2196f3}
 .legendary{box-shadow:0 0 14px gold}
-
-/* element colours */
 
 .card.fire{background:linear-gradient(#ff7043,#ff3d00)}
 .card.water{background:linear-gradient(#42a5f5,#1e88e5)}
@@ -169,115 +166,26 @@ bug:"🐛"
 
 const animals=[
 
-{
-name:"African Lion",
-scientific:"Panthera leo",
-type:"fire",
-continent:"Africa",
-rarity:"rare",
-atk:80,
-def:70,
-image:"https://upload.wikimedia.org/wikipedia/commons/7/73/Lion_waiting_in_Namibia.jpg"
-},
-
-{
-name:"Blue Whale",
-scientific:"Balaenoptera musculus",
-type:"water",
-continent:"Oceans",
-rarity:"legendary",
-atk:90,
-def:90,
-image:"https://upload.wikimedia.org/wikipedia/commons/5/5e/Bluewhale1.jpg"
-},
-
-{
-name:"Polar Bear",
-scientific:"Ursus maritimus",
-type:"ice",
-continent:"Arctic",
-rarity:"rare",
-atk:75,
-def:80,
-image:"https://upload.wikimedia.org/wikipedia/commons/e/e2/Polar_Bear_-_Alaska.jpg"
-},
-
-{
-name:"Bald Eagle",
-scientific:"Haliaeetus leucocephalus",
-type:"flying",
-continent:"North America",
-rarity:"uncommon",
-atk:60,
-def:50,
-image:"https://upload.wikimedia.org/wikipedia/commons/1/1a/Bald_Eagle_Portrait.jpg"
-},
-
-{
-name:"Poison Dart Frog",
-scientific:"Dendrobatidae",
-type:"poison",
-continent:"South America",
-rarity:"uncommon",
-atk:40,
-def:30,
-image:"https://upload.wikimedia.org/wikipedia/commons/f/f3/Dendrobates_pumilio.jpg"
-},
-
-{
-name:"Ladybug",
-scientific:"Coccinellidae",
-type:"bug",
-continent:"Europe",
-rarity:"common",
-atk:20,
-def:15,
-image:"https://upload.wikimedia.org/wikipedia/commons/7/70/Coccinella_septempunctata.jpg"
-},
-
-{
-name:"Barn Owl",
-scientific:"Tyto alba",
-type:["flying","dark"],
-continent:"Europe",
-rarity:"uncommon",
-atk:50,
-def:45,
-image:"https://upload.wikimedia.org/wikipedia/commons/1/19/Tyto_alba_-British_Wildlife_Centre-8a.jpg"
-},
-
-{
-name:"Black Widow Spider",
-scientific:"Latrodectus mactans",
-type:["poison","bug"],
-continent:"North America",
-rarity:"rare",
-atk:55,
-def:35,
-image:"https://upload.wikimedia.org/wikipedia/commons/0/05/Latrodectus_mactans_female.jpg"
-},
-
-{
-name:"Lesser Horseshoe Bat",
-scientific:"Rhinolophus hipposideros",
-type:["dark","flying"],
-continent:"Europe",
-rarity:"uncommon",
-atk:45,
-def:35,
-image:"https://upload.wikimedia.org/wikipedia/commons/6/69/Rhinolophus_hipposideros.jpg"
-},
-
-{
-name:"Axolotl",
-scientific:"Ambystoma mexicanum",
-type:"water",
-continent:"North America",
-rarity:"rare",
-atk:45,
-def:60,
-image:"https://upload.wikimedia.org/wikipedia/commons/3/35/Axolotl_Standing.jpg"
-}
+{name:"African Lion",scientific:"Panthera leo",type:"fire",continent:"Africa",rarity:"rare",atk:80,def:70,image:"https://upload.wikimedia.org/wikipedia/commons/7/73/Lion_waiting_in_Namibia.jpg"},
+{name:"Blue Whale",scientific:"Balaenoptera musculus",type:"water",continent:"Oceans",rarity:"legendary",atk:90,def:90,image:"https://upload.wikimedia.org/wikipedia/commons/5/5e/Bluewhale1.jpg"},
+{name:"Polar Bear",scientific:"Ursus maritimus",type:"ice",continent:"Arctic",rarity:"rare",atk:75,def:80,image:"https://upload.wikimedia.org/wikipedia/commons/e/e2/Polar_Bear_-_Alaska.jpg"},
+{name:"Bald Eagle",scientific:"Haliaeetus leucocephalus",type:"flying",continent:"North America",rarity:"uncommon",atk:60,def:50,image:"https://upload.wikimedia.org/wikipedia/commons/1/1a/Bald_Eagle_Portrait.jpg"},
+{name:"Poison Dart Frog",scientific:"Dendrobatidae",type:"poison",continent:"South America",rarity:"uncommon",atk:40,def:30,image:"https://upload.wikimedia.org/wikipedia/commons/f/f3/Dendrobates_pumilio.jpg"},
+{name:"Ladybug",scientific:"Coccinellidae",type:"bug",continent:"Europe",rarity:"common",atk:20,def:15,image:"https://upload.wikimedia.org/wikipedia/commons/7/70/Coccinella_septempunctata.jpg"},
+{name:"Barn Owl",scientific:"Tyto alba",type:["flying","dark"],continent:"Europe",rarity:"uncommon",atk:50,def:45,image:"https://upload.wikimedia.org/wikipedia/commons/1/19/Tyto_alba_-British_Wildlife_Centre-8a.jpg"},
+{name:"Lesser Horseshoe Bat",scientific:"Rhinolophus hipposideros",type:["dark","flying"],continent:"Europe",rarity:"uncommon",atk:45,def:35,image:"https://upload.wikimedia.org/wikipedia/commons/6/69/Rhinolophus_hipposideros.jpg"},
+{name:"Axolotl",scientific:"Ambystoma mexicanum",type:"water",continent:"North America",rarity:"rare",atk:45,def:60,image:"https://upload.wikimedia.org/wikipedia/commons/3/35/Axolotl_Standing.jpg"},
+{name:"Komodo Dragon",scientific:"Varanus komodoensis",type:"poison",continent:"Asia",rarity:"rare",atk:70,def:60,image:"https://upload.wikimedia.org/wikipedia/commons/3/3f/Komodo_dragon_with_tongue.jpg"},
+{name:"Emperor Penguin",scientific:"Aptenodytes forsteri",type:["ice","water"],continent:"Antarctica",rarity:"uncommon",atk:35,def:45,image:"https://upload.wikimedia.org/wikipedia/commons/0/0b/Emperor_penguin.jpg"},
+{name:"Red Fox",scientific:"Vulpes vulpes",type:"dark",continent:"Europe",rarity:"common",atk:45,def:35,image:"https://upload.wikimedia.org/wikipedia/commons/1/16/2010-kodiak-red-fox.jpg"},
+{name:"Giant Panda",scientific:"Ailuropoda melanoleuca",type:"grass",continent:"Asia",rarity:"rare",atk:40,def:70,image:"https://upload.wikimedia.org/wikipedia/commons/0/0f/Grosser_Panda.JPG"},
+{name:"Great White Shark",scientific:"Carcharodon carcharias",type:["water","dark"],continent:"Oceans",rarity:"rare",atk:85,def:60,image:"https://upload.wikimedia.org/wikipedia/commons/5/56/White_shark.jpg"},
+{name:"Monarch Butterfly",scientific:"Danaus plexippus",type:["bug","flying"],continent:"North America",rarity:"common",atk:15,def:15,image:"https://upload.wikimedia.org/wikipedia/commons/4/4c/Monarch_Butterfly.jpg"},
+{name:"Snow Leopard",scientific:"Panthera uncia",type:["ice","dark"],continent:"Asia",rarity:"rare",atk:75,def:55,image:"https://upload.wikimedia.org/wikipedia/commons/0/0f/Snow_leopard_portrait.jpg"},
+{name:"Tiger",scientific:"Panthera tigris",type:"fire",continent:"Asia",rarity:"rare",atk:85,def:65,image:"https://upload.wikimedia.org/wikipedia/commons/5/56/Tiger.50.jpg"},
+{name:"Honey Bee",scientific:"Apis mellifera",type:"bug",continent:"Europe",rarity:"common",atk:10,def:10,image:"https://upload.wikimedia.org/wikipedia/commons/4/4a/Apis_mellifera_Western_honey_bee.jpg"},
+{name:"Orca",scientific:"Orcinus orca",type:["water","dark"],continent:"Oceans",rarity:"rare",atk:90,def:70,image:"https://upload.wikimedia.org/wikipedia/commons/3/37/Killerwhales_jumping.jpg"},
+{name:"Golden Eagle",scientific:"Aquila chrysaetos",type:"flying",continent:"Europe",rarity:"uncommon",atk:65,def:55,image:"https://upload.wikimedia.org/wikipedia/commons/1/1a/Golden_Eagle_in_flight.jpg"}
 
 ]
 
