@@ -2,369 +2,240 @@
 <html>
 <head>
 <meta charset="UTF-8">
-
+<title>WildDex v20</title>
 <style>
-
-body{
-font-family:Arial;
-margin:0;
-padding:20px;
-text-align:center;
-background:linear-gradient(#8fd3ff,#c9f2ff,#ecfbff);
+body {
+  font-family: Arial; margin: 0; padding: 20px; text-align: center;
+  background: linear-gradient(#8fd3ff,#c9f2ff,#ecfbff);
 }
-
-/* title */
-
-h1{
-font-size:40px;
-margin-bottom:10px;
+h1 { font-size: 40px; margin-bottom: 10px; }
+.tabs button {
+  padding: 10px 20px; margin: 6px; border: none; border-radius: 20px;
+  background: white; cursor: pointer; font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0,0,0,.15);
 }
-
-/* tabs */
-
-.tabs button{
-padding:10px 20px;
-margin:6px;
-border:none;
-border-radius:20px;
-background:white;
-cursor:pointer;
-font-weight:bold;
-box-shadow:0 4px 8px rgba(0,0,0,.15);
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(220px,1fr));
+  gap: 20px;
+  margin-top: 20px;
 }
-
-/* cards */
-
-.cards{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-gap:20px;
-margin-top:20px;
+.card {
+  position: relative;
+  border-radius: 16px;
+  padding: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 12px rgba(0,0,0,.15);
+  transition: .25s;
+  cursor: pointer;
 }
-
-.card{
-position:relative;
-border-radius:16px;
-padding:12px;
-overflow:hidden;
-box-shadow:0 6px 12px rgba(0,0,0,.15);
-transition:.25s;
-cursor:pointer;
+.card:hover { transform: scale(1.05); }
+.imgBox {
+  height: 140px;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-
-.card:hover{
-transform:scale(1.05);
+.imgBox img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
-
-/* element colors */
-
+.placeholder {
+  font-size: 40px; opacity: .4; display: flex;
+  align-items: center; justify-content: center; height: 100%;
+}
+.element { font-size: 24px; margin-top: 6px; }
 .grass{background:#6de06d;}
 .water{background:#63c4ff;}
 .fire{background:#ff8750;}
 .ice{background:#c8f2ff;}
 .flying{background:#b5d5ff;}
-
-/* image */
-
-.imgBox{
-height:140px;
-background:white;
-border-radius:10px;
-overflow:hidden;
-}
-
-.imgBox img{
-width:100%;
-height:100%;
-object-fit:cover;
-}
-
-.placeholder{
-font-size:40px;
-opacity:.4;
-display:flex;
-align-items:center;
-justify-content:center;
-height:100%;
-}
-
-/* element symbol */
-
-.element{
-font-size:24px;
-margin-top:6px;
-}
-
-/* rarity glow */
-
 .uncommon{box-shadow:0 0 10px #4caf50;}
 .rare{box-shadow:0 0 14px #2196f3;}
 .legendary{box-shadow:0 0 20px gold;}
-
-/* effect layer */
-
-.effect{
-position:absolute;
-inset:0;
-pointer-events:none;
-opacity:.35;
-z-index:0;
+.effect {
+  position: absolute; inset:0; pointer-events: none; opacity: .25; z-index:0;
 }
-
-.card *{
-position:relative;
-z-index:1;
-}
-
-/* grass leaves */
-
-.grass .effect{
-background:
+.card *{ position: relative; z-index:1; }
+/* Grass leaves */
+.grass .effect{background:
 radial-gradient(circle at 20% 70%,rgba(255,255,255,.6),transparent),
 radial-gradient(circle at 80% 40%,rgba(255,255,255,.6),transparent);
-animation:leafMove 6s infinite linear;
-}
-
-@keyframes leafMove{
-0%{transform:translateX(0)}
-50%{transform:translateX(10px)}
-100%{transform:translateX(0)}
-}
-
-/* water ripple */
-
-.water .effect{
-background:
+animation:leafMove 6s infinite linear;}
+@keyframes leafMove{0%{transform:translateX(0)}50%{transform:translateX(10px)}100%{transform:translateX(0)}}
+/* Water ripple */
+.water .effect{background:
 radial-gradient(circle at 40% 40%,rgba(255,255,255,.7),transparent),
 radial-gradient(circle at 70% 70%,rgba(255,255,255,.5),transparent);
-animation:waterMove 5s infinite;
-}
-
-@keyframes waterMove{
-0%{transform:translateY(0)}
-50%{transform:translateY(6px)}
-100%{transform:translateY(0)}
-}
-
-/* fire glow */
-
-.fire .effect{
-background:
+animation:waterMove 5s infinite;}
+@keyframes waterMove{0%{transform:translateY(0)}50%{transform:translateY(6px)}100%{transform:translateY(0)}}
+/* Fire glow */
+.fire .effect{background:
 radial-gradient(circle at 50% 80%,rgba(255,120,0,.8),transparent),
 radial-gradient(circle at 60% 60%,rgba(255,60,0,.7),transparent);
-animation:flameMove 3s infinite alternate;
-}
-
-@keyframes flameMove{
-0%{transform:scale(1)}
-100%{transform:scale(1.1)}
-}
-
-/* ice sparkle */
-
-.ice .effect{
-background:
+animation:flameMove 3s infinite alternate;}
+@keyframes flameMove{0%{transform:scale(1)}100%{transform:scale(1.1)}}
+/* Ice sparkle */
+.ice .effect{background:
 radial-gradient(circle at 30% 30%,rgba(255,255,255,.8),transparent),
 radial-gradient(circle at 70% 70%,rgba(255,255,255,.6),transparent);
-animation:frostMove 5s infinite alternate;
-}
-
-@keyframes frostMove{
-0%{opacity:.3}
-100%{opacity:.7}
-}
-
-/* wind */
-
-.flying .effect{
-background:
+animation:frostMove 5s infinite alternate;}
+@keyframes frostMove{0%{opacity:.3}100%{opacity:.7}}
+/* Wind */
+.flying .effect{background:
 linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent);
-background-size:200% 100%;
-animation:windMove 4s infinite linear;
+background-size:200% 100%; animation:windMove 4s infinite linear;}
+@keyframes windMove{0%{background-position:0}100%{background-position:200%}}
+.modal {
+  position: fixed; inset:0; background: rgba(0,0,0,.5);
+  display:none; align-items:center; justify-content:center;
 }
-
-@keyframes windMove{
-0%{background-position:0}
-100%{background-position:200%}
+.modalContent {
+  background:white; padding:20px; border-radius:14px; max-width:400px;
 }
-
-/* badges */
-
-.badge{
-background:white;
-padding:10px;
-margin:8px;
-border-radius:12px;
-display:inline-block;
-box-shadow:0 3px 6px rgba(0,0,0,.15);
-}
-
+.release { background:#e53935; color:white; border:none; padding:8px 14px; border-radius:6px; cursor:pointer; }
+.badge{background:white; padding:10px; margin:8px; border-radius:12px; display:inline-block; box-shadow:0 3px 6px rgba(0,0,0,.15);}
 </style>
 </head>
-
 <body>
 
 <h1>WildDex</h1>
-
 <div class="tabs">
-<button onclick="showTab('log')">Log</button>
-<button onclick="showTab('catches')">Catches</button>
-<button onclick="showTab('badges')">Badges</button>
+  <button onclick="showTab('log')">Log</button>
+  <button onclick="showTab('catches')">Catches</button>
+  <button onclick="showTab('badges')">Badges</button>
 </div>
 
 <div id="logTab">
-<input id="search" placeholder="Search animal..." oninput="searchAnimals()">
-<div id="suggestions"></div>
+  <input id="search" placeholder="Search animal..." oninput="searchAnimals()">
+  <div id="suggestions"></div>
 </div>
 
 <div id="catchesTab" style="display:none">
-<div class="cards" id="cards"></div>
+  <div class="cards" id="cards"></div>
 </div>
 
 <div id="badgesTab" style="display:none">
-<div id="badges"></div>
+  <div id="badges"></div>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modalContent" id="modalContent"></div>
 </div>
 
 <script>
+const elementSymbol={grass:"🌿",water:"💧",fire:"🔥",ice:"❄️",flying:"🕊"};
 
-const elementSymbol={
-grass:"🌿",
-water:"💧",
-fire:"🔥",
-ice:"❄️",
-flying:"🕊"
-}
+const animalsDB=[
+{name:"Blue Whale",scientific:"Balaenoptera musculus",type:"water",continent:"Ocean",rarity:"legendary",atk:95,def:90,img:"https://upload.wikimedia.org/wikipedia/commons/5/52/Blue_whale.jpg"},
+{name:"African Lion",scientific:"Panthera leo",type:"fire",continent:"Africa",rarity:"rare",atk:85,def:70,img:"https://upload.wikimedia.org/wikipedia/commons/7/73/Lion_waiting_in_Namibia.jpg"},
+{name:"Bengal Tiger",scientific:"Panthera tigris tigris",type:"fire",continent:"Asia",rarity:"rare",atk:90,def:70,img:"https://upload.wikimedia.org/wikipedia/commons/5/56/Tiger.50.jpg"},
+{name:"Polar Bear",scientific:"Ursus maritimus",type:"ice",continent:"Arctic",rarity:"rare",atk:82,def:85,img:"https://upload.wikimedia.org/wikipedia/commons/e/e7/Polar_Bear_-_Alaska.jpg"},
+{name:"Golden Eagle",scientific:"Aquila chrysaetos",type:"flying",continent:"Europe",rarity:"uncommon",atk:65,def:55,img:"https://upload.wikimedia.org/wikipedia/commons/e/e7/Golden_Eagle.jpg"},
+{name:"Giant Panda",scientific:"Ailuropoda melanoleuca",type:"grass",continent:"Asia",rarity:"rare",atk:60,def:80,img:"https://upload.wikimedia.org/wikipedia/commons/0/0f/Grosser_Panda.JPG"}
+];
 
-/* dataset */
-
-const animals=[
-
-{name:"Blue Whale",type:"water",continent:"Ocean",rarity:"legendary",atk:95,def:90,img:"https://upload.wikimedia.org/wikipedia/commons/5/52/Blue_whale.jpg"},
-
-{name:"African Lion",type:"fire",continent:"Africa",rarity:"rare",atk:85,def:70,img:"https://upload.wikimedia.org/wikipedia/commons/7/73/Lion_waiting_in_Namibia.jpg"},
-
-{name:"Bengal Tiger",type:"fire",continent:"Asia",rarity:"rare",atk:90,def:70,img:"https://upload.wikimedia.org/wikipedia/commons/5/56/Tiger.50.jpg"},
-
-{name:"Polar Bear",type:"ice",continent:"Arctic",rarity:"rare",atk:82,def:85,img:"https://upload.wikimedia.org/wikipedia/commons/e/e7/Polar_Bear_-_Alaska.jpg"},
-
-{name:"Golden Eagle",type:"flying",continent:"Europe",rarity:"uncommon",atk:65,def:55,img:"https://upload.wikimedia.org/wikipedia/commons/e/e7/Golden_Eagle.jpg"},
-
-{name:"Giant Panda",type:"grass",continent:"Asia",rarity:"rare",atk:60,def:80,img:"https://upload.wikimedia.org/wikipedia/commons/0/0f/Grosser_Panda.JPG"}
-
-]
-
-let catches=JSON.parse(localStorage.getItem("wilddex")||"[]")
+let catches=JSON.parse(localStorage.getItem("wilddex")||"[]");
 
 function showTab(tab){
-
-logTab.style.display="none"
-catchesTab.style.display="none"
-badgesTab.style.display="none"
-
-if(tab==="log")logTab.style.display="block"
-if(tab==="catches")catchesTab.style.display="block"
-if(tab==="badges")badgesTab.style.display="block"
-
-renderCards()
-updateBadges()
-
+  document.getElementById('logTab').style.display="none";
+  document.getElementById('catchesTab').style.display="none";
+  document.getElementById('badgesTab').style.display="none";
+  if(tab==='log') document.getElementById('logTab').style.display='block';
+  if(tab==='catches') document.getElementById('catchesTab').style.display='block';
+  if(tab==='badges') document.getElementById('badgesTab').style.display='block';
+  renderCards();
+  updateBadges();
 }
-
-/* search */
 
 function searchAnimals(){
-
-let q=search.value.toLowerCase()
-
-suggestions.innerHTML=""
-
-animals.filter(a=>a.name.toLowerCase().includes(q))
-.forEach(a=>{
-
-let b=document.createElement("button")
-b.textContent=a.name
-
-b.onclick=()=>{
-
-catches.push(a)
-localStorage.setItem("wilddex",JSON.stringify(catches))
-
-renderCards()
-
+  let q=document.getElementById('search').value.toLowerCase();
+  let suggestions=document.getElementById('suggestions');
+  suggestions.innerHTML="";
+  animalsDB.filter(a=>a.name.toLowerCase().includes(q)).forEach(a=>{
+    let btn=document.createElement('button');
+    btn.textContent=a.name;
+    btn.onclick=()=>{
+      if(!catches.some(x=>x.name===a.name)){
+        catches.push(a);
+        localStorage.setItem("wilddex",JSON.stringify(catches));
+        renderCards();
+        updateBadges();
+      } else alert(a.name+" already logged!");
+      suggestions.innerHTML="";
+      document.getElementById('search').value="";
+    };
+    suggestions.appendChild(btn);
+  });
 }
-
-suggestions.appendChild(b)
-
-})
-
-}
-
-/* render cards */
 
 function renderCards(){
-
-cards.innerHTML=""
-
-catches.forEach(a=>{
-
-let card=document.createElement("div")
-
-card.className=`card ${a.type} ${a.rarity}`
-
-card.innerHTML=`
-
-<div class="effect"></div>
-
-<div class="imgBox">
-
-<img src="${a.img}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-
-<div class="placeholder" style="display:none">🐾</div>
-
-</div>
-
-<div class="element">${elementSymbol[a.type]}</div>
-
-<h3>${a.name}</h3>
-
-<p>${a.continent}</p>
-
-<p>ATK ${a.atk} DEF ${a.def}</p>
-
-`
-
-cards.appendChild(card)
-
-})
-
+  let container=document.getElementById('cards');
+  container.innerHTML="";
+  catches.forEach(a=>{
+    let card=document.createElement('div');
+    card.className=`card ${a.type} ${a.rarity}`;
+    card.innerHTML=`
+      <div class="effect"></div>
+      <div class="imgBox">
+        <img src="${a.img}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none">🐾</div>
+      </div>
+      <div class="element">${elementSymbol[a.type]}</div>
+      <h3>${a.name}</h3>
+      <i>${a.scientific}</i>
+      <p>${a.continent}</p>
+      <p>ATK ${a.atk} DEF ${a.def}</p>
+    `;
+    card.onclick=()=>openModal(a);
+    container.appendChild(card);
+  });
 }
 
-/* badges */
+function openModal(a){
+  let modal=document.getElementById('modal');
+  let content=document.getElementById('modalContent');
+  modal.style.display='flex';
+  content.innerHTML=`
+    <h2>${a.name}</h2>
+    <p><i>${a.scientific}</i></p>
+    <img src="${a.img}" style="width:100%;border-radius:10px;" onerror="this.style.display='none';">
+    <p>${elementSymbol[a.type]}</p>
+    <p>${a.continent}</p>
+    <p>ATK ${a.atk}</p>
+    <p>DEF ${a.def}</p>
+    <button class="release" onclick="releaseAnimal('${a.name}')">Release Animal</button>
+    <br><br><button onclick="document.getElementById('modal').style.display='none'">Close</button>
+  `;
+}
+
+function releaseAnimal(name){
+  catches=catches.filter(a=>a.name!==name);
+  localStorage.setItem("wilddex",JSON.stringify(catches));
+  document.getElementById('modal').style.display='none';
+  renderCards();
+  updateBadges();
+}
 
 function updateBadges(){
-
-badges.innerHTML=""
-
-let continents=[...new Set(catches.map(a=>a.continent))]
-let elements=[...new Set(catches.map(a=>a.type))]
-let legendary=catches.some(a=>a.rarity==="legendary")
-
-if(catches.length>=5)badges.innerHTML+=`<div class="badge">🐾 Beginner Tracker</div>`
-
-if(continents.length>=3)badges.innerHTML+=`<div class="badge">🌍 Explorer</div>`
-
-if(continents.length>=5)badges.innerHTML+=`<div class="badge">🌎 World Naturalist</div>`
-
-if(elements.length>=5)badges.innerHTML+=`<div class="badge">🔥 Element Master</div>`
-
-if(legendary)badges.innerHTML+=`<div class="badge">👑 Legendary Encounter</div>`
-
+  let badgesDiv=document.getElementById('badges');
+  badgesDiv.innerHTML="";
+  let continents=[...new Set(catches.map(a=>a.continent))];
+  let elements=[...new Set(catches.map(a=>a.type))];
+  let legendary=catches.some(a=>a.rarity==='legendary');
+  if(catches.length>=5) badgesDiv.innerHTML+=`<div class="badge">🐾 Beginner Tracker</div>`;
+  if(continents.length>=3) badgesDiv.innerHTML+=`<div class="badge">🌍 Explorer</div>`;
+  if(continents.length>=5) badgesDiv.innerHTML+=`<div class="badge">🌎 World Naturalist</div>`;
+  if(elements.length>=5) badgesDiv.innerHTML+=`<div class="badge">🔥 Element Master</div>`;
+  if(legendary) badgesDiv.innerHTML+=`<div class="badge">👑 Legendary Encounter</div>`;
 }
 
-renderCards()
-updateBadges()
-
+renderCards();
+updateBadges();
 </script>
-
 </body>
 </html>
