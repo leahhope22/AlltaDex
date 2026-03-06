@@ -1,1 +1,492 @@
-<!DOCTYPE html> <html> <head> <meta charset="UTF-8"> <title>WildDex</title> <style> body{ font-family:Arial; margin:0; background:linear-gradient(135deg,#74ebd5,#acb6e5); } header{ background:#333; color:white; padding:15px; text-align:center; font-size:26px; } .tabs{ display:flex; justify-content:center; gap:10px; margin:10px; } .tab{ padding:10px 20px; background:white; border-radius:8px; cursor:pointer; font-weight:bold; } .section{ display:none; padding:20px; } .active{ display:block; } select,button{ padding:10px; font-size:16px; margin:5px; } .grid{ display:grid; grid-template-columns:repeat(auto-fill,220px); gap:18px; justify-content:center; } /* CARD */ .card{ border-radius:12px; padding:12px; color:white; text-align:center; cursor:pointer; box-shadow:0 5px 12px rgba(0,0,0,0.3); } .grass{background:#4caf50;} .fire{background:#ff7043;} .water{background:#42a5f5;} .air{background:#90caf9;} .dark{background:#555;} .card img{ width:100%; height:130px; object-fit:cover; border-radius:8px; background:white; } .card h3{ margin:8px 0 0; } /* MODAL */ .modal{ position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); display:none; align-items:center; justify-content:center; } .modalContent{ background:white; padding:20px; border-radius:12px; width:320px; text-align:center; } .modalContent img{ width:100%; height:180px; object-fit:cover; border-radius:8px; } .releaseBtn{ background:#ff4444; color:white; border:none; padding:10px 15px; margin-top:10px; cursor:pointer; border-radius:6px; } .closeBtn{ margin-top:10px; padding:6px 10px; } </style> </head> <body> <header>🌍 WildDex</header> <div class="tabs"> <div class="tab" onclick="openTab('log')">Log</div> <div class="tab" onclick="openTab('catches')">Catches</div> </div> <!-- LOG TAB --> <div id="log" class="section active"> <select id="animalSelect"> <option value="">Select Animal</option> </select> <button onclick="logAnimal()">Log Animal</button> </div> <!-- CATCH TAB --> <div id="catches" class="section"> <div class="grid" id="grid"></div> </div> <!-- MODAL --> <div id="modal" class="modal"> <div class="modalContent" id="modalContent"></div> </div> <script> /* DATABASE */ const animalDatabase=[ { name:"Blue Whale", scientific:"Balaenoptera musculus", type:"water", image:"https://upload.wikimedia.org/wikipedia/commons/5/56/Bluewhale2.jpg" }, { name:"Tiger", scientific:"Panthera tigris", type:"fire", image:"https://upload.wikimedia.org/wikipedia/commons/5/56/Tiger.50.jpg" }, { name:"Bald Eagle", scientific:"Haliaeetus leucocephalus", type:"air", image:"https://upload.wikimedia.org/wikipedia/commons/1/1a/Bald_Eagle_Portrait.jpg" }, { name:"Oak Tree Frog", scientific:"Dryophytes quercicus", type:"grass", image:"https://upload.wikimedia.org/wikipedia/commons/7/7b/Oak_treefrog.jpg" }, { name:"Lesser Horseshoe Bat", scientific:"Rhinolophus hipposideros", type:"dark", image:"https://upload.wikimedia.org/wikipedia/commons/f/f2/Rhinolophus_hipposideros.jpg" } ] let loggedAnimals=JSON.parse(localStorage.getItem("wilddex"))||[] /* DROPDOWN */ const select=document.getElementById("animalSelect") animalDatabase.forEach(a=>{ let option=document.createElement("option") option.value=a.name option.textContent=a.name select.appendChild(option) }) /* LOG ANIMAL */ function logAnimal(){ const name=select.value if(!name)return if(loggedAnimals.find(a=>a.name===name)){ alert("Animal already logged!") return } const animal=animalDatabase.find(a=>a.name===name) loggedAnimals.push(animal) localStorage.setItem("wilddex",JSON.stringify(loggedAnimals)) renderCards() } /* RENDER */ function renderCards(){ const grid=document.getElementById("grid") grid.innerHTML="" loggedAnimals.forEach((a,index)=>{ let card=document.createElement("div") card.className=card ${a.type} card.innerHTML= <img src="${a.image}" onerror="this.src='https://via.placeholder.com/300x180?text=No+Image'"> <h3>${a.name}</h3> card.onclick=()=>openModal(index) grid.appendChild(card) }) } renderCards() /* MODAL */ function openModal(index){ const a=loggedAnimals[index] const modal=document.getElementById("modal") const content=document.getElementById("modalContent") content.innerHTML= <img src="${a.image}"> <h2>${a.name}</h2> <p><i>${a.scientific}</i></p> <p>Element: ${a.type}</p> <button class="releaseBtn" onclick="releaseAnimal(${index})">Release Animal</button> <br> <button class="closeBtn" onclick="closeModal()">Close</button> modal.style.display="flex" } function closeModal(){ document.getElementById("modal").style.display="none" } function releaseAnimal(index){ loggedAnimals.splice(index,1) localStorage.setItem("wilddex",JSON.stringify(loggedAnimals)) closeModal() renderCards() } /* TABS */ function openTab(id){ document.querySelectorAll(".section").forEach(s=>s.classList.remove("active")) document.getElementById(id).classList.add("active") } </script> </body> </html>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>WildDex</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#eef3f6;
+margin:0;
+text-align:center;
+}
+
+h1{margin-top:15px;}
+
+.tabs{
+display:flex;
+justify-content:center;
+gap:10px;
+margin:10px;
+}
+
+.tab{
+padding:8px 14px;
+border-radius:10px;
+background:#ddd;
+cursor:pointer;
+}
+
+.tab.active{background:#bbb;}
+
+.page{display:none;}
+.page.active{display:block;}
+
+.grid{
+display:flex;
+flex-wrap:wrap;
+gap:15px;
+justify-content:center;
+padding:20px;
+}
+
+.card{
+width:220px;
+height:340px;
+border-radius:16px;
+overflow:hidden;
+position:relative;
+border:2px solid rgba(0,0,0,.2);
+transition:.2s;
+color:#111;
+}
+
+.card:hover{transform:scale(1.03)}
+
+.card-header{
+display:flex;
+justify-content:space-between;
+padding:6px 8px;
+font-weight:bold;
+font-size:14px;
+}
+
+.image-container{
+width:100%;
+height:160px;
+display:flex;
+align-items:center;
+justify-content:center;
+background:white;
+border-bottom:2px solid rgba(0,0,0,.1);
+overflow:hidden;
+position:relative;
+}
+
+.image-container img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.no-image{
+position:absolute;
+font-size:70px;
+display:none;
+align-items:center;
+justify-content:center;
+width:100%;
+height:100%;
+}
+
+.card-body{
+padding:8px;
+position:relative;
+z-index:2;
+}
+
+.scientific{
+font-style:italic;
+font-size:13px;
+opacity:.7;
+margin-bottom:6px;
+}
+
+.stats{
+display:flex;
+justify-content:space-between;
+margin-top:6px;
+font-size:14px;
+}
+
+.footer{
+display:flex;
+justify-content:space-between;
+margin-top:6px;
+font-size:18px;
+}
+
+/* overlay */
+
+.card-overlay{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:1;
+pointer-events:none;
+}
+
+/* rarity glow */
+
+.card.common{box-shadow:none;}
+
+.card.uncommon{
+box-shadow:0 0 10px rgba(0,200,255,.4);
+}
+
+.card.rare{
+box-shadow:
+0 0 12px rgba(255,150,0,.6),
+0 0 20px rgba(255,150,0,.4);
+}
+
+.card.legendary{
+box-shadow:
+0 0 18px rgba(255,215,0,.9),
+0 0 30px rgba(255,215,0,.6),
+0 0 45px rgba(255,215,0,.3);
+animation:legendPulse 3s infinite alternate;
+}
+
+@keyframes legendPulse{
+from{filter:brightness(1)}
+to{filter:brightness(1.15)}
+}
+
+/* ELEMENT COLORS */
+
+.card.fire{
+background:linear-gradient(#ffe5d0,#ffd0b0);
+}
+
+.card.water{
+background:linear-gradient(#dff4ff,#c8eaff);
+}
+
+.card.grass{
+background:linear-gradient(#e4ffd8,#d0f5c2);
+}
+
+.card.ice{
+background:linear-gradient(#eaffff,#dff6ff);
+}
+
+.card.flying{
+background:linear-gradient(#f0f0ff,#e5e5ff);
+}
+
+/* ELEMENT EFFECTS */
+
+/* fire */
+
+.card.fire .card-overlay{
+background:
+radial-gradient(circle at 50% 100%, rgba(255,120,0,.25), transparent 70%),
+radial-gradient(circle at 60% 110%, rgba(255,60,0,.2), transparent 70%);
+animation:fireFlicker 2s infinite alternate;
+}
+
+@keyframes fireFlicker{
+from{transform:translateY(0)}
+to{transform:translateY(-3px) scale(1.03)}
+}
+
+/* water */
+
+.card.water .card-overlay{
+background:
+linear-gradient(120deg,transparent,rgba(0,150,255,.15),transparent);
+animation:waterFlow 4s linear infinite;
+}
+
+@keyframes waterFlow{
+from{background-position:-200px}
+to{background-position:200px}
+}
+
+/* grass */
+
+.card.grass .card-overlay{
+background:
+radial-gradient(circle, rgba(0,200,0,.15), transparent 70%);
+animation:grassBreathe 5s infinite alternate;
+}
+
+@keyframes grassBreathe{
+from{opacity:.3}
+to{opacity:.6}
+}
+
+/* ice */
+
+.card.ice .card-overlay{
+background:
+linear-gradient(60deg,transparent,rgba(200,255,255,.25),transparent);
+animation:iceShine 5s linear infinite;
+}
+
+@keyframes iceShine{
+from{background-position:-300px}
+to{background-position:300px}
+}
+
+/* flying */
+
+.card.flying .card-overlay{
+background:
+linear-gradient(90deg,transparent,rgba(200,200,255,.15),transparent);
+animation:windMove 6s linear infinite;
+}
+
+@keyframes windMove{
+from{background-position:-400px}
+to{background-position:400px}
+}
+
+/* controls */
+
+.controls{
+margin-top:10px;
+}
+
+.controls input, .controls select{
+padding:6px;
+margin:4px;
+}
+
+.badge{
+background:white;
+padding:10px;
+border-radius:10px;
+margin:10px auto;
+width:220px;
+border:2px solid #ccc;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>WildDex</h1>
+
+<div class="tabs">
+<div class="tab active" onclick="openPage('log')">Log</div>
+<div class="tab" onclick="openPage('catches')">Catches</div>
+<div class="tab" onclick="openPage('badges')">Badges</div>
+</div>
+
+<div id="log" class="page active">
+
+<input id="animalInput" list="animals" placeholder="Log animal">
+<datalist id="animals"></datalist>
+
+<button onclick="logAnimal()">Log</button>
+
+</div>
+
+<div id="catches" class="page">
+
+<div class="controls">
+<input id="searchBox" placeholder="Search animals" oninput="renderCollection()">
+
+<select id="filterElement" onchange="renderCollection()">
+<option value="all">All Elements</option>
+<option value="fire">Fire</option>
+<option value="water">Water</option>
+<option value="grass">Grass</option>
+<option value="ice">Ice</option>
+<option value="flying">Flying</option>
+</select>
+</div>
+
+<div id="collection" class="grid"></div>
+
+</div>
+
+<div id="badges" class="page">
+<div id="badgeArea"></div>
+</div>
+
+<script>
+
+const typeIcons={
+fire:"🔥",
+water:"💧",
+grass:"🌿",
+ice:"❄️",
+flying:"🕊️"
+}
+
+const continentIcons={
+Africa:"🌍",
+Europe:"🌍",
+Asia:"🌏",
+NorthAmerica:"🌎",
+SouthAmerica:"🌎",
+Australia:"🦘",
+Antarctica:"🧊"
+}
+
+const animals=[
+
+{name:"African Lion",scientific:"Panthera leo",type:"fire",continent:"Africa",rarity:"rare",atk:80,def:70,move:"Flame Pounce"},
+{name:"Bald Eagle",scientific:"Haliaeetus leucocephalus",type:"flying",continent:"NorthAmerica",rarity:"uncommon",atk:60,def:50,move:"Sky Dive"},
+{name:"Polar Bear",scientific:"Ursus maritimus",type:"ice",continent:"Antarctica",rarity:"rare",atk:75,def:80,move:"Frozen Swipe"},
+{name:"Poison Dart Frog",scientific:"Dendrobatidae",type:"grass",continent:"SouthAmerica",rarity:"uncommon",atk:40,def:30,move:"Toxic Jump"},
+{name:"Blue Whale",scientific:"Balaenoptera musculus",type:"water",continent:"Asia",rarity:"legendary",atk:90,def:90,move:"Ocean Surge"}
+
+]
+
+const datalist=document.getElementById("animals")
+
+animals.forEach(a=>{
+let o=document.createElement("option")
+o.value=a.name
+datalist.appendChild(o)
+})
+
+let logged=[]
+
+function logAnimal(){
+
+let name=document.getElementById("animalInput").value
+
+let animal=animals.find(a=>a.name===name)
+
+if(!animal)return
+
+logged.push(animal)
+
+renderCollection()
+updateBadges()
+}
+
+/* Wikipedia image */
+
+async function getImage(name){
+
+try{
+
+let url=`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name)}`
+
+let res=await fetch(url)
+
+let data=await res.json()
+
+return data.thumbnail ? data.thumbnail.source : ""
+
+}catch{
+return ""
+}
+
+}
+
+/* render cards */
+
+async function renderCollection(){
+
+let area=document.getElementById("collection")
+
+area.innerHTML=""
+
+let search=document.getElementById("searchBox").value.toLowerCase()
+
+let filter=document.getElementById("filterElement").value
+
+for(let a of logged){
+
+if(search && !a.name.toLowerCase().includes(search))continue
+
+if(filter!="all" && a.type!=filter)continue
+
+let img=await getImage(a.name)
+
+let card=document.createElement("div")
+
+card.className=`card ${a.type} ${a.rarity}`
+
+card.innerHTML=`
+
+<div class="card-header">
+<span>${a.name}</span>
+<span>HP ${a.atk+a.def}</span>
+</div>
+
+<div class="image-container">
+
+<img src="${img}" alt="${a.name}"
+onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+
+<div class="no-image">🖤</div>
+
+</div>
+
+<div class="card-body">
+
+<div class="card-overlay"></div>
+
+<div class="scientific">${a.scientific}</div>
+
+<div><b>${a.move}</b></div>
+
+<div class="stats">
+<span>ATK ${a.atk}</span>
+<span>DEF ${a.def}</span>
+</div>
+
+<div class="footer">
+<span>${typeIcons[a.type]}</span>
+<span>${continentIcons[a.continent]}</span>
+</div>
+
+</div>
+`
+
+area.appendChild(card)
+
+}
+
+}
+
+/* badges */
+
+function updateBadges(){
+
+let badgeArea=document.getElementById("badgeArea")
+
+badgeArea.innerHTML=""
+
+let continents=[...new Set(logged.map(a=>a.continent))]
+let elements=[...new Set(logged.map(a=>a.type))]
+
+if(continents.length>=3)
+badgeArea.innerHTML+=`<div class="badge">🌍 Explorer Badge</div>`
+
+if(elements.length>=3)
+badgeArea.innerHTML+=`<div class="badge">⚡ Elementalist Badge</div>`
+
+if(logged.length>=5)
+badgeArea.innerHTML+=`<div class="badge">📘 Field Researcher</div>`
+}
+
+function openPage(id){
+
+document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"))
+
+document.getElementById(id).classList.add("active")
+
+document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"))
+
+event.target.classList.add("active")
+
+}
+
+</script>
+
+</body>
+</html>
