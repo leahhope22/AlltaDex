@@ -35,8 +35,20 @@ cursor:pointer;
 font-weight:bold;
 }
 
-.section{display:none;padding:20px;}
-.active{display:block}
+.section{
+display:none;
+padding:20px;
+}
+
+.active{
+display:block;
+}
+
+select,button{
+padding:10px;
+font-size:16px;
+margin:5px;
+}
 
 .grid{
 display:grid;
@@ -48,134 +60,74 @@ justify-content:center;
 /* CARD */
 
 .card{
-position:relative;
-border-radius:14px;
+border-radius:12px;
 padding:12px;
 color:white;
 text-align:center;
-overflow:hidden;
 cursor:pointer;
-box-shadow:0 6px 14px rgba(0,0,0,0.35);
+box-shadow:0 5px 12px rgba(0,0,0,0.3);
 }
 
-/* ELEMENT COLORS */
+.grass{background:#4caf50;}
+.fire{background:#ff7043;}
+.water{background:#42a5f5;}
+.air{background:#90caf9;}
+.dark{background:#555;}
 
-.grass{background:#3edc81;}
-.fire{background:#ff7a3d;}
-.water{background:#3da5ff;}
-.air{background:#a6e1ff;}
-.dark{background:#444;}
+.card img{
+width:100%;
+height:130px;
+object-fit:cover;
+border-radius:8px;
+background:white;
+}
 
-/* PARTICLE LAYER */
+.card h3{
+margin:8px 0 0;
+}
 
-.particles{
-position:absolute;
+/* MODAL */
+
+.modal{
+position:fixed;
 top:0;
 left:0;
 width:100%;
 height:100%;
-pointer-events:none;
-z-index:0;
-overflow:hidden;
+background:rgba(0,0,0,0.7);
+display:none;
+align-items:center;
+justify-content:center;
 }
 
-/* IMAGE */
-
-.card img{
-width:100%;
-height:120px;
-object-fit:cover;
-border-radius:10px;
+.modalContent{
 background:white;
-position:relative;
-z-index:2;
+padding:20px;
+border-radius:12px;
+width:320px;
+text-align:center;
 }
 
-.card h3{
-margin:6px 0 0;
-position:relative;
-z-index:2;
+.modalContent img{
+width:100%;
+height:180px;
+object-fit:cover;
+border-radius:8px;
 }
 
-/* GRASS PARTICLES */
-
-.grass .particles span{
-position:absolute;
-width:6px;
-height:6px;
-background:rgba(255,255,255,0.6);
-border-radius:2px;
-animation:leafFloat 8s linear infinite;
+.releaseBtn{
+background:#ff4444;
+color:white;
+border:none;
+padding:10px 15px;
+margin-top:10px;
+cursor:pointer;
+border-radius:6px;
 }
 
-@keyframes leafFloat{
-0%{transform:translateY(120px) rotate(0)}
-100%{transform:translateY(-40px) rotate(360deg)}
-}
-
-/* FIRE PARTICLES */
-
-.fire .particles span{
-position:absolute;
-width:4px;
-height:4px;
-background:orange;
-border-radius:50%;
-animation:ember 3s linear infinite;
-}
-
-@keyframes ember{
-0%{transform:translateY(120px);opacity:1}
-100%{transform:translateY(-20px);opacity:0}
-}
-
-/* WATER PARTICLES */
-
-.water .particles span{
-position:absolute;
-width:5px;
-height:5px;
-background:rgba(255,255,255,0.6);
-border-radius:50%;
-animation:bubble 6s linear infinite;
-}
-
-@keyframes bubble{
-0%{transform:translateY(130px);opacity:0}
-30%{opacity:1}
-100%{transform:translateY(-30px);opacity:0}
-}
-
-/* AIR PARTICLES */
-
-.air .particles span{
-position:absolute;
-width:20px;
-height:2px;
-background:rgba(255,255,255,0.5);
-animation:wind 4s linear infinite;
-}
-
-@keyframes wind{
-0%{transform:translateX(-40px)}
-100%{transform:translateX(260px)}
-}
-
-/* DARK PARTICLES */
-
-.dark .particles span{
-position:absolute;
-width:8px;
-height:8px;
-background:rgba(0,0,0,0.5);
-border-radius:50%;
-animation:shadow 6s linear infinite;
-}
-
-@keyframes shadow{
-0%{transform:scale(0.5);opacity:0.3}
-50%{transform:scale(1.3);opacity:0.6}
-100%{transform:scale(0.5);opacity:0.3}
+.closeBtn{
+margin-top:10px;
+padding:6px 10px;
 }
 
 </style>
@@ -190,7 +142,7 @@ animation:shadow 6s linear infinite;
 <div class="tab" onclick="openTab('catches')">Catches</div>
 </div>
 
-<!-- LOG -->
+<!-- LOG TAB -->
 
 <div id="log" class="section active">
 
@@ -202,86 +154,109 @@ animation:shadow 6s linear infinite;
 
 </div>
 
-<!-- CATCHES -->
+<!-- CATCH TAB -->
 
 <div id="catches" class="section">
 <div class="grid" id="grid"></div>
 </div>
 
+<!-- MODAL -->
+
+<div id="modal" class="modal">
+<div class="modalContent" id="modalContent"></div>
+</div>
+
 <script>
 
-/* TEST DATABASE */
+/* DATABASE */
 
-const animals=[
+const animalDatabase=[
 
-{name:"Blue Whale",type:"water",image:"https://upload.wikimedia.org/wikipedia/commons/5/56/Bluewhale2.jpg"},
-{name:"Tiger",type:"fire",image:"https://upload.wikimedia.org/wikipedia/commons/5/56/Tiger.50.jpg"},
-{name:"Bald Eagle",type:"air",image:"https://upload.wikimedia.org/wikipedia/commons/1/1a/Bald_Eagle_Portrait.jpg"},
-{name:"Oak Tree Frog",type:"grass",image:"https://upload.wikimedia.org/wikipedia/commons/7/7b/Oak_treefrog.jpg"},
-{name:"Lesser Horseshoe Bat",type:"dark",image:"https://upload.wikimedia.org/wikipedia/commons/f/f2/Rhinolophus_hipposideros.jpg"}
+{
+name:"Blue Whale",
+scientific:"Balaenoptera musculus",
+type:"water",
+image:"https://upload.wikimedia.org/wikipedia/commons/5/56/Bluewhale2.jpg"
+},
+
+{
+name:"Tiger",
+scientific:"Panthera tigris",
+type:"fire",
+image:"https://upload.wikimedia.org/wikipedia/commons/5/56/Tiger.50.jpg"
+},
+
+{
+name:"Bald Eagle",
+scientific:"Haliaeetus leucocephalus",
+type:"air",
+image:"https://upload.wikimedia.org/wikipedia/commons/1/1a/Bald_Eagle_Portrait.jpg"
+},
+
+{
+name:"Oak Tree Frog",
+scientific:"Dryophytes quercicus",
+type:"grass",
+image:"https://upload.wikimedia.org/wikipedia/commons/7/7b/Oak_treefrog.jpg"
+},
+
+{
+name:"Lesser Horseshoe Bat",
+scientific:"Rhinolophus hipposideros",
+type:"dark",
+image:"https://upload.wikimedia.org/wikipedia/commons/f/f2/Rhinolophus_hipposideros.jpg"
+}
 
 ]
 
-let logged=JSON.parse(localStorage.getItem("wilddex"))||[]
+let loggedAnimals=JSON.parse(localStorage.getItem("wilddex"))||[]
 
-/* Dropdown */
+/* DROPDOWN */
 
 const select=document.getElementById("animalSelect")
 
-animals.forEach(a=>{
-let opt=document.createElement("option")
-opt.value=a.name
-opt.textContent=a.name
-select.appendChild(opt)
+animalDatabase.forEach(a=>{
+
+let option=document.createElement("option")
+option.value=a.name
+option.textContent=a.name
+
+select.appendChild(option)
+
 })
+
+/* LOG ANIMAL */
 
 function logAnimal(){
 
-let name=select.value
+const name=select.value
+
 if(!name)return
 
-if(logged.find(a=>a.name===name)){
-alert("Already logged")
+if(loggedAnimals.find(a=>a.name===name)){
+alert("Animal already logged!")
 return
 }
 
-let animal=animals.find(a=>a.name===name)
+const animal=animalDatabase.find(a=>a.name===name)
 
-logged.push(animal)
+loggedAnimals.push(animal)
 
-localStorage.setItem("wilddex",JSON.stringify(logged))
+localStorage.setItem("wilddex",JSON.stringify(loggedAnimals))
 
-render()
+renderCards()
 
-}
-
-/* PARTICLE GENERATOR */
-
-function particleHTML(){
-
-let html=""
-
-for(let i=0;i<10;i++){
-
-let x=Math.random()*200
-let delay=Math.random()*5
-
-html+=`<span style="left:${x}px;animation-delay:${delay}s"></span>`
-
-}
-
-return html
 }
 
 /* RENDER */
 
-function render(){
+function renderCards(){
 
 const grid=document.getElementById("grid")
 
 grid.innerHTML=""
 
-logged.forEach(a=>{
+loggedAnimals.forEach((a,index)=>{
 
 let card=document.createElement("div")
 
@@ -289,13 +264,13 @@ card.className=`card ${a.type}`
 
 card.innerHTML=`
 
-<div class="particles">${particleHTML()}</div>
-
-<img src="${a.image}" onerror="this.src=''">
+<img src="${a.image}" onerror="this.src='https://via.placeholder.com/300x180?text=No+Image'">
 
 <h3>${a.name}</h3>
 
 `
+
+card.onclick=()=>openModal(index)
 
 grid.appendChild(card)
 
@@ -303,7 +278,57 @@ grid.appendChild(card)
 
 }
 
-render()
+renderCards()
+
+/* MODAL */
+
+function openModal(index){
+
+const a=loggedAnimals[index]
+
+const modal=document.getElementById("modal")
+
+const content=document.getElementById("modalContent")
+
+content.innerHTML=`
+
+<img src="${a.image}">
+
+<h2>${a.name}</h2>
+
+<p><i>${a.scientific}</i></p>
+
+<p>Element: ${a.type}</p>
+
+<button class="releaseBtn" onclick="releaseAnimal(${index})">Release Animal</button>
+
+<br>
+
+<button class="closeBtn" onclick="closeModal()">Close</button>
+
+`
+
+modal.style.display="flex"
+
+}
+
+function closeModal(){
+
+document.getElementById("modal").style.display="none"
+
+}
+
+function releaseAnimal(index){
+
+loggedAnimals.splice(index,1)
+
+localStorage.setItem("wilddex",JSON.stringify(loggedAnimals))
+
+closeModal()
+
+renderCards()
+
+}
 
 /* TABS */
 
