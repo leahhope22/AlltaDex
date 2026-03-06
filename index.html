@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>WildDex Test</title>
+<title>WildDex Minimal Test</title>
 <style>
 body{font-family:Arial;margin:0;background:linear-gradient(135deg,#a3f0ba,#d7f2ff);}
 .tabs{display:flex;background:#2c3e50;color:white;}
@@ -15,26 +15,17 @@ button{padding:10px 18px;border:none;border-radius:8px;background:#1abc9c;color:
 .collection{display:grid;grid-template-columns:repeat(auto-fill,260px);gap:24px;}
 .card{border-radius:18px;overflow:hidden;color:white;box-shadow:0 10px 30px rgba(0,0,0,.25);transition:.25s;cursor:pointer;position:relative;height:350px;display:flex;flex-direction:column;}
 .card:hover{transform:scale(1.05);}
-.card img{width:100%;height:160px;object-fit:cover;background:white;position:relative;z-index:2;}
-.card-body{background:rgba(255,255,255,.9);color:black;padding:10px;flex:1;display:flex;flex-direction:column;justify-content:space-between;position:relative;z-index:2;}
-.card-header{padding:12px;font-weight:bold;display:flex;justify-content:space-between;position:relative;z-index:2;}
+.card img{width:100%;height:160px;object-fit:cover;background:white;}
+.card-body{background:rgba(255,255,255,.9);color:black;padding:10px;flex:1;display:flex;flex-direction:column;justify-content:space-between;}
+.card-header{padding:12px;font-weight:bold;display:flex;justify-content:space-between;}
 .stats{display:flex;gap:15px;font-weight:bold;margin-top:6px;}
 .footer{display:flex;justify-content:space-between;margin-top:6px;font-size:14px;}
-.badges{display:flex;flex-wrap:wrap;gap:20px;}
-.badge{background:white;padding:16px;border-radius:12px;box-shadow:0 5px 15px rgba(0,0,0,.2);min-width:140px;text-align:center;}
 .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);justify-content:center;align-items:center;}
 .modal-content{background:white;padding:20px;border-radius:12px;width:400px;max-width:90%;max-height:90%;overflow-y:auto;position:relative;}
 .modal-close{position:absolute;top:10px;right:12px;font-weight:bold;cursor:pointer;}
-.modal img{width:100%;height:220px;object-fit:cover;border-radius:10px;margin-bottom:12px;}
 .autocomplete-suggestions{border:1px solid #ccc;background:white;position:absolute;max-height:150px;overflow-y:auto;z-index:1000;width:250px;}
 .autocomplete-suggestion{padding:5px;cursor:pointer;}
 .autocomplete-suggestion:hover{background:#eee;}
-
-/* Rarity Glow */
-.card.common{}
-.card.rare{box-shadow:0 0 10px silver,0 10px 30px rgba(0,0,0,.25);}
-.card.epic{box-shadow:0 0 15px purple,0 10px 30px rgba(0,0,0,.25);}
-.card.legendary{box-shadow:0 0 20px gold,0 10px 30px rgba(0,0,0,.25);}
 
 /* Element Colors */
 .card.fire{background:linear-gradient(135deg,#ff7b4b,#ffcc5c);}
@@ -43,70 +34,51 @@ button{padding:10px 18px;border:none;border-radius:8px;background:#1abc9c;color:
 .card.ice{background:linear-gradient(135deg,#7de2fc,#b9b6e5);}
 .card.flying{background:linear-gradient(135deg,#89f7fe,#66a6ff);}
 .card.normal{background:linear-gradient(135deg,#bdbdbd,#e0e0e0);}
-
-/* Subtle Effects */
-.card.fire::before,.card.water::before,.card.grass::before{
-  content:"";position:absolute;top:0;left:0;width:100%;height:160px;pointer-events:none;z-index:1;
-}
-.card.fire::before{
-  background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"><path fill="%23FFD700" d="M10 0 C8 5,12 5,10 10 C14 8,12 12,10 20 C6 12,8 8,10 0 Z"/></svg>');
-  background-size:20px 20px;animation:fireFlicker 1s linear infinite;}
-@keyframes fireFlicker{0%{background-position:0 0;}25%{background-position:5px 2px;}50%{background-position:2px 5px;}75%{background-position:4px 1px;}100%{background-position:0 0;}}
-.card.water::before{
-  background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="8" r="6" fill="rgba(255,255,255,0.3)"/></svg>');
-  background-size:30px 30px;animation:waterRise 6s linear infinite;}
-@keyframes waterRise{0%{background-position:0 100%;}100%{background-position:0 -100%;}}
-.card.grass::before{
-  background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"><path fill="%23008000" d="M0 0 L4 6 L8 0 Z"/></svg>');
-  background-size:20px 20px;animation:leafSway 3s ease-in-out infinite;}
-@keyframes leafSway{0%{background-position:0 0;}50%{background-position:5px 2px;}100%{background-position:0 0;}}
-
-.card img,.card-body,.card-header{position:relative;z-index:2;}
 </style>
 </head>
 <body>
 
 <div class="tabs">
-<div class="tab active" onclick="openTab('log')">Log Animal</div>
-<div class="tab" onclick="openTab('collection')">Collection</div>
-<div class="tab" onclick="openTab('badges')">Badges</div>
+  <div class="tab active" onclick="openTab('log')">Log Animal</div>
+  <div class="tab" onclick="openTab('collection')">Collection</div>
+  <div class="tab" onclick="openTab('badges')">Badges</div>
 </div>
 
 <div id="log" class="section active">
-<h2>Log an Animal</h2>
-<div style="position:relative;">
-<input id="animalInput" placeholder="Start typing an animal name..." oninput="showSuggestions()" autocomplete="off"/>
-<div id="suggestions" class="autocomplete-suggestions"></div>
-</div>
-<button onclick="logAnimal()">Log</button>
+  <h2>Log an Animal</h2>
+  <div style="position:relative;">
+    <input id="animalInput" placeholder="Start typing an animal name..." oninput="showSuggestions()" autocomplete="off"/>
+    <div id="suggestions" class="autocomplete-suggestions"></div>
+  </div>
+  <button onclick="logAnimal()">Log</button>
 </div>
 
 <div id="collection" class="section">
-<h2>My WildDex</h2>
-<div id="collectionGrid" class="collection"></div>
+  <h2>My WildDex</h2>
+  <div id="collectionGrid" class="collection"></div>
 </div>
 
 <div id="badges" class="section">
-<h2>Explorer Badges</h2>
-<div id="badgeContainer" class="badges"></div>
+  <h2>Explorer Badges</h2>
+  <div id="badgeContainer" class="badges"></div>
 </div>
 
 <div id="modal" class="modal">
-<div class="modal-content">
-<span class="modal-close" onclick="closeModal()">✖</span>
-<div id="modalContent"></div>
-<button onclick="releaseAnimal()">Release Animal</button>
-</div>
+  <div class="modal-content">
+    <span class="modal-close" onclick="closeModal()">✖</span>
+    <div id="modalContent"></div>
+    <button onclick="releaseAnimal()">Release Animal</button>
+  </div>
 </div>
 
 <script>
 // --- Animal Database ---
 const animalDatabase=[
-{name:"African Lion",scientific:"Panthera leo",type:["fire"],continent:["Africa"],image:"https://upload.wikimedia.org/wikipedia/commons/7/73/Lion_waiting_in_Namibia.jpg"},
-{name:"Blue Whale",scientific:"Balaenoptera musculus",type:["water"],continent:["Ocean"],image:"https://upload.wikimedia.org/wikipedia/commons/5/53/Bluewhale2.jpg"},
-{name:"Emperor Penguin",scientific:"Aptenodytes forsteri",type:["ice"],continent:["Antarctica"],image:"https://upload.wikimedia.org/wikipedia/commons/e/e0/Emperor_Penguin_Manchot_empereur.jpg"},
-{name:"Bald Eagle",scientific:"Haliaeetus leucocephalus",type:["flying"],continent:["North America"],image:"https://upload.wikimedia.org/wikipedia/commons/1/14/Bald_Eagle_Portrait.jpg"},
-{name:"Elephant",scientific:"Loxodonta africana",type:["grass"],continent:["Africa"],image:"https://upload.wikimedia.org/wikipedia/commons/3/37/African_Bush_Elephant.jpg"}
+  {name:"African Lion",scientific:"Panthera leo",type:["fire"],continent:["Africa"],image:"https://upload.wikimedia.org/wikipedia/commons/7/73/Lion_waiting_in_Namibia.jpg"},
+  {name:"Blue Whale",scientific:"Balaenoptera musculus",type:["water"],continent:["Ocean"],image:"https://upload.wikimedia.org/wikipedia/commons/5/53/Bluewhale2.jpg"},
+  {name:"Emperor Penguin",scientific:"Aptenodytes forsteri",type:["ice"],continent:["Antarctica"],image:"https://upload.wikimedia.org/wikipedia/commons/e/e0/Emperor_Penguin_Manchot_empereur.jpg"},
+  {name:"Bald Eagle",scientific:"Haliaeetus leucocephalus",type:["flying"],continent:["North America"],image:"https://upload.wikimedia.org/wikipedia/commons/1/14/Bald_Eagle_Portrait.jpg"},
+  {name:"Elephant",scientific:"Loxodonta africana",type:["grass"],continent:["Africa"],image:"https://upload.wikimedia.org/wikipedia/commons/3/37/African_Bush_Elephant.jpg"}
 ];
 
 // --- Symbols ---
@@ -160,7 +132,6 @@ function logAnimal(){
     atk:random(20,100),
     def:random(20,100),
     rarity:rarity(),
-    shiny:false,
     move:moves[random(0,moves.length)]
   };
   animals.push(animal);
@@ -196,12 +167,13 @@ function renderCollection(){
 
 // --- Badges ---
 function renderBadges(){
-  let counts={};
-  animals.forEach(a=>a.continent.forEach(c=>counts[c]=(counts[c]||0)+1));
   const container=document.getElementById("badgeContainer");
   container.innerHTML="";
+  let counts={};
+  animals.forEach(a=>a.continent.forEach(c=>counts[c]=(counts[c]||0)+1));
   for(let c in counts){
-    const badge=document.createElement("div");badge.className="badge";
+    const badge=document.createElement("div");
+    badge.className="badge";
     badge.innerHTML=`<b>${continentIcons[c]} ${c} Explorer</b><br>${counts[c]} animals logged`;
     container.appendChild(badge);
   }
@@ -224,20 +196,28 @@ function openModal(index){
     <p><b>Rarity:</b> ${a.rarity}</p>`;
   modal.style.display="flex";
 }
+
 function closeModal(){document.getElementById("modal").style.display="none";}
 function releaseAnimal(){
   if(currentModalAnimalIndex!==null){
     animals.splice(currentModalAnimalIndex,1);
     localStorage.setItem("wilddex",JSON.stringify(animals));
-    renderCollection();renderBadges();closeModal();
+    renderCollection();
+    renderBadges();
+    closeModal();
   }
 }
 
-window.onclick=function(e){if(e.target==document.getElementById("modal")) closeModal();}
-function openTab(id){document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));event.target.classList.add("active");}
+function openTab(id){
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  event.target.classList.add("active");
+}
 
 renderCollection();
 renderBadges();
 </script>
+
 </body>
 </html>
