@@ -43,8 +43,9 @@ h1{margin-top:15px;}
   border:2px solid rgba(0,0,0,.2);
   transition:.2s;
   color:#111;
+  cursor:pointer;
 }
-.card:hover{transform:scale(1.03)}
+.card:hover{transform:scale(1.03);}
 .card-header{
   display:flex;
   justify-content:space-between;
@@ -67,15 +68,6 @@ h1{margin-top:15px;}
   width:100%;
   height:100%;
   object-fit:cover;
-}
-.no-image{
-  position:absolute;
-  font-size:70px;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  width:100%;
-  height:100%;
 }
 .card-body{
   padding:8px;
@@ -100,7 +92,6 @@ h1{margin-top:15px;}
   margin-top:6px;
   font-size:18px;
 }
-/* overlay */
 .card-overlay{
   position:absolute;
   top:0;
@@ -109,12 +100,12 @@ h1{margin-top:15px;}
   height:100%;
   z-index:1;
   pointer-events:none;
+  border-radius:inherit;
 }
-/* rarity glow */
+
+/* Rarity glow */
 .card.common{box-shadow:none;}
-.card.uncommon{
-  box-shadow:0 0 10px rgba(0,200,255,.4);
-}
+.card.uncommon{box-shadow:0 0 10px rgba(0,200,255,.4);}
 .card.rare{
   box-shadow:0 0 12px rgba(255,150,0,.6),0 0 20px rgba(255,150,0,.4);
 }
@@ -126,232 +117,238 @@ h1{margin-top:15px;}
   from{filter:brightness(1)}
   to{filter:brightness(1.15)}
 }
-/* ELEMENT COLORS */
+
+/* Element colors */
 .card.fire{background:linear-gradient(#ffe5d0,#ffd0b0);}
 .card.water{background:linear-gradient(#dff4ff,#c8eaff);}
 .card.grass{background:linear-gradient(#e4ffd8,#d0f5c2);}
 .card.ice{background:linear-gradient(#eaffff,#dff6ff);}
 .card.flying{background:linear-gradient(#f0f0ff,#e5e5ff);}
-.card.dark{background:linear-gradient(#dcdcdc,#bfbfbf);}
-.card.poison{background:linear-gradient(#f3e4ff,#e0c8ff);}
-.card.bug{background:linear-gradient(#f0ffd8,#d5f0c2);}
-/* ELEMENT EFFECTS */
-/* fire */
+.card.dark{background:linear-gradient(#ccc,#999);}
+.card.poison{background:linear-gradient(#f0d0ff,#e0b0ff);}
+.card.bug{background:linear-gradient(#e0f5b0,#c8e88c);}
+
+/* Element effects */
+/* Fire */
 .card.fire .card-overlay{
   background:
     radial-gradient(circle at 50% 100%, rgba(255,120,0,.25), transparent 70%),
     radial-gradient(circle at 60% 110%, rgba(255,60,0,.2), transparent 70%);
   animation:fireFlicker 2s infinite alternate;
 }
-@keyframes fireFlicker{from{transform:translateY(0)}to{transform:translateY(-3px) scale(1.03)}}
-/* water */
+@keyframes fireFlicker{0%{transform:translateY(0)}100%{transform:translateY(-3px) scale(1.03)}}
+
+/* Water */
 .card.water .card-overlay{
-  background:linear-gradient(120deg,transparent,rgba(0,150,255,.15),transparent);
+  background:
+    linear-gradient(120deg,transparent,rgba(0,150,255,.15),transparent);
   animation:waterFlow 4s linear infinite;
 }
 @keyframes waterFlow{from{background-position:-200px}to{background-position:200px}}
-/* grass */
+
+/* Grass */
 .card.grass .card-overlay{
-  background:radial-gradient(circle, rgba(0,200,0,.15), transparent 70%);
+  background:
+    radial-gradient(circle, rgba(0,200,0,.15), transparent 70%);
   animation:grassBreathe 5s infinite alternate;
 }
 @keyframes grassBreathe{from{opacity:.3}to{opacity:.6}}
-/* ice */
-.card.ice .card-overlay{
-  background:linear-gradient(60deg,transparent,rgba(200,255,255,.25),transparent);
-  animation:iceShine 5s linear infinite;
+
+/* Ice */
+.card.ice .card-overlay::before{
+  content:'';
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  pointer-events:none;
+  background:
+    radial-gradient(circle, rgba(255,255,255,.25) 1px, transparent 2px),
+    radial-gradient(circle, rgba(200,240,255,.2) 1px, transparent 2px);
+  background-size:10px 10px, 15px 15px;
+  animation:iceGlitter 3s linear infinite;
 }
-@keyframes iceShine{from{background-position:-300px}to{background-position:300px}}
-/* flying */
+@keyframes iceGlitter{
+  0%{background-position:0 0,0 0;}
+  50%{background-position:5px 5px,7px 3%;}
+  100%{background-position:0 10px,0 15px;}
+}
+
+/* Flying */
 .card.flying .card-overlay{
-  background:linear-gradient(90deg,transparent,rgba(200,200,255,.15),transparent);
+  background:
+    linear-gradient(90deg,transparent,rgba(180,180,255,.15),transparent);
   animation:windMove 6s linear infinite;
 }
 @keyframes windMove{from{background-position:-400px}to{background-position:400px}}
-.controls{margin-top:10px;}
-.controls input, .controls select{padding:6px;margin:4px;}
-.badge{background:white;padding:10px;border-radius:10px;margin:10px auto;width:220px;border:2px solid #ccc;}
+
+/* Dark */
+.card.dark .card-overlay{
+  background:
+    radial-gradient(circle, rgba(0,0,0,.15), transparent 70%);
+  animation:darkParticles 5s linear infinite;
+}
+
+/* Poison */
+.card.poison .card-overlay::before{
+  content:'';
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  pointer-events:none;
+  background:
+    radial-gradient(circle, rgba(120,0,120,.2) 20%, transparent 80%),
+    radial-gradient(circle, rgba(180,0,180,.15) 20%, transparent 80%);
+  background-size:60px 60px, 40px 40px;
+  animation:poisonSmoke 5s linear infinite;
+}
+@keyframes poisonSmoke{
+  0%{background-position:0 100%,50px 80%;}
+  50%{background-position:30px 50%,20px 30%;}
+  100%{background-position:0 0,50px -50%;}
+}
+
+/* Bug */
+.card.bug .card-overlay{
+  background:
+    radial-gradient(circle, rgba(50,200,50,.15), transparent 70%);
+  animation:bugParticles 4s linear infinite;
+}
+@keyframes bugParticles{from{background-position:0 0}to{background-position:30px 30px}}
+
+/* Dual type overlay */
+.card[data-type2] .card-overlay::before{
+  content:'';
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  pointer-events:none;
+  opacity:0.35;
+  z-index:1;
+}
 </style>
 </head>
 
 <body>
-
 <h1>WildDex</h1>
 
 <div class="tabs">
-<div class="tab active" onclick="openPage('log')">Log</div>
-<div class="tab" onclick="openPage('catches')">Catches</div>
-<div class="tab" onclick="openPage('badges')">Badges</div>
+  <div class="tab active" onclick="openPage('log')">Log</div>
+  <div class="tab" onclick="openPage('catches')">Catches</div>
+  <div class="tab" onclick="openPage('badges')">Badges</div>
 </div>
 
 <div id="log" class="page active">
-<input id="animalInput" list="animals" placeholder="Log animal">
-<datalist id="animals"></datalist>
-<button onclick="logAnimal()">Log</button>
+  <input id="animalInput" list="animals" placeholder="Log animal">
+  <datalist id="animals"></datalist>
+  <button onclick="logAnimal()">Log</button>
 </div>
 
 <div id="catches" class="page">
-<div class="controls">
-<input id="searchBox" placeholder="Search animals" oninput="renderCollection()">
-<select id="filterElement" onchange="renderCollection()">
-<option value="all">All Elements</option>
-<option value="fire">Fire</option>
-<option value="water">Water</option>
-<option value="grass">Grass</option>
-<option value="ice">Ice</option>
-<option value="flying">Flying</option>
-<option value="dark">Dark</option>
-<option value="poison">Poison</option>
-<option value="bug">Bug</option>
-</select>
-</div>
-<div id="collection" class="grid"></div>
+  <div class="controls">
+    <input id="searchBox" placeholder="Search animals" oninput="renderCollection()">
+    <select id="filterElement" onchange="renderCollection()">
+      <option value="all">All Elements</option>
+      <option value="fire">Fire</option>
+      <option value="water">Water</option>
+      <option value="grass">Grass</option>
+      <option value="ice">Ice</option>
+      <option value="flying">Flying</option>
+      <option value="dark">Dark</option>
+      <option value="poison">Poison</option>
+      <option value="bug">Bug</option>
+    </select>
+  </div>
+  <div id="collection" class="grid"></div>
 </div>
 
 <div id="badges" class="page">
-<div id="badgeArea"></div>
+  <div id="badgeArea"></div>
 </div>
 
 <script>
-const typeIcons={
-fire:"🔥",
-water:"💧",
-grass:"🌿",
-ice:"❄️",
-flying:"🕊️",
-dark:"🌙",
-poison:"☠️",
-bug:"🐛"
-}
-const continentIcons={
-Africa:"🌍",
-Europe:"🌍",
-Asia:"🌏",
-NorthAmerica:"🌎",
-SouthAmerica:"🌎",
-Australia:"🦘",
-Antarctica:"🧊"
-}
+const typeIcons={fire:"🔥", water:"💧", grass:"🌿", ice:"❄️", flying:"🕊️", dark:"🌑", poison:"☣️", bug:"🐛"};
+const continentIcons={Africa:"🌍", Europe:"🌍", Asia:"🌏", NorthAmerica:"🌎", SouthAmerica:"🌎", Australia:"🦘", Antarctica:"🧊"};
 
-// Animal database
 const animals=[
-{name:"African Lion",scientific:"Panthera leo",type:"fire",continent:"Africa",rarity:"rare",atk:80,def:70,move:"Flame Pounce"},
-{name:"Bald Eagle",scientific:"Haliaeetus leucocephalus",type:"flying",continent:"NorthAmerica",rarity:"uncommon",atk:60,def:50,move:"Sky Dive"},
-{name:"Polar Bear",scientific:"Ursus maritimus",type:"ice",continent:"Antarctica",rarity:"rare",atk:75,def:80,move:"Frozen Swipe"},
-{name:"Poison Dart Frog",scientific:"Dendrobatidae",type:"poison",continent:"SouthAmerica",rarity:"uncommon",atk:40,def:30,move:"Toxic Jump"},
-{name:"Blue Whale",scientific:"Balaenoptera musculus",type:"water",continent:"Asia",rarity:"legendary",atk:90,def:90,move:"Ocean Surge"},
-{name:"Lesser Horseshoe Bat",scientific:"Rhinolophus hipposideros",type:["dark","flying"],continent:"Europe",rarity:"uncommon",atk:35,def:30,move:"Night Echo"},
-{name:"Monarch Butterfly",scientific:"Danaus plexippus",type:["bug","flying"],continent:"NorthAmerica",rarity:"common",atk:20,def:15,move:"Wing Drift"},
-{name:"Komodo Dragon",scientific:"Varanus komodoensis",type:["poison","fire"],continent:"Asia",rarity:"rare",atk:85,def:70,move:"Venom Bite"},
-{name:"Spotted Hyena",scientific:"Crocuta crocuta",type:["dark","fire"],continent:"Africa",rarity:"uncommon",atk:65,def:55,move:"Savage Hunt"},
-{name:"Tarantula",scientific:"Theraphosidae",type:["bug","poison"],continent:"SouthAmerica",rarity:"rare",atk:50,def:40,move:"Venom Strike"}
-]
+  {name:"African Lion",scientific:"Panthera leo",type:"fire",continent:"Africa",rarity:"rare",atk:80,def:70,move:"Flame Pounce"},
+  {name:"Bald Eagle",scientific:"Haliaeetus leucocephalus",type:"flying",continent:"NorthAmerica",rarity:"uncommon",atk:60,def:50,move:"Sky Dive"},
+  {name:"Polar Bear",scientific:"Ursus maritimus",type:"ice",continent:"Antarctica",rarity:"rare",atk:75,def:80,move:"Frozen Swipe"},
+  {name:"Poison Dart Frog",scientific:"Dendrobatidae",type:"poison",continent:"SouthAmerica",rarity:"uncommon",atk:40,def:30,move:"Toxic Jump"},
+  {name:"Horseshoe Bat",scientific:"Rhinolophus hipposideros",type:"dark",type2:"flying",continent:"Europe",rarity:"rare",atk:50,def:40,move:"Night Dive"}
+];
 
 const datalist=document.getElementById("animals")
-animals.forEach(a=>{
-  let o=document.createElement("option")
-  o.value=a.name
-  datalist.appendChild(o)
-})
+animals.forEach(a=>{let o=document.createElement("option");o.value=a.name;datalist.appendChild(o);});
 
-let logged=[]
+let logged=[];
 
-// prevent duplicates
 function logAnimal(){
-  let name=document.getElementById("animalInput").value
-  if(!name)return
-  let animal=animals.find(a=>a.name===name)
-  if(!animal) return
-  if(logged.some(a=>a.name===name)) return alert("Animal already logged")
-  logged.push(animal)
-  renderCollection()
-  updateBadges()
+  let name=document.getElementById("animalInput").value;
+  let animal=animals.find(a=>a.name===name);
+  if(!animal || logged.some(l=>l.name===name)) return; // prevent duplicates
+  logged.push(animal);
+  renderCollection();
+  updateBadges();
 }
 
-// Wikipedia image
 async function getImage(name){
   try{
-    let url=`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name)}`
-    let res=await fetch(url)
-    let data=await res.json()
-    return data.thumbnail ? data.thumbnail.source : ""
-  }catch{return ""}
+    let url=`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name)}`;
+    let res=await fetch(url);
+    let data=await res.json();
+    return data.thumbnail ? data.thumbnail.source : "";
+  }catch{return "";}
 }
 
-// render cards
 async function renderCollection(){
-  let area=document.getElementById("collection")
-  area.innerHTML=""
-  let search=document.getElementById("searchBox").value.toLowerCase()
-  let filter=document.getElementById("filterElement").value
+  let area=document.getElementById("collection");
+  area.innerHTML="";
+  let search=document.getElementById("searchBox").value.toLowerCase();
+  let filter=document.getElementById("filterElement").value;
   for(let a of logged){
-    if(search && !a.name.toLowerCase().includes(search)) continue
-    if(filter!="all"){
-      if(Array.isArray(a.type)){
-        if(!a.type.includes(filter)) continue
-      }else if(a.type!=filter) continue
-    }
-    let img=await getImage(a.name)
-    let card=document.createElement("div")
-    // join dual types into classes
-    let typeClass=Array.isArray(a.type)?a.type.join(" "):a.type
-    card.className=`card ${typeClass} ${a.rarity}`
-    card.onclick=()=>openModal(a)
+    if(search && !a.name.toLowerCase().includes(search)) continue;
+    if(filter!="all" && a.type!=filter) continue;
+    let img=await getImage(a.name);
+    let card=document.createElement("div");
+    card.className=`card ${a.type} ${a.rarity}`;
+    if(a.type2) card.dataset.type2=a.type2;
     card.innerHTML=`
-    <div class="card-header">
-      <span>${a.name}</span>
-      <span>HP ${a.atk+a.def}</span>
-    </div>
-    <div class="image-container">
-      <img src="${img}" alt="${a.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-      <div class="no-image">🖤</div>
-    </div>
-    <div class="card-body">
-      <div class="card-overlay"></div>
-      <div class="scientific">${a.scientific}</div>
-      <div><b>${a.move}</b></div>
-      <div class="stats">
-        <span>ATK ${a.atk}</span>
-        <span>DEF ${a.def}</span>
+      <div class="card-header">
+        <span>${a.name}</span>
+        <span>HP ${a.atk+a.def}</span>
       </div>
-      <div class="footer">
-        <span>${Array.isArray(a.type)?a.type.map(t=>typeIcons[t]).join(" "):typeIcons[a.type]}</span>
-        <span>${continentIcons[a.continent]}</span>
+      <div class="image-container">
+        <img src="${img}" alt="${a.name}">
       </div>
-    </div>`
-    area.appendChild(card)
+      <div class="card-body">
+        <div class="card-overlay"></div>
+        <div class="scientific">${a.scientific}</div>
+        <div><b>${a.move}</b></div>
+        <div class="stats">
+          <span>ATK ${a.atk}</span>
+          <span>DEF ${a.def}</span>
+        </div>
+        <div class="footer">
+          <span>${typeIcons[a.type]}${a.type2?` ${typeIcons[a.type2]}`:""}</span>
+          <span>${continentIcons[a.continent]}</span>
+        </div>
+      </div>
+    `;
+    area.appendChild(card);
   }
 }
 
-// badges
 function updateBadges(){
-  let badgeArea=document.getElementById("badgeArea")
-  badgeArea.innerHTML=""
-  let continents=[...new Set(logged.map(a=>a.continent))]
-  let elements=[...new Set(logged.flatMap(a=>Array.isArray(a.type)?a.type:a.type))]
-  if(continents.length>=3) badgeArea.innerHTML+=`<div class="badge">🌍 Explorer Badge</div>`
-  if(elements.length>=3) badgeArea.innerHTML+=`<div class="badge">⚡ Elementalist Badge</div>`
-  if(logged.length>=5) badgeArea.innerHTML+=`<div class="badge">📘 Field Researcher</div>`
-}
-
-// modal
-function openModal(animal){
-  let modal=prompt(`${animal.name} (${animal.scientific})\nMove: ${animal.move}\nATK: ${animal.atk}\nDEF: ${animal.def}\nRarity: ${animal.rarity}\n\nRelease this animal? (yes/no)`)
-  if(modal && modal.toLowerCase()=="yes"){
-    logged=logged.filter(a=>a.name!=animal.name)
-    renderCollection()
-    updateBadges()
-  }
+  let badgeArea=document.getElementById("badgeArea");
+  badgeArea.innerHTML="";
+  let continents=[...new Set(logged.map(a=>a.continent))];
+  let elements=[...new Set(logged.map(a=>a.type))];
+  if(continents.length>=3) badgeArea.innerHTML+=`<div class="badge">🌍 Explorer Badge</div>`;
+  if(elements.length>=3) badgeArea.innerHTML+=`<div class="badge">⚡ Elementalist Badge</div>`;
+  if(logged.length>=5) badgeArea.innerHTML+=`<div class="badge">📘 Field Researcher</div>`;
 }
 
 function openPage(id){
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"))
-  document.getElementById(id).classList.add("active")
-  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"))
-  event.target.classList.add("active")
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  event.target.classList.add("active");
 }
 
 </script>
-
 </body>
 </html>
