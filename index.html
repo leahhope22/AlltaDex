@@ -233,13 +233,15 @@ to{background-position:200px}
 
 .card.grass .card-overlay{
 background:
-radial-gradient(circle, rgba(0,200,0,.15), transparent 70%);
-animation:grassBreathe 5s infinite alternate;
+radial-gradient(circle at 50% 100%, rgba(255,120,0,.25), transparent 70%),
+radial-gradient(circle at 60% 110%, rgba(255,60,0,.2), transparent 70%);
+animation:grassSway 2s infinite alternate;
 }
 
-@keyframes grassBreathe{
-from{opacity:.3}
-to{opacity:.6}
+@keyframes grassSway{
+from{transform:translateY(0)}
+to{transform:translateY(-3px) scale(1.03)}
+
 }
 
 /* ice */
