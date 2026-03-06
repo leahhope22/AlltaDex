@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>WildDex Test</title>
+<title>WildDex Test 5 Animals</title>
 <style>
 body{font-family:Arial;margin:0;background:linear-gradient(135deg,#a3f0ba,#d7f2ff);}
 .tabs{display:flex;background:#2c3e50;color:white;}
@@ -10,7 +10,7 @@ body{font-family:Arial;margin:0;background:linear-gradient(135deg,#a3f0ba,#d7f2f
 .tab.active{background:#1abc9c;}
 .section{display:none;padding:25px;}
 .section.active{display:block;}
-input,select{padding:10px;font-size:16px;border-radius:8px;border:none;width:240px;margin-bottom:10px;}
+input{padding:10px;font-size:16px;border-radius:8px;border:none;width:240px;}
 button{padding:10px 18px;border:none;border-radius:8px;background:#1abc9c;color:white;font-size:16px;cursor:pointer;margin-left:10px;}
 .collection{display:grid;grid-template-columns:repeat(auto-fill,260px);gap:24px;}
 .card{border-radius:18px;overflow:hidden;color:white;box-shadow:0 10px 30px rgba(0,0,0,.25);transition:.25s;cursor:pointer;position:relative;height:350px;display:flex;flex-direction:column;}
@@ -42,12 +42,9 @@ button{padding:10px 18px;border:none;border-radius:8px;background:#1abc9c;color:
 .card.grass{background:linear-gradient(135deg,#43e97b,#38f9d7);}
 .card.ice{background:linear-gradient(135deg,#7de2fc,#b9b6e5);}
 .card.flying{background:linear-gradient(135deg,#89f7fe,#66a6ff);}
-.card.dark{background:linear-gradient(135deg,#2f2f2f,#555);}
-.card.electric{background:linear-gradient(135deg,#fff200,#ffd500);}
-.card.poison{background:linear-gradient(135deg,#a24fab,#d46fc0);}
 .card.normal{background:linear-gradient(135deg,#bdbdbd,#e0e0e0);}
 
-/* Element Effects */
+/* Subtle Element Effects */
 .card.fire::before,.card.water::before,.card.grass::before,.card.ice::before,.card.flying::before{
   content:"";position:absolute;top:0;left:0;width:100%;height:160px;pointer-events:none;z-index:1;
 }
@@ -63,16 +60,8 @@ button{padding:10px 18px;border:none;border-radius:8px;background:#1abc9c;color:
   background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"><path fill="%23008000" d="M0 0 L4 6 L8 0 Z"/></svg>');
   background-size:20px 20px;animation:leafSway 3s ease-in-out infinite;}
 @keyframes leafSway{0%{background-position:0 0;}50%{background-position:5px 2px;}100%{background-position:0 0;}}
-.card.ice::before{
-  background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"><circle cx="4" cy="4" r="2" fill="%23fff"/></svg>');
-  background-size:10px 10px;animation:iceSparkle 2s linear infinite;}
-@keyframes iceSparkle{0%{opacity:0.5;}50%{opacity:1;}100%{opacity:0.5;}}
-.card.flying::before{
-  background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"><path stroke="%23fff" stroke-width="1" d="M0 8 L20 0 M0 4 L20 8"/></svg>');
-  background-size:20px 20px;animation:windMove 3s linear infinite;}
-@keyframes windMove{0%{background-position:0 0;}100%{background-position:20px 0;}}
 
-/* Ensure content stays visible above effects */
+/* Ensure content stays above effects */
 .card img,.card-body,.card-header{position:relative;z-index:2;}
 </style>
 </head>
@@ -95,11 +84,6 @@ button{padding:10px 18px;border:none;border-radius:8px;background:#1abc9c;color:
 
 <div id="collection" class="section">
 <h2>My WildDex</h2>
-Sort by: 
-<select id="sortSelect" onchange="renderCollection()">
-<option value="rarity">Rarity</option>
-<option value="continent">Continent</option>
-</select>
 <div id="collectionGrid" class="collection"></div>
 </div>
 
@@ -117,8 +101,144 @@ Sort by:
 </div>
 
 <script>
-// JS logic remains mostly the same as previous versions
-// [Here we would include the same JS functions as before, fixed for card rendering with correct z-index and image placeholders]
+// --- Database with 5 animals ---
+const animalDatabase=[
+{name:"African Lion",scientific:"Panthera leo",type:["fire"],continent:["Africa"],image:"https://upload.wikimedia.org/wikipedia/commons/7/73/Lion_waiting_in_Namibia.jpg"},
+{name:"Blue Whale",scientific:"Balaenoptera musculus",type:["water"],continent:["Ocean"],image:"https://upload.wikimedia.org/wikipedia/commons/5/53/Bluewhale2.jpg"},
+{name:"Emperor Penguin",scientific:"Aptenodytes forsteri",type:["ice"],continent:["Antarctica"],image:"https://upload.wikimedia.org/wikipedia/commons/e/e0/Emperor_Penguin_Manchot_empereur.jpg"},
+{name:"Bald Eagle",scientific:"Haliaeetus leucocephalus",type:["flying"],continent:["North America"],image:"https://upload.wikimedia.org/wikipedia/commons/1/14/Bald_Eagle_Portrait.jpg"},
+{name:"Elephant",scientific:"Loxodonta africana",type:["grass"],continent:["Africa"],image:"https://upload.wikimedia.org/wikipedia/commons/3/37/African_Bush_Elephant.jpg"}
+];
+
+// --- Symbols ---
+const typeIcons={fire:"🔥",water:"💧",grass:"🌿",ice:"❄️",flying:"🕊️",normal:"⚪"};
+const continentIcons={Africa:"🌍",North America:"🌎",Antarctica:"❄️",Ocean:"🌊"};
+
+// --- Data ---
+let animals=JSON.parse(localStorage.getItem("wilddex"))||[];
+let currentModalAnimalIndex=null;
+
+// --- Autocomplete ---
+function showSuggestions(){
+  const input=document.getElementById("animalInput");
+  const sugg=document.getElementById("suggestions");
+  const val=input.value.toLowerCase();
+  sugg.innerHTML="";
+  if(!val) return;
+  animalDatabase.forEach(a=>{
+    if(a.name.toLowerCase().includes(val)){
+      const div=document.createElement("div");
+      div.className="autocomplete-suggestion";
+      div.innerText=a.name;
+      div.onclick=()=>{input.value=a.name;sugg.innerHTML="";};
+      sugg.appendChild(div);
+    }
+  });
+}
+
+// --- Helper ---
+function random(min,max){return Math.floor(Math.random()*(max-min)+min);}
+function rarity(){let r=Math.random();if(r<0.6)return"common";if(r<0.85)return"rare";if(r<0.97)return"epic";return"legendary";}
+
+// --- Log Animal ---
+function logAnimal(){
+  let name=document.getElementById("animalInput").value.trim();
+  if(!name) return;
+  if(animals.some(a=>a.name===name)){alert("Already logged!");return;}
+  let dbAnimal=animalDatabase.find(a=>a.name===name);
+  if(!dbAnimal){alert("Animal not in database"); return;}
+  let moves=["Wild Strike","Heavy Charge"];
+  if(dbAnimal.type.includes("fire")) moves=["Flame Pounce","Savage Roar"];
+  if(dbAnimal.type.includes("water")) moves=["Tidal Slam","Splash Charge"];
+  if(dbAnimal.type.includes("grass")) moves=["Vine Whip","Nature Guard"];
+  if(dbAnimal.type.includes("ice")) moves=["Frost Bite","Glacier Punch"];
+  if(dbAnimal.type.includes("flying")) moves=["Sky Dive","Wind Slash"];
+  let animal={
+    name:dbAnimal.name,
+    scientific:dbAnimal.scientific,
+    type:dbAnimal.type,
+    continent:dbAnimal.continent,
+    image:dbAnimal.image || "",
+    atk:random(20,100),
+    def:random(20,100),
+    rarity:rarity(),
+    shiny:Math.random()<0.05,
+    move:moves[random(0,moves.length)]
+  };
+  animals.push(animal);
+  localStorage.setItem("wilddex",JSON.stringify(animals));
+  renderCollection();
+  renderBadges();
+  document.getElementById("animalInput").value="";
+}
+
+// --- Render Collection ---
+function renderCollection(){
+  const grid=document.getElementById("collectionGrid");
+  grid.innerHTML="";
+  animals.forEach((a,i)=>{
+    const card=document.createElement("div");
+    card.className="card "+a.type[0]+" "+a.rarity+(a.shiny?" shiny":"");
+    card.onclick=()=>openModal(i);
+    let imgHtml=a.image?`<img src="${a.image}" onerror="this.src='https://via.placeholder.com/260x160?text=No+Image'">`
+                      :`<div style="width:100%;height:160px;background:#ddd;text-align:center;line-height:160px;font-size:40px;">🖤</div>`;
+    card.innerHTML=`<div class="card-header"><span>${a.name}</span><span>HP ${a.atk+a.def}</span></div>
+      ${imgHtml}
+      <div class="card-body">
+        <div><b>${a.move}</b></div>
+        <div class="stats"><span>ATK ${a.atk}</span><span>DEF ${a.def}</span></div>
+        <div class="footer">
+          <span>${a.type.map(t=>typeIcons[t]).join(" ")}</span>
+          <span>${a.continent.map(c=>continentIcons[c]).join(" ")}</span>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+// --- Badges ---
+function renderBadges(){
+  let counts={};
+  animals.forEach(a=>a.continent.forEach(c=>counts[c]=(counts[c]||0)+1));
+  const container=document.getElementById("badgeContainer");container.innerHTML="";
+  for(let c in counts){
+    const badge=document.createElement("div");badge.className="badge";
+    badge.innerHTML=`<b>${continentIcons[c]} ${c} Explorer</b><br>${counts[c]} animals logged`;
+    container.appendChild(badge);
+  }
+}
+
+// --- Modal ---
+function openModal(index){
+  currentModalAnimalIndex=index;
+  const a=animals[index];
+  const modal=document.getElementById("modal");
+  const content=document.getElementById("modalContent");
+  content.innerHTML=`<img src="${a.image}" onerror="this.src='https://via.placeholder.com/400x220?text=No+Image'">
+    <h3>${a.name} <i>(${a.scientific})</i></h3>
+    <p><b>Move:</b> ${a.move}</p>
+    <p><b>ATK:</b> ${a.atk}</p>
+    <p><b>DEF:</b> ${a.def}</p>
+    <p><b>HP:</b> ${a.atk+a.def}</p>
+    <p><b>Type:</b> ${a.type.map(t=>typeIcons[t]).join(" ")}</p>
+    <p><b>Continent:</b> ${a.continent.map(c=>continentIcons[c]).join(" ")}</p>
+    <p><b>Rarity:</b> ${a.rarity}</p>`;
+  modal.style.display="flex";
+}
+function closeModal(){document.getElementById("modal").style.display="none";}
+function releaseAnimal(){
+  if(currentModalAnimalIndex!==null){
+    animals.splice(currentModalAnimalIndex,1);
+    localStorage.setItem("wilddex",JSON.stringify(animals));
+    renderCollection();renderBadges();closeModal();
+  }
+}
+
+window.onclick=function(e){if(e.target==document.getElementById("modal")) closeModal();}
+function openTab(id){document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));event.target.classList.add("active");}
+
+renderCollection();
+renderBadges();
 </script>
 </body>
 </html>
