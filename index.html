@@ -185,7 +185,17 @@ background:linear-gradient(#fbf0ff,#aa91ba);
 .card.poison{
 background:linear-gradient(#f3e4ff,#e4c8ff);
 }
+.card.dark.flying{
+background:linear-gradient(#e8e8f5,#e5e5ff);
+}
 
+.card.poison.fire{
+background:linear-gradient(#f3e4ff,#ffd0b0);
+}
+
+.card.bug.flying{
+background:linear-gradient(#f0ffd8,#e5e5ff);
+}
 .card.bug{
 background:linear-gradient(#f0ffd8,#e0f5b8);
 }
@@ -457,7 +467,7 @@ let img=await getImage(a.name)
 
 let card=document.createElement("div")
 
-card.className=`card ${a.type} ${a.rarity}`
+card.className=`card ${Array.isArray(a.type)?a.type.join(" "):a.type} ${a.rarity}`
 
 card.innerHTML=`
 
