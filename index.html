@@ -291,7 +291,7 @@ Release
 </div>
 
 <div id="log" class="page active">
-  <input id="animalInput" list="animals" placeholder="Log animal">
+  <input id="animalInput" list="animals" placeholder="Log animal" onkeydown="if(event.key==='Enter') logAnimal()">
   <datalist id="animals"></datalist>
   <button onclick="logAnimal()">Log</button>
 </div>
