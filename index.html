@@ -544,14 +544,37 @@ card.onclick=()=>openAnimal(a,img);
   }
 }
 
-function updateBadges(){
-  let badgeArea=document.getElementById("badgeArea");
-  badgeArea.innerHTML="";
-  let continents=[...new Set(logged.map(a=>a.continent))];
-  let elements=[...new Set(logged.map(a=>a.type))];
-  if(continents.length>=3) badgeArea.innerHTML+=`<div class="badge">🌍 Explorer Badge</div>`;
-  if(elements.length>=3) badgeArea.innerHTML+=`<div class="badge">⚡ Elementalist Badge</div>`;
-  if(logged.length>=5) badgeArea.innerHTML+=`<div class="badge">📘 Field Researcher</div>`;
+function updateBadges() {
+  const badgeArea = document.getElementById("badgeArea");
+  badgeArea.innerHTML = "";
+
+  const continents = [...new Set(logged.map(a => a.continent))];
+  const elements = [...new Set(logged.map(a => a.type))];
+  const rareCount = logged.filter(a => a.rarity === "rare" || a.rarity === "legendary").length;
+  const dualTypes = logged.filter(a => a.type2).length;
+  const legendaryCount = logged.filter(a => a.rarity === "legendary").length;
+
+  // Continent Badges
+  if (continents.length >= 5) badgeArea.innerHTML += `<div class="badge">🌏 World Explorer</div>`;
+  else if (continents.length >= 3) badgeArea.innerHTML += `<div class="badge">🌍 Explorer Badge</div>`;
+
+  // Element Badges
+  if (elements.length >= 6) badgeArea.innerHTML += `<div class="badge">⚡ Element Master</div>`;
+  else if (elements.length >= 3) badgeArea.innerHTML += `<div class="badge">⚡ Elementalist Badge</div>`;
+
+  // Logged Animals Count
+  if (logged.length >= 10) badgeArea.innerHTML += `<div class="badge">📘 Field Researcher</div>`;
+  else if (logged.length >= 5) badgeArea.innerHTML += `<div class="badge">📖 Junior Researcher</div>`;
+
+  // Rare/Legendary Collector
+  if (rareCount >= 5) badgeArea.innerHTML += `<div class="badge">💎 Elite Collector</div>`;
+  else if (rareCount >= 3) badgeArea.innerHTML += `<div class="badge">💎 Collector Badge</div>`;
+
+  // Dual-Type Explorer
+  if (dualTypes >= 3) badgeArea.innerHTML += `<div class="badge">🔗 Dual-Type Explorer</div>`;
+
+  // Legendary Hunter
+  if (legendaryCount >= 1) badgeArea.innerHTML += `<div class="badge">🌟 Legendary Hunter</div>`;
 }
 
 function openPage(id){
