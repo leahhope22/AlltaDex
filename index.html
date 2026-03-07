@@ -11,22 +11,28 @@ body{
   margin:0;
   text-align:center;
 }
+
 h1{margin-top:15px;}
+
 .tabs{
   display:flex;
   justify-content:center;
   gap:10px;
   margin:10px;
 }
+
 .tab{
   padding:8px 14px;
   border-radius:10px;
   background:#ddd;
   cursor:pointer;
 }
+
 .tab.active{background:#bbb;}
+
 .page{display:none;}
 .page.active{display:block;}
+
 .grid{
   display:flex;
   flex-wrap:wrap;
@@ -60,13 +66,8 @@ h1{margin-top:15px;}
 .image-container{
   width:100%;
   height:160px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
   background:white;
-  border-bottom:2px solid rgba(0,0,0,.1);
   overflow:hidden;
-  position:relative;
 }
 
 .image-container img{
@@ -77,22 +78,18 @@ h1{margin-top:15px;}
 
 .card-body{
   padding:8px;
-  position:relative;
-  z-index:2;
 }
 
 .scientific{
   font-style:italic;
   font-size:13px;
   opacity:.7;
-  margin-bottom:6px;
 }
 
 .stats{
   display:flex;
   justify-content:space-between;
   margin-top:6px;
-  font-size:14px;
 }
 
 .footer{
@@ -102,48 +99,7 @@ h1{margin-top:15px;}
   font-size:18px;
 }
 
-.card-overlay{
-  position:absolute;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  z-index:1;
-  pointer-events:none;
-  border-radius:inherit;
-}
-
-/* Rarity glow */
-
-.card.common{box-shadow:none;}
-.card.uncommon{box-shadow:0 0 10px rgba(0,200,255,.4);}
-.card.rare{box-shadow:0 0 10px rgba(180,0,255,.6);}
-
-.card.legendary{
-  box-shadow:0 0 18px rgba(255,215,0,.9),0 0 30px rgba(255,215,0,.6),0 0 45px rgba(255,215,0,.3);
-  animation:legendPulse 3s infinite alternate;
-}
-
-@keyframes legendPulse{
-  from{filter:brightness(1)}
-  to{filter:brightness(1.15)}
-}
-
-/* Element colors */
-
-.card.fire{background:linear-gradient(#ffe5d0,#ffd0b0);}
-.card.water{background:linear-gradient(#dff4ff,#c8eaff);}
-.card.grass{background:linear-gradient(#e4ffd8,#d0f5c2);}
-.card.ice{background:linear-gradient(#eaffff,#dff6ff);}
-.card.flying{background:linear-gradient(#f0f0ff,#e5e5ff);}
-.card.dark{background:linear-gradient(#ccc,#676c73);}
-.card.poison{background:linear-gradient(#f0d0ff,#e0b0ff);}
-.card.bug{background:linear-gradient(#e0f5b0,#c8e88c);}
-.card.electric{background:linear-gradient(#fff6b0,#ffe066);}
-
-/* ===================== */
-/* MODAL STYLING (NEW) */
-/* ===================== */
+/* Modal */
 
 .modal{
   display:none;
@@ -155,7 +111,6 @@ h1{margin-top:15px;}
   background:rgba(0,0,0,.6);
   justify-content:center;
   align-items:center;
-  z-index:1000;
 }
 
 .modal-content{
@@ -163,7 +118,6 @@ h1{margin-top:15px;}
   padding:25px;
   border-radius:16px;
   width:320px;
-  box-shadow:0 10px 30px rgba(0,0,0,.4);
 }
 
 .close{
@@ -174,16 +128,12 @@ h1{margin-top:15px;}
 
 #releaseBtn{
   margin-top:15px;
-  padding:10px 16px;
+  padding:10px;
   border:none;
   border-radius:10px;
   background:#ff5c5c;
   color:white;
   cursor:pointer;
-}
-
-#releaseBtn:hover{
-  background:#ff3c3c;
 }
 
 </style>
@@ -206,9 +156,10 @@ h1{margin-top:15px;}
 </div>
 
 <div id="catches" class="page">
-  <div class="controls">
-    <input id="searchBox" placeholder="Search animals" oninput="renderCollection()">
-    <select id="filterElement" onchange="renderCollection()">
+
+  <input id="searchBox" placeholder="Search animals" oninput="renderCollection()">
+
+  <select id="filterElement" onchange="renderCollection()">
       <option value="all">All Elements</option>
       <option value="fire">Fire</option>
       <option value="water">Water</option>
@@ -219,8 +170,7 @@ h1{margin-top:15px;}
       <option value="poison">Poison</option>
       <option value="bug">Bug</option>
       <option value="electric">Electric</option>
-    </select>
-  </div>
+  </select>
 
   <div id="collection" class="grid"></div>
 </div>
@@ -229,12 +179,11 @@ h1{margin-top:15px;}
   <div id="badgeArea"></div>
 </div>
 
-<!-- ===================== -->
-<!-- MODAL HTML (NEW) -->
-<!-- ===================== -->
+<!-- Modal -->
 
 <div id="animalModal" class="modal">
   <div class="modal-content">
+
     <span class="close" onclick="closeModal()">✖</span>
 
     <h2 id="modalName"></h2>
@@ -245,141 +194,205 @@ h1{margin-top:15px;}
     <p id="modalContinent"></p>
 
     <button id="releaseBtn">Release</button>
+
   </div>
 </div>
 
 <script>
 
-const typeIcons={fire:"🔥", water:"💧", grass:"🌿", ice:"❄️", flying:"🕊️", dark:"🌑", poison:"☣️", bug:"🐛",electric:"⚡"};
-const continentIcons={Africa:"🌍", Europe:"🌍", Asia:"🌏", NorthAmerica:"🌎", SouthAmerica:"🌎", Australia:"🦘", Antarctica:"🧊"};
+const typeIcons={
+fire:"🔥",water:"💧",grass:"🌿",ice:"❄️",
+flying:"🕊️",dark:"🌑",poison:"☣️",bug:"🐛",electric:"⚡"
+};
 
-const animals=[/* your entire animal list remains unchanged */];
+const continentIcons={
+Africa:"🌍",Europe:"🌍",Asia:"🌏",
+NorthAmerica:"🌎",SouthAmerica:"🌎",
+Australia:"🦘",Antarctica:"🧊"
+};
 
-const datalist=document.getElementById("animals")
+const animals=[
+{name:"Red Fox",scientific:"Vulpes vulpes",type:"fire",continent:"Europe",rarity:"common",atk:50,def:40,move:"Blaze Dash"},
+{name:"European Hedgehog",scientific:"Erinaceus europaeus",type:"grass",continent:"Europe",rarity:"common",atk:35,def:50,move:"Spike Roll"},
+{name:"Barn Owl",scientific:"Tyto alba",type:"flying",continent:"Europe",rarity:"uncommon",atk:50,def:40,move:"Silent Glide"},
+{name:"Wild Boar",scientific:"Sus scrofa",type:"dark",continent:"Europe",rarity:"uncommon",atk:70,def:65,move:"Tusk Rush"},
+{name:"European Otter",scientific:"Lutra lutra",type:"water",continent:"Europe",rarity:"uncommon",atk:55,def:50,move:"River Dash"},
+{name:"Honey Bee",scientific:"Apis mellifera",type:"bug",continent:"Europe",rarity:"common",atk:30,def:25,move:"Sting Swarm"},
+{name:"Electric Eel",scientific:"Electrophorus electricus",type:"electric",continent:"SouthAmerica",rarity:"rare",atk:85,def:60,move:"Volt Shock"}
+];
+
+const datalist=document.getElementById("animals");
+
 animals.forEach(a=>{
-  let o=document.createElement("option");
-  o.value=a.name;
-  datalist.appendChild(o);
+let o=document.createElement("option");
+o.value=a.name;
+datalist.appendChild(o);
 });
 
-let logged=[];
+let logged=JSON.parse(localStorage.getItem("wilddex_logged"))||[];
+
+function save(){
+localStorage.setItem("wilddex_logged",JSON.stringify(logged));
+}
 
 function logAnimal(){
-  let name=document.getElementById("animalInput").value;
-  let animal=animals.find(a=>a.name===name);
-  if(!animal || logged.some(l=>l.name===name)) return;
-  logged.push(animal);
-  renderCollection();
-  updateBadges();
+
+let name=document.getElementById("animalInput").value;
+
+let animal=animals.find(a=>a.name===name);
+
+if(!animal || logged.some(l=>l.name===name)) return;
+
+logged.push(animal);
+
+save();
+
+renderCollection();
+
+updateBadges();
+
 }
 
 async function getImage(name){
-  try{
-    let url=`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name)}`;
-    let res=await fetch(url);
-    let data=await res.json();
-    return data.thumbnail ? data.thumbnail.source : "";
-  }catch{return "";}
+
+try{
+let url=`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name)}`;
+let res=await fetch(url);
+let data=await res.json();
+return data.thumbnail?data.thumbnail.source:"";
+}catch{return ""}
+
 }
 
 async function renderCollection(){
 
-  let area=document.getElementById("collection");
-  area.innerHTML="";
+let area=document.getElementById("collection");
 
-  let search=document.getElementById("searchBox").value.toLowerCase();
-  let filter=document.getElementById("filterElement").value;
+area.innerHTML="";
 
-  for(let a of logged){
+let search=document.getElementById("searchBox").value.toLowerCase();
 
-    if(search && !a.name.toLowerCase().includes(search)) continue;
-    if(filter!="all" && a.type!=filter) continue;
+let filter=document.getElementById("filterElement").value;
 
-    let img=await getImage(a.name);
+for(let a of logged){
 
-    let card=document.createElement("div");
-    card.className=`card ${a.type} ${a.rarity}`;
+if(search && !a.name.toLowerCase().includes(search)) continue;
 
-    if(a.type2) card.dataset.type2=a.type2;
+if(filter!="all" && a.type!=filter) continue;
 
-    card.onclick=()=>openModal(a);  // ⭐ CLICK CARD
+let img=await getImage(a.name);
 
-    card.innerHTML=`
-      <div class="card-header">
-        <span>${a.name}</span>
-        <span>HP ${a.atk+a.def}</span>
-      </div>
+let card=document.createElement("div");
 
-      <div class="image-container">
-        <img src="${img}" alt="${a.name}">
-      </div>
+card.className=`card`;
 
-      <div class="card-body">
-        <div class="card-overlay"></div>
+card.onclick=()=>openModal(a);
 
-        <div class="scientific">${a.scientific}</div>
-        <div><b>${a.move}</b></div>
+card.innerHTML=`
 
-        <div class="stats">
-          <span>ATK ${a.atk}</span>
-          <span>DEF ${a.def}</span>
-        </div>
+<div class="card-header">
+<span>${a.name}</span>
+<span>HP ${a.atk+a.def}</span>
+</div>
 
-        <div class="footer">
-          <span>${typeIcons[a.type]}${a.type2?` ${typeIcons[a.type2]}`:""}</span>
-          <span>${continentIcons[a.continent]}</span>
-        </div>
-      </div>
-    `;
+<div class="image-container">
+<img src="${img}">
+</div>
 
-    area.appendChild(card);
-  }
+<div class="card-body">
+
+<div class="scientific">${a.scientific}</div>
+
+<div><b>${a.move}</b></div>
+
+<div class="stats">
+<span>ATK ${a.atk}</span>
+<span>DEF ${a.def}</span>
+</div>
+
+<div class="footer">
+<span>${typeIcons[a.type]}</span>
+<span>${continentIcons[a.continent]}</span>
+</div>
+
+</div>
+
+`;
+
+area.appendChild(card);
+
 }
 
-/* ===================== */
-/* MODAL FUNCTIONS */
-/* ===================== */
+}
 
 function openModal(animal){
 
-  document.getElementById("modalName").textContent=animal.name;
-  document.getElementById("modalScientific").textContent=animal.scientific;
-  document.getElementById("modalMove").textContent="Move: "+animal.move;
-  document.getElementById("modalStats").textContent=`ATK ${animal.atk} | DEF ${animal.def}`;
-  document.getElementById("modalType").textContent="Type: "+animal.type+(animal.type2?` / ${animal.type2}`:"");
-  document.getElementById("modalContinent").textContent="Continent: "+animal.continent;
+document.getElementById("modalName").textContent=animal.name;
 
-  document.getElementById("animalModal").style.display="flex";
+document.getElementById("modalScientific").textContent=animal.scientific;
 
-  document.getElementById("releaseBtn").onclick=()=>{
-    logged=logged.filter(a=>a.name!==animal.name);
-    renderCollection();
-    updateBadges();
-    closeModal();
-  };
+document.getElementById("modalMove").textContent="Move: "+animal.move;
+
+document.getElementById("modalStats").textContent=`ATK ${animal.atk} | DEF ${animal.def}`;
+
+document.getElementById("modalType").textContent="Type: "+animal.type;
+
+document.getElementById("modalContinent").textContent="Continent: "+animal.continent;
+
+document.getElementById("animalModal").style.display="flex";
+
+document.getElementById("releaseBtn").onclick=()=>{
+
+logged=logged.filter(a=>a.name!==animal.name);
+
+save();
+
+renderCollection();
+
+updateBadges();
+
+closeModal();
+
+};
 
 }
 
 function closeModal(){
-  document.getElementById("animalModal").style.display="none";
+document.getElementById("animalModal").style.display="none";
 }
 
 function updateBadges(){
-  let badgeArea=document.getElementById("badgeArea");
-  badgeArea.innerHTML="";
-  let continents=[...new Set(logged.map(a=>a.continent))];
-  let elements=[...new Set(logged.map(a=>a.type))];
-  if(continents.length>=3) badgeArea.innerHTML+=`<div class="badge">🌍 Explorer Badge</div>`;
-  if(elements.length>=3) badgeArea.innerHTML+=`<div class="badge">⚡ Elementalist Badge</div>`;
-  if(logged.length>=5) badgeArea.innerHTML+=`<div class="badge">📘 Field Researcher</div>`;
+
+let badgeArea=document.getElementById("badgeArea");
+
+badgeArea.innerHTML="";
+
+let continents=[...new Set(logged.map(a=>a.continent))];
+
+let elements=[...new Set(logged.map(a=>a.type))];
+
+if(continents.length>=3) badgeArea.innerHTML+=`<div>🌍 Explorer Badge</div>`;
+
+if(elements.length>=3) badgeArea.innerHTML+=`<div>⚡ Elementalist Badge</div>`;
+
+if(logged.length>=5) badgeArea.innerHTML+=`<div>📘 Field Researcher</div>`;
+
 }
 
 function openPage(id){
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-  event.target.classList.add("active");
+
+document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+
+document.getElementById(id).classList.add("active");
+
+document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+
+event.target.classList.add("active");
+
 }
+
+renderCollection();
+updateBadges();
 
 </script>
 </body>
