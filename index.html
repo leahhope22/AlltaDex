@@ -294,6 +294,7 @@ Release
   <input id="animalInput" list="animals" placeholder="Log animal" onkeydown="if(event.key==='Enter') logAnimal()">
   <datalist id="animals"></datalist>
   <button onclick="logAnimal()">Log</button>
+  <p id="logMessage" style="height:20px;font-weight:bold;"></p>
 </div>
 
 <div id="catches" class="page">
@@ -462,7 +463,27 @@ let logged = JSON.parse(localStorage.getItem("wilddex_logged")) || [];
 function logAnimal(){
   let name=document.getElementById("animalInput").value;
   let animal=animals.find(a=>a.name===name);
-  if(!animal || logged.some(l=>l.name===name)) return; // prevent duplicates
+  let message=document.getElementById("logMessage");
+    if(!animal){
+    message.textContent="Animal not found.";
+    message.style.color="red";
+    return;
+  }
+
+  if(logged.some(l=>l.name===name)){
+    message.textContent="You've already logged this animal.";
+    message.style.color="orange";
+    return;
+  }
+  logged.push(animal);
+
+  localStorage.setItem("wilddex_logged", JSON.stringify(logged));
+
+  message.textContent="New animal logged!";
+  message.style.color="green";
+
+  document.getElementById("animalInput").value="";
+  document.getElementById("animalInput").focus();
 
   logged.push(animal);
 localStorage.setItem("wilddex_logged", JSON.stringify(logged));
