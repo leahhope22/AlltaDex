@@ -461,20 +461,23 @@ animals.forEach(a=>{let o=document.createElement("option");o.value=a.name;datali
 let logged = JSON.parse(localStorage.getItem("wilddex_logged")) || [];
 
 function logAnimal(){
-  let name=document.getElementById("animalInput").value;
-  let animal=animals.find(a=>a.name===name);
-  let message=document.getElementById("logMessage");
-    if(!animal){
+  let name = document.getElementById("animalInput").value.trim();
+  let animal = animals.find(a => a.name === name);
+  let message = document.getElementById("logMessage");
+
+  if(!animal){
     message.textContent="Animal not found.";
     message.style.color="red";
     return;
   }
 
-  if(logged.some(l=>l.name===name)){
+  // check using the animal's official name
+  if(logged.some(a => a.name === animal.name)){
     message.textContent="You've already logged this animal.";
     message.style.color="orange";
     return;
   }
+
   logged.push(animal);
 
   localStorage.setItem("wilddex_logged", JSON.stringify(logged));
@@ -484,10 +487,6 @@ function logAnimal(){
 
   document.getElementById("animalInput").value="";
   document.getElementById("animalInput").focus();
-
-  logged.push(animal);
-localStorage.setItem("wilddex_logged", JSON.stringify(logged));
-  document.getElementById("animalInput").value="";  // clear the input box
 
   renderCollection();
   updateBadges();
