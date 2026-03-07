@@ -5,6 +5,41 @@
 <title>WildDex</title>
 
 <style>
+.badge {
+  display: inline-block;
+  margin: 6px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(45deg, #ff6b6b, #ff9a6b);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  cursor: default;
+  transition: transform 0.3s, box-shadow 0.3s;
+  font-size: 14px;
+}
+
+.badge:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 10px rgba(0,0,0,0.3);
+}
+
+@keyframes badgePop {
+  0% { transform: scale(0.5); opacity: 0; }
+  70% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+.badge.animate {
+  animation: badgePop 0.5s ease-out;
+}
+
+/* Optional: Different colors for different types of badges */
+.badge-world { background: linear-gradient(45deg, #4e9af1, #1c6ef2); }
+.badge-element { background: linear-gradient(45deg, #f1d94e, #f2b91c); }
+.badge-research { background: linear-gradient(45deg, #4ef182, #1cf25b); }
+.badge-rare { background: linear-gradient(45deg, #d94ef1, #a21cf2); }
+.badge-legendary { background: linear-gradient(45deg, #ffd700, #ffa500); }
 body{
   font-family:Verdana;
   background:#aaf0c6;
@@ -554,29 +589,36 @@ function updateBadges() {
   const dualTypes = logged.filter(a => a.type2).length;
   const legendaryCount = logged.filter(a => a.rarity === "legendary").length;
 
+  const createBadge = (text, title, extraClass="") => {
+    const b = document.createElement("div");
+    b.className = `badge ${extraClass} animate`;
+    b.textContent = text;
+    b.title = title;
+    badgeArea.appendChild(b);
+  };
+
   // Continent Badges
-  if (continents.length >= 5) badgeArea.innerHTML += `<div class="badge" title="Collected animals from 5+ continents!">🌏 World Explorer</div>`;
-  else if (continents.length >= 3) badgeArea.innerHTML += `<div class="badge" title="Collected animals from 3+ continents. ${5 - continents.length} more to World Explorer!">🌍 Explorer Badge</div>`;
+  if (continents.length >= 5) createBadge("🌏 World Explorer", "Collected animals from 5+ continents!", "badge-world");
+  else if (continents.length >= 3) createBadge("🌍 Explorer Badge", `Collected animals from 3+ continents. ${5 - continents.length} more to World Explorer!`, "badge-world");
 
   // Element Badges
-  if (elements.length >= 6) badgeArea.innerHTML += `<div class="badge" title="Caught 6+ elements!">⚡ Element Master</div>`;
-  else if (elements.length >= 3) badgeArea.innerHTML += `<div class="badge" title="Caught 3+ elements. ${6 - elements.length} more to Element Master!">⚡ Elementalist Badge</div>`;
+  if (elements.length >= 6) createBadge("⚡ Element Master", "Caught 6+ elements!", "badge-element");
+  else if (elements.length >= 3) createBadge("⚡ Elementalist Badge", `Caught 3+ elements. ${6 - elements.length} more to Element Master!`, "badge-element");
 
   // Logged Animals Count
-  if (logged.length >= 10) badgeArea.innerHTML += `<div class="badge" title="Logged 10+ animals!">📘 Field Researcher</div>`;
-  else if (logged.length >= 5) badgeArea.innerHTML += `<div class="badge" title="Logged 5+ animals. ${10 - logged.length} more to Field Researcher!">📖 Junior Researcher</div>`;
+  if (logged.length >= 10) createBadge("📘 Field Researcher", "Logged 10+ animals!", "badge-research");
+  else if (logged.length >= 5) createBadge("📖 Junior Researcher", `Logged 5+ animals. ${10 - logged.length} more to Field Researcher!`, "badge-research");
 
   // Rare/Legendary Collector
-  if (rareCount >= 5) badgeArea.innerHTML += `<div class="badge" title="Collected 5+ rare or legendary animals!">💎 Elite Collector</div>`;
-  else if (rareCount >= 3) badgeArea.innerHTML += `<div class="badge" title="Collected 3+ rare or legendary animals. ${5 - rareCount} more to Elite Collector!">💎 Collector Badge</div>`;
+  if (rareCount >= 5) createBadge("💎 Elite Collector", "Collected 5+ rare or legendary animals!", "badge-rare");
+  else if (rareCount >= 3) createBadge("💎 Collector Badge", `Collected 3+ rare or legendary animals. ${5 - rareCount} more to Elite Collector!`, "badge-rare");
 
   // Dual-Type Explorer
-  if (dualTypes >= 3) badgeArea.innerHTML += `<div class="badge" title="Caught 3+ dual-type animals!">🔗 Dual-Type Explorer</div>`;
+  if (dualTypes >= 3) createBadge("🔗 Dual-Type Explorer", "Caught 3+ dual-type animals!");
 
   // Legendary Hunter
-  if (legendaryCount >= 1) badgeArea.innerHTML += `<div class="badge" title="Caught ${legendaryCount} legendary animal(s)!">🌟 Legendary Hunter</div>`;
+  if (legendaryCount >= 1) createBadge("🌟 Legendary Hunter", `Caught ${legendaryCount} legendary animal(s)!`, "badge-legendary");
 }
-
 function openPage(id){
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
   document.getElementById(id).classList.add("active");
