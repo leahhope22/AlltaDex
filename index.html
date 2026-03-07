@@ -276,9 +276,6 @@ h1{margin-top:15px;}
     <p id="modalStats"></p>
     <p id="modalType"></p>
     <p id="modalContinent"></p>
-    <button onclick="releaseAnimal()" style="background:#ff4444;color:white;border:none;padding:10px 16px;border-radius:8px;cursor:pointer;">
-Release
-</button>
   </div>
 </div>
 
@@ -457,8 +454,7 @@ const animals=[
 const datalist=document.getElementById("animals")
 animals.forEach(a=>{let o=document.createElement("option");o.value=a.name;datalist.appendChild(o);});
 
-let loggedAnimals = [];
-let selectedAnimalIndex = null;
+let logged=[];
 
 function logAnimal(){
   let name=document.getElementById("animalInput").value;
@@ -488,7 +484,7 @@ async function renderCollection(){
     if(filter!="all" && a.type!=filter) continue;
     let img=await getImage(a.name);
     let card=document.createElement("div");
-card.onclick=()=>openAnimal(a,img,i);
+card.onclick=()=>openAnimal(a,img);
     card.className=`card ${a.type} ${a.rarity}`;
     if(a.type2) card.dataset.type2=a.type2;
     card.innerHTML=`
@@ -526,22 +522,14 @@ function updateBadges(){
   if(elements.length>=3) badgeArea.innerHTML+=`<div class="badge">⚡ Elementalist Badge</div>`;
   if(logged.length>=5) badgeArea.innerHTML+=`<div class="badge">📘 Field Researcher</div>`;
 }
-function releaseAnimal(){
-  if(selectedAnimalIndex===null) return;
 
-  loggedAnimals.splice(selectedAnimalIndex,1);
-
-  closeModal();
-  renderCollection();
-}
 function openPage(id){
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
   document.getElementById(id).classList.add("active");
   document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
   event.target.classList.add("active");
 }
-function openAnimal(a,img,index){
-  selectedAnimalIndex = index;
+function openAnimal(a,img){
   document.getElementById("modalName").textContent=a.name;
   document.getElementById("modalImg").src=img;
   document.getElementById("modalScientific").textContent="Scientific: "+a.scientific;
