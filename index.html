@@ -106,22 +106,8 @@ h1{margin-top:15px;}
 /* Rarity glow */
 .card.common{box-shadow:none;}
 .card.uncommon{box-shadow:0 0 10px rgba(0,200,255,.4);}
-.card.rare{
-  box-shadow: 0 0 12px rgba(255,150,0,.6),
-              0 0 20px rgba(255,150,0,.4);
-  animation: rareGlow 2s infinite alternate;
-}
+.card.rare{box-shadow:0 0 10px rgba(180,0,255,.6);}
 
-@keyframes rareGlow{
-  from{
-    box-shadow: 0 0 8px rgba(255,150,0,.4),
-                0 0 14px rgba(255,150,0,.3);
-  }
-  to{
-    box-shadow: 0 0 18px rgba(255,150,0,.8),
-                0 0 30px rgba(255,150,0,.6);
-  }
-}
 .card.legendary{
   box-shadow:0 0 18px rgba(255,215,0,.9),0 0 30px rgba(255,215,0,.6),0 0 45px rgba(255,215,0,.3);
   animation:legendPulse 3s infinite alternate;
