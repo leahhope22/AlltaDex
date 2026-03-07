@@ -457,7 +457,7 @@ const animals=[
 const datalist=document.getElementById("animals")
 animals.forEach(a=>{let o=document.createElement("option");o.value=a.name;datalist.appendChild(o);});
 
-let logged=[];
+let logged = JSON.parse(localStorage.getItem("wilddex_logged")) || [];
 
 function logAnimal(){
   let name=document.getElementById("animalInput").value;
@@ -465,7 +465,7 @@ function logAnimal(){
   if(!animal || logged.some(l=>l.name===name)) return; // prevent duplicates
 
   logged.push(animal);
-
+localStorage.setItem("wilddex_logged", JSON.stringify(logged));
   document.getElementById("animalInput").value="";  // clear the input box
 
   renderCollection();
@@ -559,7 +559,7 @@ function releaseAnimal(){
   if(!currentAnimal) return;
 
   logged = logged.filter(a => a.name !== currentAnimal.name);
-
+ localStorage.setItem("wilddex_logged", JSON.stringify(logged));
   closeModal();
   renderCollection();
   updateBadges();
