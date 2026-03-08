@@ -200,40 +200,30 @@ h1{margin-top:15px;}
 }
 
 /* Flame Layer 2 - secondary flicker */
-.card.fire .card-overlay::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  width: 100%;
-  height: 100%;
-  background:
-    radial-gradient(circle at 40% 100%, rgba(255,180,50,0.7) 0%, transparent 70%),
-    radial-gradient(circle at 55% 110%, rgba(255,100,0,0.6) 0%, transparent 80%);
+.card.fire {
+  position: relative;
+  width: 200px;
+  height: 300px;
+  padding: 20px;
+  border-radius: 12px;
+  color: #fff;
+  background: #ffcc99; /* base light orange */
+  background-image:
+    radial-gradient(circle at 50% 90%, rgba(255,255,200,0.8) 0%, transparent 60%),
+    radial-gradient(circle at 60% 100%, rgba(255,140,0,0.6) 0%, transparent 70%),
+    radial-gradient(circle at 40% 100%, rgba(255,180,50,0.5) 0%, transparent 70%);
   background-repeat: no-repeat;
-  background-size: 50% 50%, 60% 60%;
-  transform: translateX(-50%);
-  animation: fireFlicker2 2s infinite alternate;
-  filter: blur(12px);
+  background-size: 50% 50%, 60% 60%, 55% 55%;
+  animation: fireFlicker 2s infinite alternate;
 }
 
-/* Keyframes Layer 1 */
-@keyframes fireFlicker1 {
-  0%   { transform: translateX(-50%) translateY(0) scale(1); }
-  25%  { transform: translateX(-50%) translateY(-5px) scale(1.05); }
-  50%  { transform: translateX(-50%) translateY(-10px) scale(1.1); }
-  75%  { transform: translateX(-50%) translateY(-7px) scale(1.03); }
-  100% { transform: translateX(-50%) translateY(0) scale(1); }
-}
-
-/* Keyframes Layer 2 */
-@keyframes fireFlicker2 {
-  0%   { transform: translateX(-50%) translateY(0) scale(1); }
-  20%  { transform: translateX(-50%) translateY(-6px) scale(1.03); }
-  40%  { transform: translateX(-50%) translateY(-12px) scale(1.06); }
-  60%  { transform: translateX(-50%) translateY(-8px) scale(1.04); }
-  80%  { transform: translateX(-50%) translateY(-4px) scale(1.02); }
-  100% { transform: translateX(-50%) translateY(0) scale(1); }
+/* Animate background positions to create flicker */
+@keyframes fireFlicker {
+  0%   { background-position: 50% 90%, 60% 100%, 40% 100%; }
+  25%  { background-position: 48% 88%, 62% 98%, 42% 102%; }
+  50%  { background-position: 52% 85%, 58% 95%, 38% 105%; }
+  75%  { background-position: 49% 87%, 61% 97%, 41% 103%; }
+  100% { background-position: 50% 90%, 60% 100%, 40% 100%; }
 }
 /* Water */
 .card.water .card-overlay{
