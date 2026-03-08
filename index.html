@@ -169,63 +169,71 @@ h1{margin-top:15px;}
   position: relative;
   width: 200px;
   height: 300px;
-  background: #ffcc99; /* light orange background */
+  background: #ffcc99; /* light orange */
   border-radius: 12px;
   overflow: hidden;
 }
 
-/* Overlay for flames covering the whole card */
+/* Overlay covering the whole card */
 .card.fire .card-overlay {
   position: absolute;
-  inset: 0; /* covers entire card */
+  inset: 0;
   pointer-events: none;
 }
 
-/* Flame Layer 1 - Main Core */
+/* Flame Layer 1 - visible core flames */
 .card.fire .card-overlay::before {
   content: '';
   position: absolute;
   bottom: 0;
   left: 50%;
-  width: 100%;   /* now spans whole card width */
-  height: 100%;  /* spans whole card height */
-  background: radial-gradient(circle at 50% 100%, rgba(255,255,200,0.4), rgba(255,120,0,0.15) 60%, transparent 80%);
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(circle at 50% 90%, rgba(255,255,200,0.9) 0%, transparent 60%),
+    radial-gradient(circle at 60% 100%, rgba(255,140,0,0.8) 0%, transparent 70%);
+  background-repeat: no-repeat;
+  background-size: 50% 50%, 60% 60%;
   transform: translateX(-50%);
-  animation: fireFlicker1 2s infinite alternate;
-  filter: blur(20px);
+  animation: fireFlicker1 1.8s infinite alternate;
+  filter: blur(10px);
 }
 
-/* Flame Layer 2 - Outer Flicker */
+/* Flame Layer 2 - secondary flicker */
 .card.fire .card-overlay::after {
   content: '';
   position: absolute;
   bottom: 0;
   left: 50%;
-  width: 100%;  
+  width: 100%;
   height: 100%;
-  background: radial-gradient(circle at 60% 110%, rgba(255,140,0,0.3), rgba(255,60,0,0.1) 70%, transparent 90%);
+  background:
+    radial-gradient(circle at 40% 100%, rgba(255,180,50,0.7) 0%, transparent 70%),
+    radial-gradient(circle at 55% 110%, rgba(255,100,0,0.6) 0%, transparent 80%);
+  background-repeat: no-repeat;
+  background-size: 50% 50%, 60% 60%;
   transform: translateX(-50%);
-  animation: fireFlicker2 1.7s infinite alternate;
-  filter: blur(30px);
+  animation: fireFlicker2 2s infinite alternate;
+  filter: blur(12px);
 }
 
-/* Keyframes for Layer 1 */
+/* Keyframes Layer 1 */
 @keyframes fireFlicker1 {
-  0%   { transform: translateX(-50%) translateY(0) scale(1) rotate(0deg); opacity: 0.8; }
-  25%  { transform: translateX(-50%) translateY(-5px) scale(1.02) rotate(1deg); opacity: 1; }
-  50%  { transform: translateX(-50%) translateY(-10px) scale(1.05) rotate(-1deg); opacity: 0.9; }
-  75%  { transform: translateX(-50%) translateY(-7px) scale(1.03) rotate(2deg); opacity: 0.95; }
-  100% { transform: translateX(-50%) translateY(0) scale(1) rotate(0deg); opacity: 0.8; }
+  0%   { transform: translateX(-50%) translateY(0) scale(1); }
+  25%  { transform: translateX(-50%) translateY(-5px) scale(1.05); }
+  50%  { transform: translateX(-50%) translateY(-10px) scale(1.1); }
+  75%  { transform: translateX(-50%) translateY(-7px) scale(1.03); }
+  100% { transform: translateX(-50%) translateY(0) scale(1); }
 }
 
-/* Keyframes for Layer 2 */
+/* Keyframes Layer 2 */
 @keyframes fireFlicker2 {
-  0%   { transform: translateX(-50%) translateY(0) scale(1) rotate(0deg); opacity: 0.7; }
-  20%  { transform: translateX(-50%) translateY(-6px) scale(1.03) rotate(-1deg); opacity: 0.9; }
-  40%  { transform: translateX(-50%) translateY(-12px) scale(1.06) rotate(1deg); opacity: 0.8; }
-  60%  { transform: translateX(-50%) translateY(-8px) scale(1.04) rotate(-2deg); opacity: 0.85; }
-  80%  { transform: translateX(-50%) translateY(-4px) scale(1.02) rotate(1deg); opacity: 0.9; }
-  100% { transform: translateX(-50%) translateY(0) scale(1) rotate(0deg); opacity: 0.7; }
+  0%   { transform: translateX(-50%) translateY(0) scale(1); }
+  20%  { transform: translateX(-50%) translateY(-6px) scale(1.03); }
+  40%  { transform: translateX(-50%) translateY(-12px) scale(1.06); }
+  60%  { transform: translateX(-50%) translateY(-8px) scale(1.04); }
+  80%  { transform: translateX(-50%) translateY(-4px) scale(1.02); }
+  100% { transform: translateX(-50%) translateY(0) scale(1); }
 }
 /* Water */
 .card.water .card-overlay{
