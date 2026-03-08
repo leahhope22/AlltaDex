@@ -235,13 +235,25 @@ h1{margin-top:15px;}
 }
 @keyframes waterFlow{from{background-position:-200px}to{background-position:200px}}
 
-/* Grass */
+/* Grass / Plant Effect */
 .card.grass .card-overlay{
   background:
-    radial-gradient(circle, rgba(0,200,0,.15), transparent 70%);
-  animation:grassBreathe 5s infinite alternate;
+    radial-gradient(circle at 30% 70%, rgba(120,220,120,.18), transparent 60%),
+    radial-gradient(circle at 70% 40%, rgba(40,160,60,.15), transparent 65%),
+    radial-gradient(circle at center, rgba(0,120,40,.12), transparent 70%);
+  animation: grassBreathe 6s ease-in-out infinite alternate;
 }
-@keyframes grassBreathe{from{opacity:.3}to{opacity:.20}}
+
+@keyframes grassBreathe{
+  from{
+    opacity: .35;
+    transform: scale(1);
+  }
+  to{
+    opacity: .22;
+    transform: scale(1.03);
+  }
+}
 
 /* Ice */
 .card.ice .card-overlay::before{
