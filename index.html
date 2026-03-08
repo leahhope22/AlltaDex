@@ -165,13 +165,21 @@ h1{margin-top:15px;}
 
 /* Element effects */
 /* Fire */
-.card.fire .card-overlay{
+.card.fire .card-overlay {
   background:
-    radial-gradient(circle at 50% 100%, rgba(255,120,0,.25), transparent 70%),
-    radial-gradient(circle at 60% 110%, rgba(255,60,0,.2), transparent 70%);
-  animation:fireFlicker 2s infinite alternate;
+    radial-gradient(circle at 50% 100%, rgba(255,255,200,0.5), transparent 60%),
+    radial-gradient(circle at 55% 110%, rgba(255,120,0,0.3), transparent 70%),
+    radial-gradient(circle at 60% 105%, rgba(255,60,0,0.2), transparent 80%);
+  animation: fireFlicker 2s infinite alternate;
 }
-@keyframes fireFlicker{0%{transform:translateY(0)}100%{transform:translateY(-3px) scale(1.03)}}
+
+@keyframes fireFlicker {
+  0%   { transform: translateY(0) scale(1); opacity: 0.9; }
+  25%  { transform: translateY(-2px) scale(1.02); opacity: 1; }
+  50%  { transform: translateY(-3px) scale(1.03); opacity: 0.85; }
+  75%  { transform: translateY(-1px) scale(1.01); opacity: 0.95; }
+  100% { transform: translateY(0) scale(1); opacity: 0.9; }
+}
 
 /* Water */
 .card.water .card-overlay{
