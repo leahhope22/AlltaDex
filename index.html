@@ -235,38 +235,38 @@ h1{margin-top:15px;}
 }
 @keyframes waterFlow{from{background-position:-200px}to{background-position:200px}}
 
-/* Grass / Plant Effect */
-/* Grass / Plant Wind Effect */
+/* Grass / Living Plant Effect */
 .card.grass .card-overlay{
   background:
-    repeating-linear-gradient(
-      100deg,
-      rgba(40,160,60,.08) 0px,
-      rgba(40,160,60,.08) 2px,
-      transparent 2px,
-      transparent 8px
-    ),
-    radial-gradient(circle at center, rgba(80,200,100,.15), transparent 70%);
-  
-  background-size: 200% 200%, cover;
-  animation: grassWind 8s ease-in-out infinite;
+    /* floating pollen */
+    radial-gradient(circle at 20% 30%, rgba(255,255,200,.18) 1px, transparent 3px),
+    radial-gradient(circle at 70% 60%, rgba(255,255,200,.15) 1px, transparent 3px),
+
+    /* soft leaf lighting */
+    radial-gradient(circle at 40% 70%, rgba(120,220,120,.18), transparent 60%),
+
+    /* base plant glow */
+    radial-gradient(circle at center, rgba(40,160,60,.12), transparent 70%);
+
+  background-size: 120px 120px, 140px 140px, cover, cover;
+
+  animation: grassLife 10s linear infinite;
 }
 
-@keyframes grassWind{
+@keyframes grassLife{
   0%{
-    background-position: 0% 0%, center;
+    background-position: 0 0, 0 0, center, center;
     opacity:.35;
   }
   50%{
-    background-position: 40% 10%, center;
+    background-position: 40px -30px, -30px 40px, center, center;
     opacity:.28;
   }
   100%{
-    background-position: 80% 0%, center;
+    background-position: 80px -60px, -60px 80px, center, center;
     opacity:.35;
   }
 }
-
 /* Ice */
 .card.ice .card-overlay::before{
   content:'';
@@ -332,10 +332,21 @@ background-position: 0 0, 10px 10px;
 /* Bug */
 .card.bug .card-overlay{
   background:
-    radial-gradient(circle, rgba(50,200,50,.15), transparent);
-  animation:bugParticles 4s linear infinite;
+    repeating-radial-gradient(
+      circle at center,
+      rgba(80,200,80,.08) 0px,
+      rgba(80,200,80,.08) 2px,
+      transparent 4px
+    ),
+    radial-gradient(circle, rgba(50,200,50,.15), transparent 70%);
+
+  animation: bugHive 8s linear infinite;
 }
-@keyframes bugParticles{from{background-position:0 0}to{background-position:30px 30px}}
+
+@keyframes bugHive{
+  from{background-position:0 0}
+  to{background-position:40px 40px}
+}
 
 /* Dual type overlay */
 .card[data-type2] .card-overlay::before{
